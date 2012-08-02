@@ -177,45 +177,39 @@ const (
  */
 type Vertex struct {
 	X, Y, Z float32
-	Col Dword
-	TX, TY float32
+	Col     Dword
+	TX, TY  float32
 }
 
 /*
  * HGE Triple structure
  */
 type Triple struct {
-	V [3]Vertex
-	Tex Texture
+	V     [3]Vertex
+	Tex   Texture
 	Blend int
 }
-
 
 /*
 * HGE Quad structure
  */
 type Quad struct {
-	V [4]Vertex
-	Tex Texture
+	V     [4]Vertex
+	Tex   Texture
 	Blend int
 }
 
 /*
 * HGE Input Event structure
  */
-// typedef struct HGE_InputEvent_s
-// {
-// 	int type;			// event type
-// 	int key;			// key code
-// 	int flags;			// event flags
-// 	int chr;			// character code
-// 	int wheel;			// wheel shift
-// 	float32 x;				// mouse cursor x-coordinate
-// 	float32 y;				// mouse cursor y-coordinate
-// } HGE_InputEvent_t;
-
 type InputEvent struct {
-	ie C.HGE_InputEvent_t
+	Type  int     // event type
+	Key   int     // key code
+	Flags int     // event flags
+	Chr   int     // character code
+	Wheel int     // wheel shift
+	X     float32 // mouse cursor x-coordinate
+	Y     float32 // mouse cursor y-coordinate
 }
 
 /*
@@ -876,7 +870,7 @@ func (h *HGE) Input_GetChar() int {
 }
 
 func (h *HGE) Input_GetEvent(event *InputEvent) bool {
-	return C.HGE_Input_GetEvent(h.hge, &event.ie) == 1
+	return C.HGE_Input_GetEvent(h.hge, (*C.HGE_InputEvent_t)(unsafe.Pointer(event))) == 1
 }
 
 func (h *HGE) Gfx_BeginScene(arg ...interface{}) bool {
