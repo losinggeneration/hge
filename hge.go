@@ -71,16 +71,16 @@ const (
  * HGE System state constants
  */
 var (
-	WINDOWED      BoolState = C.HGE_C_WINDOWED
-	ZBUFFER       BoolState = C.HGE_C_ZBUFFER
-	TEXTUREFILTER BoolState = C.HGE_C_TEXTUREFILTER
+	WINDOWED      BoolState = C.HGE_C_WINDOWED      // bool run in window? (default: false)
+	ZBUFFER       BoolState = C.HGE_C_ZBUFFER       // bool use z-buffer? (default: false)
+	TEXTUREFILTER BoolState = C.HGE_C_TEXTUREFILTER // bool texture filtering? (default: true)
 
-	USESOUND BoolState = C.HGE_C_USESOUND
+	USESOUND BoolState = C.HGE_C_USESOUND // bool use sound? (default: true)
 
-	DONTSUSPEND BoolState = C.HGE_C_DONTSUSPEND
-	HIDEMOUSE   BoolState = C.HGE_C_HIDEMOUSE
+	DONTSUSPEND BoolState = C.HGE_C_DONTSUSPEND // bool focus lost:suspend? (default: false)
+	HIDEMOUSE   BoolState = C.HGE_C_HIDEMOUSE   // bool hide system cursor? (default: true)
 
-	SHOWSPLASH BoolState = C.HGE_C_SHOWSPLASH
+	SHOWSPLASH BoolState = C.HGE_C_SHOWSPLASH // bool show splash? (default: true)
 
 	BOOLSTATE_FORCE_DWORD BoolState = C.HGE_C_BOOLSTATE_FORCE_DWORD
 )
@@ -88,12 +88,12 @@ var (
 type BoolState int
 
 const (
-	FRAMEFUNC      FuncState = C.HGE_C_FRAMEFUNC
-	RENDERFUNC     FuncState = C.HGE_C_RENDERFUNC
-	FOCUSLOSTFUNC  FuncState = C.HGE_C_FOCUSLOSTFUNC
-	FOCUSGAINFUNC  FuncState = C.HGE_C_FOCUSGAINFUNC
-	GFXRESTOREFUNC FuncState = C.HGE_C_GFXRESTOREFUNC
-	EXITFUNC       FuncState = C.HGE_C_EXITFUNC
+	FRAMEFUNC      FuncState = C.HGE_C_FRAMEFUNC      // func() bool frame function (default: nil) (you MUST set this)
+	RENDERFUNC     FuncState = C.HGE_C_RENDERFUNC     // func() bool render function (default: nil)
+	FOCUSLOSTFUNC  FuncState = C.HGE_C_FOCUSLOSTFUNC  // func() bool focus lost function (default: nil)
+	FOCUSGAINFUNC  FuncState = C.HGE_C_FOCUSGAINFUNC  // func() bool focus gain function (default: nil)
+	GFXRESTOREFUNC FuncState = C.HGE_C_GFXRESTOREFUNC // func() bool gfx restore function (default: nil)
+	EXITFUNC       FuncState = C.HGE_C_EXITFUNC       // func() bool exit function (default: nil)
 
 	FUNCSTATE_FORCE_DWORD FuncState = C.HGE_C_FUNCSTATE_FORCE_DWORD
 )
@@ -101,8 +101,8 @@ const (
 type FuncState int
 
 const (
-	HWND       HwndState = C.HGE_C_HWND
-	HWNDPARENT HwndState = C.HGE_C_HWNDPARENT
+	HWND       HwndState = C.HGE_C_HWND       // int		window handle: read only
+	HWNDPARENT HwndState = C.HGE_C_HWNDPARENT // int		parent win handle	(default: 0)
 
 	HWNDSTATE_FORCE_DWORD HwndState = C.HGE_C_HWNDSTATE_FORCE_DWORD
 )
@@ -114,21 +114,21 @@ type Hwnd struct {
 }
 
 const (
-	SCREENWIDTH  IntState = C.HGE_C_SCREENWIDTH
-	SCREENHEIGHT IntState = C.HGE_C_SCREENHEIGHT
-	SCREENBPP    IntState = C.HGE_C_SCREENBPP
+	SCREENWIDTH  IntState = C.HGE_C_SCREENWIDTH  // int screen width (default: 800)
+	SCREENHEIGHT IntState = C.HGE_C_SCREENHEIGHT // int screen height (default: 600)
+	SCREENBPP    IntState = C.HGE_C_SCREENBPP    // int screen bitdepth (default: 32) (desktop bpp in windowed mode)
 
-	SAMPLERATE   IntState = C.HGE_C_SAMPLERATE
-	FXVOLUME     IntState = C.HGE_C_FXVOLUME
-	MUSVOLUME    IntState = C.HGE_C_MUSVOLUME
-	STREAMVOLUME IntState = C.HGE_C_STREAMVOLUME
+	SAMPLERATE   IntState = C.HGE_C_SAMPLERATE   // int sample rate (default: 44100)
+	FXVOLUME     IntState = C.HGE_C_FXVOLUME     // int global fx volume (default: 100)
+	MUSVOLUME    IntState = C.HGE_C_MUSVOLUME    // int global music volume (default: 100)
+	STREAMVOLUME IntState = C.HGE_C_STREAMVOLUME // int stream music volume (default: 100)
 
-	FPS IntState = C.HGE_C_FPS
+	FPS IntState = C.HGE_C_FPS // int fixed fps (default: hge.FPS_UNLIMITED)
 
-	POWERSTATUS IntState = C.HGE_C_POWERSTATUS
+	POWERSTATUS IntState = C.HGE_C_POWERSTATUS // int battery life percent + status
 
-	ORIGSCREENWIDTH  IntState = C.HGE_C_ORIGSCREENWIDTH
-	ORIGSCREENHEIGHT IntState = C.HGE_C_ORIGSCREENHEIGHT
+	ORIGSCREENWIDTH  IntState = C.HGE_C_ORIGSCREENWIDTH  // int original screen width (default: 800 ... not valid until hge.System_Initiate()!)
+	ORIGSCREENHEIGHT IntState = C.HGE_C_ORIGSCREENHEIGHT // int original screen height (default: 600 ... not valid until hge.System_Initiate()!))
 
 	INTSTATE_FORCE_DWORD IntState = C.HGE_C_INTSTATE_FORCE_DWORD
 )
@@ -136,11 +136,11 @@ const (
 type IntState int
 
 const (
-	ICON  StringState = C.HGE_C_ICON
-	TITLE StringState = C.HGE_C_TITLE
+	ICON  StringState = C.HGE_C_ICON  // string icon resource (default: nil)
+	TITLE StringState = C.HGE_C_TITLE // string window title (default: "HGE")
 
-	INIFILE StringState = C.HGE_C_INIFILE
-	LOGFILE StringState = C.HGE_C_LOGFILE
+	INIFILE StringState = C.HGE_C_INIFILE // string ini file (default: nil) (meaning no file)
+	LOGFILE StringState = C.HGE_C_LOGFILE // string log file (default: nil) (meaning no file)
 
 	STRINGSTATE_FORCE_DWORD StringState = C.HGE_C_STRINGSTATE_FORCE_DWORD
 )
@@ -176,9 +176,10 @@ const (
  * HGE Vertex structure
  */
 type Vertex struct {
-	X, Y, Z float32
-	Col     Dword
-	TX, TY  float32
+	X, Y   float32 // screen position
+	Z      float32 // Z-buffer depth 0..1
+	Col    Dword   // color
+	TX, TY float32 // texture coordinates
 }
 
 /*
