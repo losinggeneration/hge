@@ -132,7 +132,7 @@ func main() {
 	h = hge.Create(hge.VERSION)
 
 	// Set up log file, frame function, render function and window title
-	h.System_SetState(hge.LOGFILE, "hge_tut02.log")
+	h.System_SetState(hge.LOGFILE, "tutorial02.log")
 	h.System_SetState(hge.FRAMEFUNC, FrameFunc)
 	h.System_SetState(hge.RENDERFUNC, RenderFunc)
 	h.System_SetState(hge.TITLE, "HGE Tutorial 02 - Using input, sound and rendering")
@@ -150,7 +150,7 @@ func main() {
 		if snd == 0 || quad.Tex == 0 {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
-			fmt.Println("Error: Can't load menu.wav or particles.png")
+			fmt.Println("Error: Can't load menu.ogg or particles.png")
 			h.System_Shutdown()
 			h.Release()
 			return
