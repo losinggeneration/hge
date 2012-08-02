@@ -176,106 +176,28 @@ const (
  * HGE Vertex structure
  */
 type Vertex struct {
-	v C.HGE_Vertex_t
-}
-
-func (v *Vertex) SetX(x float32) {
-	v.v.x = C.float(x)
-}
-
-func (v *Vertex) X() float32 {
-	return float32(v.v.x)
-}
-
-func (v *Vertex) SetY(y float32) {
-	v.v.y = C.float(y)
-}
-
-func (v *Vertex) Y() float32 {
-	return float32(v.v.y)
-}
-
-func (v *Vertex) SetZ(z float32) {
-	v.v.z = C.float(z)
-}
-
-func (v *Vertex) Z() float32 {
-	return float32(v.v.z)
-}
-
-func (v *Vertex) SetColor(color uint32) {
-	v.v.col = C.DWORD(color)
-}
-
-func (v *Vertex) Color() uint32 {
-	return uint32(v.v.col)
-}
-
-func (v *Vertex) SetTX(tx float32) {
-	v.v.tx = C.float(tx)
-}
-
-func (v *Vertex) TX() float32 {
-	return float32(v.v.tx)
-}
-
-func (v *Vertex) SetTY(ty float32) {
-	v.v.ty = C.float(ty)
-}
-
-func (v *Vertex) TY() float32 {
-	return float32(v.v.ty)
+	X, Y, Z float32
+	Col Dword
+	TX, TY float32
 }
 
 /*
  * HGE Triple structure
  */
 type Triple struct {
-	t C.HGE_Triple_t
+	V [3]Vertex
+	Tex Texture
+	Blend int
 }
 
-func (t Triple) SetV(v [3]Vertex) {
-	t.t.v[0] = v[0].v
-	t.t.v[1] = v[1].v
-	t.t.v[2] = v[2].v
-}
-
-func (t *Triple) V() [3]Vertex {
-	var v [3]Vertex
-	v[0].v = t.t.v[0]
-	v[1].v = t.t.v[2]
-	v[2].v = t.t.v[2]
-	return v
-}
-
-func (t *Triple) SetTexture(tex Texture) {
-	t.t.tex = C.HTEXTURE(tex)
-}
-
-func (t *Triple) Texture() Texture {
-	return Texture(t.t.tex)
-}
-
-func (t *Triple) SetBlend(blend int) {
-	t.t.blend = C.int(blend)
-}
-
-func (t *Triple) Blend() int {
-	return int(t.t.blend)
-}
 
 /*
 * HGE Quad structure
  */
-// typedef struct HGE_Quad_s
-// {
-// 	HGE_Vertex_t v[4];
-// 	HTEXTURE tex;
-// 	int blend;
-// } HGE_Quad_t;
-
 type Quad struct {
-	q C.HGE_Quad_t
+	V [4]Vertex
+	Tex Texture
+	Blend int
 }
 
 /*
@@ -739,7 +661,6 @@ func (h *HGE) Music_Free(music Music) {
 	C.HGE_Music_Free(h.hge, C.HMUSIC(music))
 }
 
-// int volume = 100, int order = -1, int row = -1
 func (h *HGE) Music_Play(music Music, loop bool, arg ...interface{}) Channel {
 	volume := 100
 	order := -1
@@ -882,7 +803,6 @@ func (h *HGE) Channel_SetPos(chn Channel, fSeconds float32) {
 	C.HGE_Channel_SetPos(h.hge, C.HCHANNEL(chn), C.float(fSeconds))
 }
 
-//int volume, int pan = -101, float pitch = -1
 func (h *HGE) Channel_SlideTo(channel Channel, time float32, arg ...interface{}) {
 	volume := 100
 	pan := 0
@@ -998,24 +918,22 @@ func (h *HGE) Gfx_RenderLine(x1 float32, y1 float32, x2 float32, y2 float32, arg
 }
 
 func (h *HGE) Gfx_RenderTriple(triple *Triple) {
-	C.HGE_Gfx_RenderTriple(h.hge, &triple.t)
+	C.HGE_Gfx_RenderTriple(h.hge, (*C.HGE_Triple_t)(unsafe.Pointer(triple)))
 }
 
-func (h *HGE) Gfx_RenderQuad(quad Quad) {
-	C.HGE_Gfx_RenderQuad(h.hge, &quad.q)
+func (h *HGE) Gfx_RenderQuad(quad *Quad) {
+	C.HGE_Gfx_RenderQuad(h.hge, (*C.HGE_Quad_t)(unsafe.Pointer(quad)))
 }
 
-/// FIXME
-func (h *HGE) Gfx_StartBatch(prim_type int, tex Texture, blend int) (Vertex, max_prim int, ok bool) {
+func (h *HGE) Gfx_StartBatch(prim_type int, tex Texture, blend int) (ver *Vertex, max_prim int, ok bool) {
 	mp := C.int(0)
-	var v *C.HGE_Vertex_t
-	v = C.HGE_Gfx_StartBatch(h.hge, C.int(prim_type), C.HTEXTURE(tex), C.int(blend), &mp)
+	var v = C.HGE_Gfx_StartBatch(h.hge, C.int(prim_type), C.HTEXTURE(tex), C.int(blend), &mp)
 
 	if v == nil {
-		return Vertex, 0, false
+		return nil, 0, false
 	}
 
-	return Vertex, int(mp), true
+	return (*Vertex)(unsafe.Pointer(v)), int(mp), true
 }
 
 func (h *HGE) Gfx_FinishBatch(nprim int) {
