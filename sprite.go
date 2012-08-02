@@ -87,9 +87,25 @@ func (sprite *Sprite) Render(x float32, y float32) {
 	sprite.Hge.Gfx_RenderQuad(&sprite.Quad)
 }
 
-func (sprite *Sprite) RenderEx(x float32, y float32, rot float64, hscale float32, vscale float32) {
+func (sprite *Sprite) RenderEx(x float32, y float32, rot float64, arg ...interface{}) {
 	var tx1, ty1, tx2, ty2 float32
 	var sint, cost float32
+
+	hscale := float32(1.0)
+	vscale := float32(0.0)
+
+	for i := 0; i < len(arg); i++ {
+		if i == 0 {
+			if h, ok := arg[i].(float32); ok {
+				hscale = h
+			}
+		}
+		if i == 1 {
+			if v, ok := arg[i].(float32); ok {
+				vscale = v
+			}
+		}
+	}
 
 	if vscale == 0 {
 		vscale = hscale
@@ -225,7 +241,15 @@ func (sprite *Sprite) SetTextureRect(x float32, y float32, w float32, h float32,
 	sprite.SetFlip(bX, bY, bHS)
 }
 
-func (sprite *Sprite) SetColor(col Dword, i int) {
+func (sprite *Sprite) SetColor(col Dword, arg ...interface{}) {
+	i := -1
+
+	if len(arg) == 1 {
+		if ni, ok := arg[0].(int); ok {
+			i = ni
+		}
+	}
+
 	if i != -1 {
 		sprite.Quad.V[i].Col = col
 	} else {
@@ -236,7 +260,15 @@ func (sprite *Sprite) SetColor(col Dword, i int) {
 	}
 }
 
-func (sprite *Sprite) SetZ(z float32, i int) {
+func (sprite *Sprite) SetZ(z float32, arg ...interface{}) {
+	i := -1
+
+	if len(arg) == 1 {
+		if ni, ok := arg[0].(int); ok {
+			i = ni
+		}
+	}
+
 	if i != -1 {
 		sprite.Quad.V[i].Z = z
 	} else {
