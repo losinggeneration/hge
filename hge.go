@@ -238,9 +238,7 @@ const (
 	INP_REPEAT     = C.HGE_INP_REPEAT
 )
 
-type Resource struct {
-	Ptr unsafe.Pointer
-}
+type Resource unsafe.Pointer
 
 func btoi(b bool) C.BOOL {
 	if b {
@@ -425,18 +423,17 @@ func (h *HGE) System_GetStateString(state StringState) string {
 }
 
 func (h *HGE) Resource_Load(filename string) (Resource, Dword) {
-	var r Resource
 	var s C.DWORD
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
-	r.Ptr = C.HGE_Resource_Load(h.hge, fname, &s)
+	r := Resource(C.HGE_Resource_Load(h.hge, fname, &s))
 
 	return r, Dword(s)
 }
 
 func (h *HGE) Resource_Free(res Resource) {
-	C.HGE_Resource_Free(h.hge, res.Ptr)
+	C.HGE_Resource_Free(h.hge, unsafe.Pointer(res))
 }
 
 func (h *HGE) Resource_AttachPack(filename string, oargs ...interface{}) bool {
