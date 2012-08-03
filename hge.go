@@ -18,9 +18,7 @@ const (
 
 type Dword C.DWORD
 
-/*
- * Common math constants
- */
+// Common math constants
 const (
 	Pi     = math.Pi
 	Pi_2   = math.Pi / 2
@@ -29,9 +27,7 @@ const (
 	Two_Pi = 2 / math.Pi
 )
 
-/*
- * HGE Handle types
- */
+// HGE Handle types
 type Texture C.HTEXTURE
 type Target C.HTARGET
 type Effect C.HEFFECT
@@ -39,9 +35,7 @@ type Music C.HMUSIC
 type Stream C.HSTREAM
 type Channel C.HCHANNEL
 
-/*
- * Hardware color macros
- */
+// Hardware color macros
 // #define ARGB(a,r,g,b)	((Dword(a)<<24) + (Dword(r)<<16) + (Dword(g)<<8) + Dword(b))
 // #define GETA(col)		((col)>>24)
 // #define GETR(col)		(((col)>>16) & 0xFF)
@@ -52,9 +46,7 @@ type Channel C.HCHANNEL
 // #define SETG(col,g)		(((col) & 0xFFFF00FF) + (Dword(g)<<8))
 // #define SETB(col,b)		(((col) & 0xFFFFFF00) + Dword(b))
 
-/*
- * HGE Blending constants
- */
+// HGE Blending constants
 const (
 	BLEND_COLORADD   = C.BLEND_COLORADD
 	BLEND_COLORMUL   = C.BLEND_COLORMUL
@@ -67,9 +59,7 @@ const (
 	BLEND_DEFAULT_Z = C.BLEND_DEFAULT_Z
 )
 
-/*
- * HGE System state constants
- */
+// HGE System state constants
 var (
 	WINDOWED      BoolState = C.HGE_C_WINDOWED      // bool run in window? (default: false)
 	ZBUFFER       BoolState = C.HGE_C_ZBUFFER       // bool use z-buffer? (default: false)
@@ -147,34 +137,26 @@ const (
 
 type StringState int
 
-/*
- * HGE_FPS system state special constants
- */
+// HGE_FPS system state special constants
 const (
 	FPS_UNLIMITED = C.HGE_FPS_UNLIMITED
 	FPS_VSYNC     = C.HGE_FPS_VSYNC
 )
 
-/*
- * HGE_POWERSTATUS system state special constants
- */
+// HGE_POWERSTATUS system state special constants
 const (
 	PWR_AC          = C.HGE_PWR_AC
 	PWR_UNSUPPORTED = C.HGE_PWR_UNSUPPORTED
 )
 
-/*
- * HGE Primitive type constants
- */
+// HGE Primitive type constants
 const (
 	PRIM_LINES   = C.HGE_PRIM_LINES
 	PRIM_TRIPLES = C.HGE_PRIM_TRIPLES
 	PRIM_QUADS   = C.HGE_PRIM_QUADS
 )
 
-/*
- * HGE Vertex structure
- */
+// HGE Vertex structure
 type Vertex struct {
 	X, Y   float32 // screen position
 	Z      float32 // Z-buffer depth 0..1
@@ -182,27 +164,21 @@ type Vertex struct {
 	TX, TY float32 // texture coordinates
 }
 
-/*
- * HGE Triple structure
- */
+// HGE Triple structure
 type Triple struct {
 	V     [3]Vertex
 	Tex   Texture
 	Blend int
 }
 
-/*
-* HGE Quad structure
- */
+// HGE Quad structure
 type Quad struct {
 	V     [4]Vertex
 	Tex   Texture
 	Blend int
 }
 
-/*
-* HGE Input Event structure
- */
+// HGE Input Event structure
 type InputEvent struct {
 	Type  int     // event type
 	Key   int     // key code
@@ -213,9 +189,7 @@ type InputEvent struct {
 	Y     float32 // mouse cursor y-coordinate
 }
 
-/*
- * HGE Input Event type constants
- */
+// HGE Input Event type constants
 const (
 	INPUT_KEYDOWN     = C.HGE_INPUT_KEYDOWN
 	INPUT_KEYUP       = C.HGE_INPUT_KEYUP
@@ -225,9 +199,7 @@ const (
 	INPUT_MOUSEWHEEL  = C.HGE_INPUT_MOUSEWHEEL
 )
 
-/*
- * HGE Input Event flags
- */
+// HGE Input Event flags
 const (
 	INP_SHIFT      = C.HGE_INP_SHIFT
 	INP_CTRL       = C.HGE_INP_CTRL
@@ -248,13 +220,12 @@ func btoi(b bool) C.BOOL {
 	return 0
 }
 
-/*
- * HGE Interface class
- */
+// HGE struct
 type HGE struct {
 	hge *C.HGE_t
 }
 
+// Creates a new instance of an HGE structure
 func Create(ver int) *HGE {
 	h := new(HGE)
 	h.hge = C.HGE_Create(C.int(ver))
@@ -264,26 +235,32 @@ func Create(ver int) *HGE {
 	return h
 }
 
+// Releases the memory the C++ library allocated for the HGE struct
 func (h *HGE) Release() {
 	C.HGE_Release(h.hge)
 }
 
+// Initializes hardware and software needed to run engine.
 func (h *HGE) System_Initiate() bool {
 	return C.HGE_System_Initiate(h.hge) == 1
 }
 
+//  Restores video mode and frees allocated resources.
 func (h *HGE) System_Shutdown() {
 	C.HGE_System_Shutdown(h.hge)
 }
 
+// Starts running user defined frame function.
 func (h *HGE) System_Start() bool {
 	return C.HGE_System_Start(h.hge) == 1
 }
 
+//  Returns last occured HGE error description.
 func (h *HGE) System_GetErrorMessage() string {
 	return C.GoString(C.HGE_System_GetErrorMessage(h.hge))
 }
 
+// Writes a formatted message to the log file.
 func (h *HGE) System_Log(format string, v ...interface{}) {
 	var str string
 
@@ -299,6 +276,7 @@ func (h *HGE) System_Log(format string, v ...interface{}) {
 	C.HGE_System_Logw(h.hge, fstr)
 }
 
+// Launches an URL or external executable/data file.
 func (h *HGE) System_Launch(url string) bool {
 	urlstr := C.CString(url)
 	defer C.free(unsafe.Pointer(urlstr))
@@ -306,6 +284,7 @@ func (h *HGE) System_Launch(url string) bool {
 	return C.HGE_System_Launch(h.hge, urlstr) == 1
 }
 
+//  Saves current screen snapshot into a file.
 func (h *HGE) System_Snapshot(arg ...interface{}) {
 	if len(arg) == 1 {
 		if filename, ok := arg[0].(string); ok {
@@ -320,52 +299,54 @@ func (h *HGE) System_Snapshot(arg ...interface{}) {
 	C.HGE_System_Snapshot(h.hge, nil)
 }
 
+// Sets internal system states.
+// First param should be one of: BoolState, IntState, StringState, FuncState, HwndState
+// Second parameter must be of the matching type, bool, int, string, StateFunc/func() int, *Hwnd
 func (h *HGE) System_SetState(a ...interface{}) {
 	if len(a) == 2 {
 		switch a[0].(type) {
 		case BoolState:
-			if _, ok := a[1].(bool); ok {
-				h.System_SetStateBool(a[0].(BoolState), a[1].(bool))
+			if bs, ok := a[1].(bool); ok {
+				h.setStateBool(a[0].(BoolState), bs)
 				return
 			}
 
 		case IntState:
-			if _, ok := a[1].(int); ok {
-				h.System_SetStateInt(a[0].(IntState), a[1].(int))
+			if is, ok := a[1].(int); ok {
+				h.setStateInt(a[0].(IntState), is)
 				return
 			}
 
 		case StringState:
-			if _, ok := a[1].(string); ok {
-				h.System_SetStateString(a[0].(StringState), a[1].(string))
+			if ss, ok := a[1].(string); ok {
+				h.setStateString(a[0].(StringState), ss)
 				return
 			}
 
 		case FuncState:
 			switch a[1].(type) {
 			case StateFunc:
-				h.System_SetStateFunc(a[0].(FuncState), a[1].(StateFunc))
+				h.setStateFunc(a[0].(FuncState), a[1].(StateFunc))
 				return
 			case func() int:
-				h.System_SetStateFunc(a[0].(FuncState), a[1].(func() int))
+				h.setStateFunc(a[0].(FuncState), a[1].(func() int))
 				return
 			}
-			fmt.Println(StateFunc(a[1].(func() int)))
 
 		case HwndState:
-			if _, ok := a[1].(*Hwnd); ok {
-				h.System_SetStateHwnd(a[0].(HwndState), a[1].(*Hwnd))
+			if hs, ok := a[1].(*Hwnd); ok {
+				h.setStateHwnd(a[0].(HwndState), hs)
 				return
 			}
 		}
 	}
 }
 
-func (h *HGE) System_SetStateBool(state BoolState, value bool) {
+func (h *HGE) setStateBool(state BoolState, value bool) {
 	C.HGE_System_SetStateBool(h.hge, C.HGE_BoolState_t(state), btoi(value))
 }
 
-func (h *HGE) System_SetStateFunc(state FuncState, value StateFunc) {
+func (h *HGE) setStateFunc(state FuncState, value StateFunc) {
 	funcCBs[state] = value
 	switch state {
 	case FRAMEFUNC:
@@ -383,45 +364,70 @@ func (h *HGE) System_SetStateFunc(state FuncState, value StateFunc) {
 	}
 }
 
-func (h *HGE) System_SetStateHwnd(state HwndState, value *Hwnd) {
+func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) {
 	C.HGE_System_SetStateHwnd(h.hge, C.HGE_HwndState_t(state), value.hwnd)
 }
 
-func (h *HGE) System_SetStateInt(state IntState, value int) {
+func (h *HGE) setStateInt(state IntState, value int) {
 	C.HGE_System_SetStateInt(h.hge, C.HGE_IntState_t(state), C.int(value))
 }
 
-func (h *HGE) System_SetStateString(state StringState, value string) {
+func (h *HGE) setStateString(state StringState, value string) {
 	val := C.CString(value)
 	defer C.free(unsafe.Pointer(val))
 
 	C.HGE_System_SetStateString(h.hge, C.HGE_StringState_t(state), val)
 }
 
-func (h *HGE) System_GetStateBool(state BoolState) bool {
+// Returns internal system state values.
+func (h *HGE) System_GetState(a ...interface{}) interface{} {
+	if len(a) == 1 {
+		switch a[0].(type) {
+		case BoolState:
+			return h.getStateBool(a[0].(BoolState))
+
+		case IntState:
+			return h.getStateInt(a[0].(IntState))
+
+		case StringState:
+			return h.getStateString(a[0].(StringState))
+
+		case FuncState:
+			return h.getStateFunc(a[0].(FuncState))
+
+		case HwndState:
+			return h.getStateHwnd(a[0].(HwndState))
+		}
+	}
+
+	return nil
+}
+
+func (h *HGE) getStateBool(state BoolState) bool {
 	return C.HGE_System_GetStateBool(h.hge, C.HGE_BoolState_t(state)) == 1
 }
 
-func (h *HGE) System_GetStateFunc(state FuncState) StateFunc {
+func (h *HGE) getStateFunc(state FuncState) StateFunc {
 	// I don't know how to convert the HGE_Callback C function type to a Go
 	// function, so we just pass back the Go function
 	return funcCBs[state]
 }
 
-func (h *HGE) System_GetStateHwnd(state HwndState) Hwnd {
+func (h *HGE) getStateHwnd(state HwndState) Hwnd {
 	var hwnd Hwnd
 	hwnd.hwnd = C.HGE_System_GetStateHwnd(h.hge, C.HGE_HwndState_t(state))
 	return hwnd
 }
 
-func (h *HGE) System_GetStateInt(state IntState) int {
+func (h *HGE) getStateInt(state IntState) int {
 	return int(C.HGE_System_GetStateInt(h.hge, C.HGE_IntState_t(state)))
 }
 
-func (h *HGE) System_GetStateString(state StringState) string {
+func (h *HGE) getStateString(state StringState) string {
 	return C.GoString(C.HGE_System_GetStateString(h.hge, C.HGE_StringState_t(state)))
 }
 
+// Loads a resource into memory from disk.
 func (h *HGE) Resource_Load(filename string) (Resource, Dword) {
 	var s C.DWORD
 	fname := C.CString(filename)
@@ -432,10 +438,12 @@ func (h *HGE) Resource_Load(filename string) (Resource, Dword) {
 	return r, Dword(s)
 }
 
+// Deletes a previously loaded resource from memory.
 func (h *HGE) Resource_Free(res Resource) {
 	C.HGE_Resource_Free(h.hge, unsafe.Pointer(res))
 }
 
+// Attaches a resource pack.
 func (h *HGE) Resource_AttachPack(filename string, oargs ...interface{}) bool {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
@@ -455,6 +463,7 @@ func (h *HGE) Resource_AttachPack(filename string, oargs ...interface{}) bool {
 	return C.HGE_Resource_AttachPack(h.hge, fname, nil) == 1
 }
 
+// Removes a resource pack.
 func (h *HGE) Resource_RemovePack(filename string) {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
@@ -462,10 +471,12 @@ func (h *HGE) Resource_RemovePack(filename string) {
 	C.HGE_Resource_RemovePack(h.hge, C.CString(filename))
 }
 
+// Removes all resource packs previously attached.
 func (h *HGE) Resource_RemoveAllPacks() {
 	C.HGE_Resource_RemoveAllPacks(h.hge)
 }
 
+// Builds absolute file path.
 func (h *HGE) Resource_MakePath(arg ...interface{}) string {
 	if len(arg) == 1 {
 		if filename, ok := arg[0].(string); ok {
@@ -479,6 +490,7 @@ func (h *HGE) Resource_MakePath(arg ...interface{}) string {
 	return C.GoString(C.HGE_Resource_MakePath(h.hge, nil))
 }
 
+// Enumerates files by given wildcard.
 func (h *HGE) Resource_EnumFiles(arg ...interface{}) string {
 	if len(arg) == 1 {
 		if wildcard, ok := arg[0].(string); ok {
@@ -492,6 +504,7 @@ func (h *HGE) Resource_EnumFiles(arg ...interface{}) string {
 	return C.GoString(C.HGE_Resource_EnumFiles(h.hge, nil))
 }
 
+// Enumerates folders by given wildcard.
 func (h *HGE) Resource_EnumFolders(arg ...interface{}) string {
 	if len(arg) == 1 {
 		if wildcard, ok := arg[0].(string); ok {
@@ -1120,9 +1133,7 @@ func (h *HGE) Texture_Unlock(tex Texture) {
 	C.HGE_Texture_Unlock(h.hge, C.HTEXTURE(tex))
 }
 
-/*
- * HGE_ Virtual-key codes
- */
+// HGE_ Virtual-key codes
 const (
 	K_LBUTTON = C.HGE_K_LBUTTON
 	K_RBUTTON = C.HGE_K_RBUTTON
