@@ -9,7 +9,7 @@ type Rect struct {
 	clean          bool
 }
 
-func NewRect(x1 float32, y1 float32, x2 float32, y2 float32) Rect {
+func NewRect(x1, y1, x2, y2 float32) Rect {
 	var r Rect
 
 	r.X1 = x1
@@ -37,7 +37,7 @@ func (rect *Rect) IsClean() bool {
 	return rect.clean
 }
 
-func (rect *Rect) Set(x1 float32, y1 float32, x2 float32, y2 float32) {
+func (rect *Rect) Set(x1, y1, x2, y2 float32) {
 	rect.X1 = x1
 	rect.X2 = x2
 	rect.Y1 = y1
@@ -45,7 +45,7 @@ func (rect *Rect) Set(x1 float32, y1 float32, x2 float32, y2 float32) {
 	rect.clean = false
 }
 
-func (rect *Rect) SetRadius(x float32, y float32, r float32) {
+func (rect *Rect) SetRadius(x, y, r float32) {
 	rect.X1 = x - r
 	rect.X2 = x + r
 	rect.Y1 = y - r
@@ -53,7 +53,7 @@ func (rect *Rect) SetRadius(x float32, y float32, r float32) {
 	rect.clean = false
 }
 
-func (rect *Rect) Encapsulate(x float32, y float32) {
+func (rect *Rect) Encapsulate(x, y float32) {
 	if rect.clean {
 		rect.X1 = x
 		rect.X2 = x
@@ -76,7 +76,7 @@ func (rect *Rect) Encapsulate(x float32, y float32) {
 	}
 }
 
-func (rect *Rect) TestPoint(x float32, y float32) bool {
+func (rect *Rect) TestPoint(x, y float32) bool {
 	if x >= rect.X1 && x < rect.X2 && y >= rect.Y1 && y < rect.Y2 {
 		return true
 	}

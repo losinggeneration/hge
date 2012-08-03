@@ -10,7 +10,7 @@ type Vector struct {
 	X, Y float32
 }
 
-func NewVector(x float32, y float32) Vector {
+func NewVector(x, y float32) Vector {
 	var v Vector
 	v.X = x
 	v.Y = y

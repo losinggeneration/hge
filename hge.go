@@ -505,7 +505,7 @@ func (h *HGE) Resource_EnumFolders(arg ...interface{}) string {
 	return C.GoString(C.HGE_Resource_EnumFolders(h.hge, nil))
 }
 
-func (h *HGE) Ini_SetInt(section string, name string, value int) {
+func (h *HGE) Ini_SetInt(section, name string, value int) {
 	s := C.CString(section)
 	defer C.free(unsafe.Pointer(s))
 	n := C.CString(name)
@@ -514,7 +514,7 @@ func (h *HGE) Ini_SetInt(section string, name string, value int) {
 	C.HGE_Ini_SetInt(h.hge, s, n, C.int(value))
 }
 
-func (h *HGE) Ini_GetInt(section string, name string, def_val int) int {
+func (h *HGE) Ini_GetInt(section, name string, def_val int) int {
 	s := C.CString(section)
 	defer C.free(unsafe.Pointer(s))
 	n := C.CString(name)
@@ -523,7 +523,7 @@ func (h *HGE) Ini_GetInt(section string, name string, def_val int) int {
 	return int(C.HGE_Ini_GetInt(h.hge, s, n, C.int(def_val)))
 }
 
-func (h *HGE) Ini_SetFloat(section string, name string, value float32) {
+func (h *HGE) Ini_SetFloat(section, name string, value float32) {
 	s := C.CString(section)
 	defer C.free(unsafe.Pointer(s))
 	n := C.CString(name)
@@ -532,7 +532,7 @@ func (h *HGE) Ini_SetFloat(section string, name string, value float32) {
 	C.HGE_Ini_SetFloat(h.hge, s, n, C.float(value))
 }
 
-func (h *HGE) Ini_GetFloat(section string, name string, def_val float32) float32 {
+func (h *HGE) Ini_GetFloat(section, name string, def_val float32) float32 {
 	s := C.CString(section)
 	defer C.free(unsafe.Pointer(s))
 	n := C.CString(name)
@@ -541,7 +541,7 @@ func (h *HGE) Ini_GetFloat(section string, name string, def_val float32) float32
 	return float32(C.HGE_Ini_GetFloat(h.hge, s, n, C.float(def_val)))
 }
 
-func (h *HGE) Ini_SetString(section string, name string, value string) {
+func (h *HGE) Ini_SetString(section, name, value string) {
 	s := C.CString(section)
 	defer C.free(unsafe.Pointer(s))
 	n := C.CString(name)
@@ -550,7 +550,7 @@ func (h *HGE) Ini_SetString(section string, name string, value string) {
 	C.HGE_Ini_SetString(h.hge, s, n, C.CString(value))
 }
 
-func (h *HGE) Ini_GetString(section string, name string, def_val string) string {
+func (h *HGE) Ini_GetString(section, name, def_val string) string {
 	s := C.CString(section)
 	defer C.free(unsafe.Pointer(s))
 	n := C.CString(name)
@@ -569,11 +569,11 @@ func (h *HGE) Random_Seed(arg ...interface{}) {
 	C.HGE_Random_Seed(h.hge, 0)
 }
 
-func (h *HGE) Random_Int(min int, max int) int {
+func (h *HGE) Random_Int(min, max int) int {
 	return int(C.HGE_Random_Int(h.hge, C.int(min), C.int(max)))
 }
 
-func (h *HGE) Random_Float(min float32, max float32) float32 {
+func (h *HGE) Random_Float(min, max float32) float32 {
 	return float32(C.HGE_Random_Float(h.hge, C.float(min), C.float(max)))
 }
 
@@ -691,11 +691,11 @@ func (h *HGE) Music_GetLength(music Music) int {
 	return int(C.HGE_Music_GetLength(h.hge, C.HMUSIC(music)))
 }
 
-func (h *HGE) Music_SetPos(music Music, order int, row int) {
+func (h *HGE) Music_SetPos(music Music, order, row int) {
 	C.HGE_Music_SetPos(h.hge, C.HMUSIC(music), C.int(order), C.int(row))
 }
 
-func (h *HGE) Music_GetPos(music Music) (order int, row int, ok bool) {
+func (h *HGE) Music_GetPos(music Music) (order, row int, ok bool) {
 	var o, r C.int
 	ok = C.HGE_Music_GetPos(h.hge, C.HMUSIC(music), &o, &r) == 1
 	order = int(o)
@@ -712,7 +712,7 @@ func (h *HGE) Music_GetInstrVolume(music Music, instr int) int {
 	return int(C.HGE_Music_GetInstrVolume(h.hge, C.HMUSIC(music), C.int(instr)))
 }
 
-func (h *HGE) Music_SetChannelVolume(music Music, channel int, volume int) {
+func (h *HGE) Music_SetChannelVolume(music Music, channel, volume int) {
 	C.HGE_Music_SetChannelVolume(h.hge, C.HMUSIC(music), C.int(channel), C.int(volume))
 }
 
@@ -825,14 +825,14 @@ func (h *HGE) Channel_IsSliding(channel Channel) bool {
 	return C.HGE_Channel_IsSliding(h.hge, C.HCHANNEL(channel)) == 1
 }
 
-func (h *HGE) Input_GetMousePos() (x float32, y float32) {
+func (h *HGE) Input_GetMousePos() (x, y float32) {
 	var nx C.float
 	var ny C.float
 	C.HGE_Input_GetMousePos(h.hge, &nx, &ny)
 	return float32(nx), float32(ny)
 }
 
-func (h *HGE) Input_SetMousePos(x float32, y float32) {
+func (h *HGE) Input_SetMousePos(x, y float32) {
 	C.HGE_Input_SetMousePos(h.hge, C.float(x), C.float(y))
 }
 
@@ -889,7 +889,7 @@ func (h *HGE) Gfx_Clear(color Dword) {
 	C.HGE_Gfx_Clear(h.hge, C.DWORD(color))
 }
 
-func (h *HGE) Gfx_RenderLine(x1 float32, y1 float32, x2 float32, y2 float32, arg ...interface{}) {
+func (h *HGE) Gfx_RenderLine(x1, y1, x2, y2 float32, arg ...interface{}) {
 	color := uint(0xFFFFFFFF)
 	z := float32(0.5)
 
@@ -1014,7 +1014,7 @@ func (h *HGE) Gfx_SetTransform(arg ...interface{}) {
 	C.HGE_Gfx_SetTransform(h.hge, C.float(x), C.float(y), C.float(dx), C.float(dy), C.float(rot), C.float(hscale), C.float(vscale))
 }
 
-func (h *HGE) Target_Create(width int, height int, zbuffer bool) Target {
+func (h *HGE) Target_Create(width, height int, zbuffer bool) Target {
 	return Target(C.HGE_Target_Create(h.hge, C.int(width), C.int(height), btoi(zbuffer)))
 }
 
@@ -1026,7 +1026,7 @@ func (h *HGE) Target_GetTexture(target Target) Texture {
 	return Texture(C.HGE_Target_GetTexture(h.hge, C.HTARGET(target)))
 }
 
-func (h *HGE) Texture_Create(width int, height int) Texture {
+func (h *HGE) Texture_Create(width, height int) Texture {
 	return Texture(C.HGE_Texture_Create(h.hge, C.int(width), C.int(height)))
 }
 
