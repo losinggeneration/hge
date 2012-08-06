@@ -2,3 +2,8 @@
 *~
 .kdev4
 *.kdev*
+
+# Ignore everything in the tutorial* subdirectories
+tutorial*/*
+# Except *.go files
+!tutorial*/*.go
