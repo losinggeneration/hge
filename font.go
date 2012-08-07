@@ -1,10 +1,12 @@
 package hge
 
 import (
+	"C"
 	"errors"
 	"fmt"
 	"strconv"
 	"strings"
+	"unsafe"
 )
 
 const (
@@ -119,14 +121,15 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	f.col = 0xFFFFFFFF
 
 	data, size := f.hge.Resource_Load(filename)
-	if data == nil {
+	if data == nil || size == 0 {
 		return nil
 	}
 
-	desc := make([]byte, size+1)
-	copy(desc, *(*string)(data))
-	desc[size] = 0
-	f.hge.Resource_Free(data)
+	desc := C.GoBytes(unsafe.Pointer(data), C.int(size))
+	// 	desc := make([]byte, size+1)
+	// 	copy(desc, *(*[]byte)(data))
+	// 	desc = *(*[]byte)(data)
+	// 	f.hge.Resource_Free(data)
 
 	lines := getLines(string(desc))
 
@@ -193,11 +196,11 @@ func (f *Font) Render(x, y float32, align int, str string) {
 	}
 }
 
-func (f *Font) printf(x, y float32, align int, format string, arg ...interface{}) {
+func (f *Font) Printf(x, y float32, align int, format string, arg ...interface{}) {
 	f.Render(x, y, align, fmt.Sprintf(format, arg))
 }
 
-func (f *Font) printfb(x, y, w, h float32, align int, format string, arg ...interface{}) {
+func (f *Font) Printfb(x, y, w, h float32, align int, format string, arg ...interface{}) {
 }
 
 func (f *Font) SetColor(col Dword) {
