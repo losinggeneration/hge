@@ -230,8 +230,6 @@ func Create(ver int) *HGE {
 	h := new(HGE)
 	h.hge = C.HGE_Create(C.int(ver))
 
-	funcCBs = make([]StateFunc, EXITFUNC+1)
-
 	return h
 }
 

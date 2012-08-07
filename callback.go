@@ -5,7 +5,7 @@ import "C"
 
 type StateFunc func() int
 
-var funcCBs []StateFunc
+var funcCBs []StateFunc = make([]StateFunc, EXITFUNC+1)
 
 //export goFrameFunc
 func goFrameFunc() int {
