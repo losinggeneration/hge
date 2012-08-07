@@ -126,14 +126,11 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	}
 
 	desc := C.GoBytes(unsafe.Pointer(data), C.int(size))
-	// 	desc := make([]byte, size+1)
-	// 	copy(desc, *(*[]byte)(data))
-	// 	desc = *(*[]byte)(data)
-	// 	f.hge.Resource_Free(data)
+	f.hge.Resource_Free(data)
 
 	lines := getLines(string(desc))
 
-	if lines[0] != fntHEADERTAG {
+	if len(lines) == 0 || lines[0] != fntHEADERTAG {
 		f.hge.System_Log("Font %s has incorrect format.", filename)
 		return nil
 	}
@@ -152,6 +149,7 @@ func NewFont(filename string, arg ...interface{}) *Font {
 			chr, x, y, w, h, a, c := tokenizeChar(value)
 
 			sprt := NewSprite(f.texture, x, y, w, h)
+
 			f.letters[chr] = &sprt
 			f.pre[chr] = a
 			f.post[chr] = c
@@ -197,7 +195,7 @@ func (f *Font) Render(x, y float32, align int, str string) {
 }
 
 func (f *Font) Printf(x, y float32, align int, format string, arg ...interface{}) {
-	f.Render(x, y, align, fmt.Sprintf(format, arg))
+	f.Render(x, y, align, fmt.Sprintf(format, arg...))
 }
 
 func (f *Font) Printfb(x, y, w, h float32, align int, format string, arg ...interface{}) {

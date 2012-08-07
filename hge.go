@@ -3,7 +3,7 @@ package hge
 // #cgo pkg-config: hge-unix-c
 // #include "hge_c.h"
 // #include "callback.h"
-//void HGE_System_Logw(HGE_t *h, const char *str) { HGE_System_Log(h, str); }
+//void goHGE_System_Log(HGE_t *h, const char *str) { printf(str); HGE_System_Log(h, str); }
 import "C"
 
 import (
@@ -28,12 +28,14 @@ const (
 )
 
 // HGE Handle types
-type Texture C.HTEXTURE
-type Target C.HTARGET
-type Effect C.HEFFECT
-type Music C.HMUSIC
-type Stream C.HSTREAM
-type Channel C.HCHANNEL
+type (
+	Texture C.HTEXTURE
+	Target  C.HTARGET
+	Effect  C.HEFFECT
+	Music   C.HMUSIC
+	Stream  C.HSTREAM
+	Channel C.HCHANNEL
+)
 
 // Hardware color macros
 // #define ARGB(a,r,g,b)	((Dword(a)<<24) + (Dword(r)<<16) + (Dword(g)<<8) + Dword(b))
@@ -75,8 +77,6 @@ var (
 	BOOLSTATE_FORCE_DWORD BoolState = C.HGE_C_BOOLSTATE_FORCE_DWORD
 )
 
-type BoolState int
-
 const (
 	FRAMEFUNC      FuncState = C.HGE_C_FRAMEFUNC      // func() bool frame function (default: nil) (you MUST set this)
 	RENDERFUNC     FuncState = C.HGE_C_RENDERFUNC     // func() bool render function (default: nil)
@@ -88,16 +88,12 @@ const (
 	FUNCSTATE_FORCE_DWORD FuncState = C.HGE_C_FUNCSTATE_FORCE_DWORD
 )
 
-type FuncState int
-
 const (
 	HWND       HwndState = C.HGE_C_HWND       // int		window handle: read only
 	HWNDPARENT HwndState = C.HGE_C_HWNDPARENT // int		parent win handle	(default: 0)
 
 	HWNDSTATE_FORCE_DWORD HwndState = C.HGE_C_HWNDSTATE_FORCE_DWORD
 )
-
-type HwndState int
 
 type Hwnd struct {
 	hwnd C.HWND
@@ -123,8 +119,6 @@ const (
 	INTSTATE_FORCE_DWORD IntState = C.HGE_C_INTSTATE_FORCE_DWORD
 )
 
-type IntState int
-
 const (
 	ICON  StringState = C.HGE_C_ICON  // string icon resource (default: nil)
 	TITLE StringState = C.HGE_C_TITLE // string window title (default: "HGE")
@@ -135,7 +129,13 @@ const (
 	STRINGSTATE_FORCE_DWORD StringState = C.HGE_C_STRINGSTATE_FORCE_DWORD
 )
 
-type StringState int
+type (
+	BoolState   int
+	FuncState   int
+	HwndState   int
+	IntState    int
+	StringState int
+)
 
 // HGE_FPS system state special constants
 const (
@@ -263,7 +263,7 @@ func (h *HGE) System_Log(format string, v ...interface{}) {
 	var str string
 
 	if v != nil {
-		str = fmt.Sprintf(format, v)
+		str = fmt.Sprintf(format, v...)
 	} else {
 		str = format
 	}
@@ -271,7 +271,7 @@ func (h *HGE) System_Log(format string, v ...interface{}) {
 	fstr := C.CString(str)
 	defer C.free(unsafe.Pointer(fstr))
 
-	C.HGE_System_Logw(h.hge, fstr)
+	C.goHGE_System_Log(h.hge, fstr)
 }
 
 // Launches an URL or external executable/data file.
