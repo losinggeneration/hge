@@ -1,9 +1,9 @@
 /*
-** Haaf's Game Engine 1.8
-** Copyright (C) 2003-2007, Relish Games
-** hge.relishgames.com
-**
-** hge_tut02 - Using input, sound and rendering
+ * Haaf's Game Engine 1.8
+ * Copyright (C) 2003-2007, Relish Games
+ * hge.relishgames.com
+ *
+ * hge_tut02 - Using input, sound and rendering
  */
 
 package main
@@ -13,30 +13,23 @@ import (
 	"hge"
 )
 
-var h *hge.HGE
-
-var quad hge.Quad
-
-var snd hge.Effect
-
 var (
-	x  float32
-	y  float32
-	dx float32
-	dy float32
+	h *hge.HGE
+
+	quad hge.Quad
+
+	snd hge.Effect
+
+	x  = float32(100.0)
+	y  = float32(100.0)
+	dx = float32(0.0)
+	dy = float32(0.0)
 )
 
 const (
-	speed    = 90
+	speed    = 90.0
 	friction = 0.98
 )
-
-func setup() {
-	x = 100.0
-	y = 100.0
-	dx = 0.0
-	dy = 0.0
-}
 
 func boom() {
 	pan := int((x - 400) / 4)
@@ -47,6 +40,7 @@ func boom() {
 func FrameFunc() int {
 	dt := h.Timer_GetDelta()
 
+	// Process keys
 	if h.Input_GetKeyState(hge.K_ESCAPE) {
 		return 1
 	}
@@ -127,7 +121,6 @@ func RenderFunc() int {
 }
 
 func main() {
-	setup()
 	// Get HGE interface
 	h = hge.Create(hge.VERSION)
 
