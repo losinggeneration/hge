@@ -15,7 +15,6 @@ type Sprite struct {
 }
 
 func NewSprite(texture Texture, texx, texy, w, h float32) Sprite {
-	var texx1, texy1, texx2, texy2 float32
 	var sprite Sprite
 
 	sprite.Hge = Create(VERSION)
@@ -40,10 +39,10 @@ func NewSprite(texture Texture, texx, texy, w, h float32) Sprite {
 	sprite.HSFlip = false
 	sprite.Quad.Tex = texture
 
-	texx1 = texx / sprite.TexWidth
-	texy1 = texy / sprite.TexHeight
-	texx2 = (texx + w) / sprite.TexWidth
-	texy2 = (texy + h) / sprite.TexHeight
+	texx1 := texx / sprite.TexWidth
+	texy1 := texy / sprite.TexHeight
+	texx2 := (texx + w) / sprite.TexWidth
+	texy2 := (texy + h) / sprite.TexHeight
 
 	sprite.Quad.V[0].TX = texx1
 	sprite.Quad.V[0].TY = texy1
