@@ -28,6 +28,7 @@ func main() {
 	h.System_Log("Test vararg: %s %d", "test", 15)
 
 	if h.System_Initiate() {
+		defer h.System_Shutdown()
 		h.System_Log("Test")
 		h.System_Log("Test vararg: %s %d", "test", 15)
 		h.System_Start()
@@ -36,5 +37,4 @@ func main() {
 	}
 
 	h.System_Log("Test")
-	h.System_Shutdown()
 }

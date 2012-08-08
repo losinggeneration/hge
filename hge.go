@@ -534,7 +534,7 @@ func (h *HGE) Ini_GetInt(section, name string, def_val int) int {
 	return int(C.HGE_Ini_GetInt(h.hge, s, n, C.int(def_val)))
 }
 
-func (h *HGE) Ini_SetFloat(section, name string, value float32) {
+func (h *HGE) Ini_SetFloat(section, name string, value float64) {
 	s := C.CString(section)
 	defer C.free(unsafe.Pointer(s))
 	n := C.CString(name)
@@ -543,13 +543,13 @@ func (h *HGE) Ini_SetFloat(section, name string, value float32) {
 	C.HGE_Ini_SetFloat(h.hge, s, n, C.float(value))
 }
 
-func (h *HGE) Ini_GetFloat(section, name string, def_val float32) float32 {
+func (h *HGE) Ini_GetFloat(section, name string, def_val float64) float64 {
 	s := C.CString(section)
 	defer C.free(unsafe.Pointer(s))
 	n := C.CString(name)
 	defer C.free(unsafe.Pointer(n))
 
-	return float32(C.HGE_Ini_GetFloat(h.hge, s, n, C.float(def_val)))
+	return float64(C.HGE_Ini_GetFloat(h.hge, s, n, C.float(def_val)))
 }
 
 func (h *HGE) Ini_SetString(section, name, value string) {
@@ -584,16 +584,16 @@ func (h *HGE) Random_Int(min, max int) int {
 	return int(C.HGE_Random_Int(h.hge, C.int(min), C.int(max)))
 }
 
-func (h *HGE) Random_Float(min, max float32) float32 {
-	return float32(C.HGE_Random_Float(h.hge, C.float(min), C.float(max)))
+func (h *HGE) Random_Float(min, max float64) float64 {
+	return float64(C.HGE_Random_Float(h.hge, C.float(min), C.float(max)))
 }
 
-func (h *HGE) Timer_GetTime() float32 {
-	return float32(C.HGE_Timer_GetTime(h.hge))
+func (h *HGE) Timer_GetTime() float64 {
+	return float64(C.HGE_Timer_GetTime(h.hge))
 }
 
-func (h *HGE) Timer_GetDelta() float32 {
-	return float32(C.HGE_Timer_GetDelta(h.hge))
+func (h *HGE) Timer_GetDelta() float64 {
+	return float64(C.HGE_Timer_GetDelta(h.hge))
 }
 
 func (h *HGE) Timer_GetFPS() int {
@@ -624,7 +624,7 @@ func (h *HGE) Effect_Play(eff Effect) Channel {
 func (h *HGE) Effect_PlayEx(eff Effect, arg ...interface{}) Channel {
 	volume := 100
 	pan := 0
-	pitch := float32(1.0)
+	pitch := 1.0
 	loop := false
 
 	for i := 0; i < len(arg); i++ {
@@ -640,6 +640,9 @@ func (h *HGE) Effect_PlayEx(eff Effect, arg ...interface{}) Channel {
 		}
 		if i == 2 {
 			if p, ok := arg[i].(float32); ok {
+				pitch = float64(p)
+			}
+			if p, ok := arg[i].(float64); ok {
 				pitch = p
 			}
 		}
@@ -762,7 +765,7 @@ func (h *HGE) Channel_SetVolume(chn Channel, volume int) {
 	C.HGE_Channel_SetVolume(h.hge, C.HCHANNEL(chn), C.int(volume))
 }
 
-func (h *HGE) Channel_SetPitch(chn Channel, pitch float32) {
+func (h *HGE) Channel_SetPitch(chn Channel, pitch float64) {
 	C.HGE_Channel_SetPitch(h.hge, C.HCHANNEL(chn), C.float(pitch))
 }
 
@@ -794,22 +797,22 @@ func (h *HGE) Channel_IsPlaying(chn Channel) bool {
 	return C.HGE_Channel_IsPlaying(h.hge, C.HCHANNEL(chn)) == 1
 }
 
-func (h *HGE) Channel_GetLength(chn Channel) float32 {
-	return float32(C.HGE_Channel_GetLength(h.hge, C.HCHANNEL(chn)))
+func (h *HGE) Channel_GetLength(chn Channel) float64 {
+	return float64(C.HGE_Channel_GetLength(h.hge, C.HCHANNEL(chn)))
 }
 
-func (h *HGE) Channel_GetPos(chn Channel) float32 {
-	return float32(C.HGE_Channel_GetPos(h.hge, C.HCHANNEL(chn)))
+func (h *HGE) Channel_GetPos(chn Channel) float64 {
+	return float64(C.HGE_Channel_GetPos(h.hge, C.HCHANNEL(chn)))
 }
 
-func (h *HGE) Channel_SetPos(chn Channel, fSeconds float32) {
+func (h *HGE) Channel_SetPos(chn Channel, fSeconds float64) {
 	C.HGE_Channel_SetPos(h.hge, C.HCHANNEL(chn), C.float(fSeconds))
 }
 
-func (h *HGE) Channel_SlideTo(channel Channel, time float32, arg ...interface{}) {
+func (h *HGE) Channel_SlideTo(channel Channel, time float64, arg ...interface{}) {
 	volume := 100
 	pan := 0
-	pitch := float32(1.0)
+	pitch := 1.0
 
 	for i := 0; i < len(arg); i++ {
 		if i == 0 {
@@ -824,6 +827,9 @@ func (h *HGE) Channel_SlideTo(channel Channel, time float32, arg ...interface{})
 		}
 		if i == 2 {
 			if p, ok := arg[i].(float32); ok {
+				pitch = float64(p)
+			}
+			if p, ok := arg[i].(float64); ok {
 				pitch = p
 			}
 		}
@@ -836,14 +842,14 @@ func (h *HGE) Channel_IsSliding(channel Channel) bool {
 	return C.HGE_Channel_IsSliding(h.hge, C.HCHANNEL(channel)) == 1
 }
 
-func (h *HGE) Input_GetMousePos() (x, y float32) {
+func (h *HGE) Input_GetMousePos() (x, y float64) {
 	var nx C.float
 	var ny C.float
 	C.HGE_Input_GetMousePos(h.hge, &nx, &ny)
-	return float32(nx), float32(ny)
+	return float64(nx), float64(ny)
 }
 
-func (h *HGE) Input_SetMousePos(x, y float32) {
+func (h *HGE) Input_SetMousePos(x, y float64) {
 	C.HGE_Input_SetMousePos(h.hge, C.float(x), C.float(y))
 }
 
@@ -900,9 +906,9 @@ func (h *HGE) Gfx_Clear(color Dword) {
 	C.HGE_Gfx_Clear(h.hge, C.DWORD(color))
 }
 
-func (h *HGE) Gfx_RenderLine(x1, y1, x2, y2 float32, arg ...interface{}) {
+func (h *HGE) Gfx_RenderLine(x1, y1, x2, y2 float64, arg ...interface{}) {
 	color := uint(0xFFFFFFFF)
-	z := float32(0.5)
+	z := 0.5
 
 	for i := 0; i < len(arg); i++ {
 		if i == 0 {
@@ -912,6 +918,9 @@ func (h *HGE) Gfx_RenderLine(x1, y1, x2, y2 float32, arg ...interface{}) {
 		}
 		if i == 1 {
 			if z1, ok := arg[i].(float32); ok {
+				z = float64(z1)
+			}
+			if z1, ok := arg[i].(float64); ok {
 				z = z1
 			}
 		}
@@ -976,47 +985,68 @@ func (hge *HGE) Gfx_SetClipping(arg ...interface{}) {
 }
 
 func (h *HGE) Gfx_SetTransform(arg ...interface{}) {
-	x := float32(0)
-	y := float32(0)
-	dx := float32(0)
-	dy := float32(0)
-	rot := float32(0)
-	hscale := float32(0)
-	vscale := float32(0)
+	x := 0.0
+	y := 0.0
+	dx := 0.0
+	dy := 0.0
+	rot := 0.0
+	hscale := 0.0
+	vscale := 0.0
 
 	for i := 0; i < len(arg); i++ {
 		if i == 0 {
 			if x1, ok := arg[i].(float32); ok {
+				x = float64(x1)
+			}
+			if x1, ok := arg[i].(float64); ok {
 				x = x1
 			}
 		}
 		if i == 1 {
 			if y1, ok := arg[i].(float32); ok {
+				y = float64(y1)
+			}
+			if y1, ok := arg[i].(float64); ok {
 				y = y1
 			}
 		}
 		if i == 2 {
 			if dx1, ok := arg[i].(float32); ok {
+				dx = float64(dx1)
+			}
+			if dx1, ok := arg[i].(float64); ok {
 				dx = dx1
 			}
 		}
 		if i == 3 {
 			if dy1, ok := arg[i].(float32); ok {
+				dy = float64(dy1)
+			}
+			if dy1, ok := arg[i].(float64); ok {
 				dy = dy1
 			}
 		}
 		if i == 4 {
 			if rot1, ok := arg[i].(float32); ok {
+				rot = float64(rot1)
+			}
+			if rot1, ok := arg[i].(float64); ok {
 				rot = rot1
 			}
 		}
 		if i == 5 {
 			if hscale1, ok := arg[i].(float32); ok {
+				hscale = float64(hscale1)
+			}
+			if hscale1, ok := arg[i].(float64); ok {
 				hscale = hscale1
 			}
 		}
 		if i == 6 {
 			if vscale1, ok := arg[i].(float32); ok {
+				vscale = float64(vscale1)
+			}
+			if vscale1, ok := arg[i].(float64); ok {
 				vscale = vscale1
 			}
 		}

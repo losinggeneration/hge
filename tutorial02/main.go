@@ -20,10 +20,10 @@ var (
 
 	snd hge.Effect
 
-	x  = float32(100.0)
-	y  = float32(100.0)
-	dx = float32(0.0)
-	dy = float32(0.0)
+	x  = 100.0
+	y  = 100.0
+	dx = 0.0
+	dy = 0.0
 )
 
 const (
@@ -38,7 +38,7 @@ func boom() {
 }
 
 func FrameFunc() int {
-	dt := h.Timer_GetDelta()
+	dt := float64(h.Timer_GetDelta())
 
 	// Process keys
 	if h.Input_GetKeyState(hge.K_ESCAPE) {
@@ -84,14 +84,14 @@ func FrameFunc() int {
 	}
 
 	// Set up quad's screen coordinates
-	quad.V[0].X = x - 16
-	quad.V[0].Y = y - 16
-	quad.V[1].X = x + 16
-	quad.V[1].Y = y - 16
-	quad.V[2].X = x + 16
-	quad.V[2].Y = y + 16
-	quad.V[3].X = x - 16
-	quad.V[3].Y = y + 16
+	quad.V[0].X = float32(x - 16)
+	quad.V[0].Y = float32(y - 16)
+	quad.V[1].X = float32(x + 16)
+	quad.V[1].Y = float32(y - 16)
+	quad.V[2].X = float32(x + 16)
+	quad.V[2].Y = float32(y + 16)
+	quad.V[3].X = float32(x - 16)
+	quad.V[3].Y = float32(y + 16)
 
 	// Continue execution
 	return 0
@@ -123,6 +123,7 @@ func RenderFunc() int {
 func main() {
 	// Get HGE interface
 	h = hge.Create(hge.VERSION)
+	defer h.Release()
 
 	// Set up log file, frame function, render function and window title
 	h.System_SetState(hge.LOGFILE, "tutorial02.log")
@@ -137,6 +138,7 @@ func main() {
 	h.System_SetState(hge.SCREENBPP, 32)
 
 	if h.System_Initiate() {
+		defer h.System_Shutdown()
 		// Load sound and texture
 		snd = h.Effect_Load("menu.ogg")
 		quad.Tex = h.Texture_Load("particles.png")
@@ -144,10 +146,10 @@ func main() {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
 			fmt.Println("Error: Can't load menu.ogg or particles.png")
-			h.System_Shutdown()
-			h.Release()
 			return
 		}
+		defer h.Effect_Free(snd)
+		defer h.Texture_Free(quad.Tex)
 
 		// Set up quad which we will use for rendering sprite
 		quad.Blend = hge.BLEND_ALPHAADD | hge.BLEND_COLORMUL | hge.BLEND_ZWRITE
@@ -173,15 +175,7 @@ func main() {
 
 		// Let's rock now!
 		h.System_Start()
-
-		// Free loaded texture and sound
-		h.Texture_Free(quad.Tex)
-		h.Effect_Free(snd)
 	} else {
 		fmt.Println("Error: %s\n", h.System_GetErrorMessage())
 	}
-
-	// Clean up and shutdown
-	h.System_Shutdown()
-	h.Release()
 }

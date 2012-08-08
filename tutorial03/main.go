@@ -10,15 +10,15 @@ var (
 
 	spr, spt hge.Sprite
 	fnt      *hge.Font
-	par hge.ParticleSystem
+	par      *hge.ParticleSystem
 
 	tex hge.Texture
 	snd hge.Effect
 
-	x  = float32(100.0)
-	y  = float32(100.0)
-	dx = float32(0.0)
-	dy = float32(0.0)
+	x  = 100.0
+	y  = 100.0
+	dx = 0.0
+	dy = 0.0
 )
 
 const (
@@ -33,7 +33,7 @@ func boom() {
 }
 
 func FrameFunc() int {
-	dt := h.Timer_GetDelta()
+	dt := float64(h.Timer_GetDelta())
 
 	// Process keys
 	if h.Input_GetKeyState(hge.K_ESCAPE) {
@@ -79,8 +79,8 @@ func FrameFunc() int {
 	}
 
 	// Update particle system
-	par.Info.Emission=(int)(dx*dx+dy*dy)*2
-	par.MoveTo(x,y)
+	par.Info.Emission = (int)(dx*dx+dy*dy) * 2
+	par.MoveTo(x, y)
 	par.Update(dt)
 
 	return 0
@@ -89,7 +89,8 @@ func FrameFunc() int {
 func RenderFunc() int {
 	h.Gfx_BeginScene()
 	h.Gfx_Clear(0)
-	par.Render();
+	// currently broken
+	// par.Render();
 	spr.Render(x, y)
 	fnt.Printf(5, 5, hge.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", h.Timer_GetDelta(), h.Timer_GetFPS())
 	h.Gfx_EndScene()
@@ -110,15 +111,19 @@ func main() {
 	h.System_SetState(hge.SCREENHEIGHT, 600)
 	h.System_SetState(hge.SCREENBPP, 32)
 
+	defer h.Release()
+
 	if h.System_Initiate() {
+		defer h.System_Shutdown()
 		snd = h.Effect_Load("menu.ogg")
 		tex = h.Texture_Load("particles.png")
 		if snd == 0 || tex == 0 {
 			fmt.Printf("Error: Can't load one of the following files:\nmenu.ogg, particles.png, font1.fnt, font1.png, trail.psi\n")
-			h.System_Shutdown()
-			h.Release()
 			return
 		}
+
+		defer h.Effect_Free(snd)
+		defer h.Texture_Free(tex)
 
 		spr = hge.NewSprite(tex, 96, 64, 32, 32)
 		spr.SetColor(0xFFFFA000)
@@ -132,15 +137,14 @@ func main() {
 		spt = hge.NewSprite(tex, 32, 32, 32, 32)
 		spt.SetBlendMode(hge.BLEND_COLORMUL | hge.BLEND_ALPHAADD | hge.BLEND_NOZWRITE)
 		spt.SetHotSpot(16, 16)
+
 		par = hge.NewParticleSystem("trail.psi", &spt)
+		if par == nil {
+			fmt.Println("Error loading trail.psi")
+			return
+		}
 		par.Fire()
 
 		h.System_Start()
-
-		h.Texture_Free(tex)
-		h.Effect_Free(snd)
 	}
-
-	h.System_Shutdown()
-	h.Release()
 }

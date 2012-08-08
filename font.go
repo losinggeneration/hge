@@ -35,17 +35,17 @@ type Font struct {
 
 	texture    Texture
 	letters    [256]*Sprite
-	pre        [256]float32
-	post       [256]float32
-	height     float32
-	scale      float32
-	proportion float32
-	rot        float32
-	tracking   float32
-	spacing    float32
+	pre        [256]float64
+	post       [256]float64
+	height     float64
+	scale      float64
+	proportion float64
+	rot        float64
+	tracking   float64
+	spacing    float64
 
 	col   Dword
-	z     float32
+	z     float64
 	blend int
 }
 
@@ -76,21 +76,21 @@ func tokenizeLine(line string) (string, string, error) {
 	return "", "", errors.New("Unable to tokenize line")
 }
 
-func tokenizeChar(value string) (chr byte, x, y, w, h, a, c float32) {
+func tokenizeChar(value string) (chr byte, x, y, w, h, a, c float64) {
 	z := strings.Split(value, ",")
 	chr = z[0][0]
 	x1, _ := strconv.ParseFloat(z[1], 32)
-	x = float32(x1)
+	x = x1
 	y1, _ := strconv.ParseFloat(z[2], 32)
-	y = float32(y1)
+	y = y1
 	w1, _ := strconv.ParseFloat(z[3], 32)
-	w = float32(w1)
+	w = w1
 	h1, _ := strconv.ParseFloat(z[4], 32)
-	h = float32(h1)
+	h = h1
 	a1, _ := strconv.ParseFloat(z[5], 32)
-	a = float32(a1)
+	a = a1
 	c1, _ := strconv.ParseFloat(z[6], 32)
-	c = float32(c1)
+	c = c1
 
 	return
 }
@@ -159,7 +159,7 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	return f
 }
 
-func (f *Font) Render(x, y float32, align int, str string) {
+func (f *Font) Render(x, y float64, align int, str string) {
 	fx := x
 
 	align &= TEXT_HORZMASK
@@ -187,18 +187,18 @@ func (f *Font) Render(x, y float32, align int, str string) {
 			}
 			if f.letters[i] != nil {
 				fx += f.pre[i] * f.scale * f.proportion
-				f.letters[i].RenderEx(fx, y, float64(f.rot), f.scale*f.proportion, f.scale)
+				f.letters[i].RenderEx(fx, y, f.rot, f.scale*f.proportion, f.scale)
 				fx += (f.letters[i].GetWidth() + f.post[i] + f.tracking) * f.scale * f.proportion
 			}
 		}
 	}
 }
 
-func (f *Font) Printf(x, y float32, align int, format string, arg ...interface{}) {
+func (f *Font) Printf(x, y float64, align int, format string, arg ...interface{}) {
 	f.Render(x, y, align, fmt.Sprintf(format, arg...))
 }
 
-func (f *Font) Printfb(x, y, w, h float32, align int, format string, arg ...interface{}) {
+func (f *Font) Printfb(x, y, w, h float64, align int, format string, arg ...interface{}) {
 }
 
 func (f *Font) SetColor(col Dword) {
@@ -211,7 +211,7 @@ func (f *Font) SetColor(col Dword) {
 	}
 }
 
-func (f *Font) SetZ(z float32) {
+func (f *Font) SetZ(z float64) {
 	f.z = z
 
 	for i := 0; i < 256; i++ {
@@ -231,23 +231,23 @@ func (f *Font) SetBlendMode(blend int) {
 	}
 }
 
-func (f *Font) SetScale(scale float32) {
+func (f *Font) SetScale(scale float64) {
 	f.scale = scale
 }
 
-func (f *Font) SetProportion(prop float32) {
+func (f *Font) SetProportion(prop float64) {
 	f.proportion = prop
 }
 
-func (f *Font) SetRotation(rot float32) {
+func (f *Font) SetRotation(rot float64) {
 	f.rot = rot
 }
 
-func (f *Font) SetTracking(tracking float32) {
+func (f *Font) SetTracking(tracking float64) {
 	f.tracking = tracking
 }
 
-func (f *Font) SetSpacing(spacing float32) {
+func (f *Font) SetSpacing(spacing float64) {
 	f.spacing = spacing
 }
 
@@ -255,7 +255,7 @@ func (f Font) GetColor() Dword {
 	return f.col
 }
 
-func (f Font) GetZ() float32 {
+func (f Font) GetZ() float64 {
 	return f.z
 }
 
@@ -263,23 +263,23 @@ func (f Font) GetBlendMode() int {
 	return f.blend
 }
 
-func (f Font) GetScale() float32 {
+func (f Font) GetScale() float64 {
 	return f.scale
 }
 
-func (f Font) GetProportion() float32 {
+func (f Font) GetProportion() float64 {
 	return f.proportion
 }
 
-func (f Font) GetRotation() float32 {
+func (f Font) GetRotation() float64 {
 	return f.rot
 }
 
-func (f Font) GetTracking() float32 {
+func (f Font) GetTracking() float64 {
 	return f.tracking
 }
 
-func (f Font) GetSpacing() float32 {
+func (f Font) GetSpacing() float64 {
 	return f.spacing
 }
 
@@ -287,21 +287,21 @@ func (f Font) GetSprite(chr byte) *Sprite {
 	return f.letters[chr]
 }
 
-func (f Font) GetPreWidth(chr byte) float32 {
+func (f Font) GetPreWidth(chr byte) float64 {
 	return f.pre[chr]
 }
 
-func (f Font) GetPostWidth(chr byte) float32 {
+func (f Font) GetPostWidth(chr byte) float64 {
 	return f.post[chr]
 }
 
-func (f Font) GetHeight() float32 {
+func (f Font) GetHeight() float64 {
 	return f.height
 }
 
-func (f Font) GetStringWidth(str string, arg ...interface{}) float32 {
+func (f Font) GetStringWidth(str string, arg ...interface{}) float64 {
 	multiline := true
-	w := float32(0.0)
+	w := 0.0
 
 	if len(arg) == 1 {
 		if m, ok := arg[0].(bool); ok {
@@ -310,7 +310,7 @@ func (f Font) GetStringWidth(str string, arg ...interface{}) float32 {
 	}
 
 	for j := 0; j < len(str); j++ {
-		linew := float32(0.0)
+		linew := 0.0
 
 		for ; str[j] != '\n'; j++ {
 			i := str[j]

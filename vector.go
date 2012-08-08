@@ -2,15 +2,15 @@ package hge
 
 import "math"
 
-func InvSqrt(x float32) float32 {
-	return float32(1 / math.Sqrt(float64(x)))
+func InvSqrt(x float64) float64 {
+	return 1 / math.Sqrt(x)
 }
 
 type Vector struct {
-	X, Y float32
+	X, Y float64
 }
 
-func NewVector(x, y float32) Vector {
+func NewVector(x, y float64) Vector {
 	var v Vector
 	v.X = x
 	v.Y = y
@@ -49,29 +49,29 @@ func (v Vector) NEQ(v2 Vector) bool {
 	return v.X != v2.X && v.Y != v2.Y
 }
 
-func (v Vector) Divide(scalar float32) Vector {
+func (v Vector) Divide(scalar float64) Vector {
 	return NewVector(v.X/scalar, v.Y/scalar)
 }
 
-func (v Vector) Multiply(scalar float32) Vector {
+func (v Vector) Multiply(scalar float64) Vector {
 	return NewVector(v.X*scalar, v.Y*scalar)
 }
 
-func (v *Vector) MultiplyEequal(scalar float32) *Vector {
+func (v *Vector) MultiplyEqual(scalar float64) *Vector {
 	v.X *= scalar
 	v.Y *= scalar
 	return v
 }
 
-func (v Vector) Dot(v2 Vector) float32 {
+func (v Vector) Dot(v2 Vector) float64 {
 	return v.X*v2.X + v.Y*v2.Y
 }
 
-func (v Vector) Length() float32 {
-	return float32(math.Sqrt(float64(v.Dot(v))))
+func (v Vector) Length() float64 {
+	return math.Sqrt(v.Dot(v))
 }
 
-func (v Vector) Angle(arg ...interface{}) float32 {
+func (v Vector) Angle(arg ...interface{}) float64 {
 	if len(arg) == 1 {
 		if vec, ok := arg[0].(Vector); ok {
 			s := vec
@@ -79,16 +79,16 @@ func (v Vector) Angle(arg ...interface{}) float32 {
 
 			s.Normalize()
 			t.Normalize()
-			return float32(math.Acos(float64(s.Dot(t))))
+			return math.Acos(s.Dot(t))
 		}
 	} else {
-		return float32(math.Atan2(float64(v.Y), float64(v.X)))
+		return math.Atan2(v.Y, v.X)
 	}
 
 	return 0.0
 }
 
-func (v *Vector) Clamp(max float32) {
+func (v *Vector) Clamp(max float64) {
 	if v.Length() > max {
 		v.Normalize()
 		v.X *= max
@@ -104,11 +104,11 @@ func (v *Vector) Normalize() *Vector {
 	return v
 }
 
-func (v *Vector) Rotate(a float32) *Vector {
+func (v *Vector) Rotate(a float64) *Vector {
 	var vec Vector
 
-	vec.X = v.X*float32(math.Cos(float64(a))) - v.Y*float32(math.Sin(float64(a)))
-	vec.Y = v.X*float32(math.Sin(float64(a))) + v.Y*float32(math.Cos(float64(a)))
+	vec.X = v.X*math.Cos(a) - v.Y*math.Sin(a)
+	vec.Y = v.X*math.Sin(a) + v.Y*math.Cos(a)
 
 	v.X = vec.X
 	v.Y = vec.Y
@@ -116,10 +116,10 @@ func (v *Vector) Rotate(a float32) *Vector {
 	return v
 }
 
-func VectorAngle(v Vector, u Vector) float32 {
+func VectorAngle(v Vector, u Vector) float64 {
 	return v.Angle(u)
 }
 
-func VectorDot(v Vector, u Vector) float32 {
+func VectorDot(v Vector, u Vector) float64 {
 	return v.Dot(u)
 }
