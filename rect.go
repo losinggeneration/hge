@@ -37,6 +37,14 @@ func (rect *Rect) IsClean() bool {
 	return rect.clean
 }
 
+func (rect *Rect) SetRect(r Rect) {
+	rect.X1 = r.X1
+	rect.X2 = r.X2
+	rect.Y1 = r.Y1
+	rect.Y2 = r.Y2
+	rect.clean = false
+}
+
 func (rect *Rect) Set(x1, y1, x2, y2 float32) {
 	rect.X1 = x1
 	rect.X2 = x2
