@@ -205,22 +205,17 @@ func (ps *ParticleSystem) MoveTo(x, y float64, a ...interface{}) {
 		ps.prev_location.Y = ps.prev_location.Y + dy
 	} else {
 		if ps.age == -2.0 {
-			ps.prev_location.X = x
-			ps.prev_location.Y = y
+			ps.prev_location.X, ps.prev_location.Y = x, y
 		} else {
-			ps.prev_location.X = ps.location.X
-			ps.prev_location.Y = ps.location.Y
+			ps.prev_location.X, ps.prev_location.Y = ps.location.X, ps.location.Y
 		}
 	}
 
-	ps.location.X = x
-	ps.location.Y = y
-
+	ps.location.X, ps.location.Y = x, y
 }
 
 func (ps *ParticleSystem) Transpose(x, y float64) {
-	ps.tx = x
-	ps.ty = y
+	ps.tx, ps.ty = x, y
 }
 
 func (ps *ParticleSystem) TrackBoundingBox(track bool) {
@@ -378,8 +373,7 @@ func NewParticleManager(a ...interface{}) ParticleManager {
 
 	pm.ps = 0
 	pm.fps = fps
-	pm.x = 0.0
-	pm.y = 0.0
+	pm.x, pm.y = 0.0, 0.0
 
 	return pm
 }
@@ -430,8 +424,8 @@ func (pm *ParticleManager) Transpose(x, y float64) {
 	for i := 0; i < pm.ps; i++ {
 		pm.list[i].Transpose(x, y)
 	}
-	pm.x = x
-	pm.y = y
+
+	pm.x, pm.y = x, y
 }
 
 func (pm ParticleManager) GetTransposition() (dx, dy float64) {

@@ -12,8 +12,9 @@ type Vector struct {
 
 func NewVector(x, y float64) Vector {
 	var v Vector
-	v.X = x
-	v.Y = y
+
+	v.X, v.Y = x, y
+
 	return v
 }
 
@@ -74,8 +75,7 @@ func (v Vector) Length() float64 {
 func (v Vector) Angle(arg ...interface{}) float64 {
 	if len(arg) == 1 {
 		if vec, ok := arg[0].(Vector); ok {
-			s := vec
-			t := vec
+			s, t := vec, vec
 
 			s.Normalize()
 			t.Normalize()
@@ -110,8 +110,7 @@ func (v *Vector) Rotate(a float64) *Vector {
 	vec.X = v.X*math.Cos(a) - v.Y*math.Sin(a)
 	vec.Y = v.X*math.Sin(a) + v.Y*math.Cos(a)
 
-	v.X = vec.X
-	v.Y = vec.Y
+	v.X, v.Y = vec.X, vec.Y
 
 	return v
 }

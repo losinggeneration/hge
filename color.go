@@ -26,10 +26,7 @@ type Color interface {
 func NewColorRGB(r, g, b, a float64) ColorRGB {
 	var c ColorRGB
 
-	c.R = r
-	c.G = g
-	c.B = b
-	c.A = a
+	c.R, c.G, c.B, c.A = r, g, b, a
 
 	return c
 }
@@ -122,10 +119,7 @@ type ColorHSV struct {
 func NewColorHSV(h, s, v, a float64) ColorHSV {
 	var c ColorHSV
 
-	c.H = h
-	c.S = s
-	c.V = v
-	c.A = a
+	c.H, c.S, c.V, c.A = h, s, v, a
 
 	return c
 }
@@ -213,8 +207,7 @@ func (c *ColorHSV) SetHWColor(col Dword) {
 	c.V = maxv
 
 	if delta == 0 {
-		c.H = 0
-		c.S = 0
+		c.H, c.S = 0, 0
 	} else {
 		c.S = delta / maxv
 		del_R := (((maxv - r) / 6) + (delta / 2)) / delta

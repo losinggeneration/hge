@@ -446,9 +446,9 @@ func (h *HGE) Resource_AttachPack(filename string, oargs ...interface{}) bool {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
-	var password *C.char
-
 	if len(oargs) == 1 {
+		var password *C.char
+
 		switch oargs[0].(type) {
 		case string:
 			password = C.CString(oargs[0].(string))
@@ -517,54 +517,48 @@ func (h *HGE) Resource_EnumFolders(arg ...interface{}) string {
 }
 
 func (h *HGE) Ini_SetInt(section, name string, value int) {
-	s := C.CString(section)
+	s, n := C.CString(section), C.CString(name)
 	defer C.free(unsafe.Pointer(s))
-	n := C.CString(name)
 	defer C.free(unsafe.Pointer(n))
 
 	C.HGE_Ini_SetInt(h.hge, s, n, C.int(value))
 }
 
 func (h *HGE) Ini_GetInt(section, name string, def_val int) int {
-	s := C.CString(section)
+	s, n := C.CString(section), C.CString(name)
 	defer C.free(unsafe.Pointer(s))
-	n := C.CString(name)
 	defer C.free(unsafe.Pointer(n))
 
 	return int(C.HGE_Ini_GetInt(h.hge, s, n, C.int(def_val)))
 }
 
 func (h *HGE) Ini_SetFloat(section, name string, value float64) {
-	s := C.CString(section)
+	s, n := C.CString(section), C.CString(name)
 	defer C.free(unsafe.Pointer(s))
-	n := C.CString(name)
 	defer C.free(unsafe.Pointer(n))
 
 	C.HGE_Ini_SetFloat(h.hge, s, n, C.float(value))
 }
 
 func (h *HGE) Ini_GetFloat(section, name string, def_val float64) float64 {
-	s := C.CString(section)
+	s, n := C.CString(section), C.CString(name)
 	defer C.free(unsafe.Pointer(s))
-	n := C.CString(name)
 	defer C.free(unsafe.Pointer(n))
 
 	return float64(C.HGE_Ini_GetFloat(h.hge, s, n, C.float(def_val)))
 }
 
 func (h *HGE) Ini_SetString(section, name, value string) {
-	s := C.CString(section)
+	s, n := C.CString(section), C.CString(name)
 	defer C.free(unsafe.Pointer(s))
-	n := C.CString(name)
 	defer C.free(unsafe.Pointer(n))
 
 	C.HGE_Ini_SetString(h.hge, s, n, C.CString(value))
 }
 
 func (h *HGE) Ini_GetString(section, name, def_val string) string {
-	s := C.CString(section)
+	s, n := C.CString(section), C.CString(name)
 	defer C.free(unsafe.Pointer(s))
-	n := C.CString(name)
 	defer C.free(unsafe.Pointer(n))
 
 	return C.GoString(C.HGE_Ini_GetString(h.hge, s, n, C.CString(def_val)))
@@ -622,8 +616,7 @@ func (h *HGE) Effect_Play(eff Effect) Channel {
 }
 
 func (h *HGE) Effect_PlayEx(eff Effect, arg ...interface{}) Channel {
-	volume := 100
-	pan := 0
+	volume, pan := 100, 0
 	pitch := 1.0
 	loop := false
 
@@ -668,9 +661,7 @@ func (h *HGE) Music_Free(music Music) {
 }
 
 func (h *HGE) Music_Play(music Music, loop bool, arg ...interface{}) Channel {
-	volume := 100
-	order := -1
-	row := -1
+	volume, order, row := 100, -1, -1
 
 	for i := 0; i < len(arg); i++ {
 		if i == 0 {
@@ -711,11 +702,10 @@ func (h *HGE) Music_SetPos(music Music, order, row int) {
 
 func (h *HGE) Music_GetPos(music Music) (order, row int, ok bool) {
 	var o, r C.int
-	ok = C.HGE_Music_GetPos(h.hge, C.HMUSIC(music), &o, &r) == 1
-	order = int(o)
-	row = int(r)
 
-	return order, row, ok
+	ok = C.HGE_Music_GetPos(h.hge, C.HMUSIC(music), &o, &r) == 1
+
+	return int(o), int(r), ok
 }
 
 func (h *HGE) Music_SetInstrVolume(music Music, instr int, volume int) {
@@ -810,8 +800,7 @@ func (h *HGE) Channel_SetPos(chn Channel, fSeconds float64) {
 }
 
 func (h *HGE) Channel_SlideTo(channel Channel, time float64, arg ...interface{}) {
-	volume := 100
-	pan := 0
+	volume, pan := 100, 0
 	pitch := 1.0
 
 	for i := 0; i < len(arg); i++ {
@@ -843,9 +832,10 @@ func (h *HGE) Channel_IsSliding(channel Channel) bool {
 }
 
 func (h *HGE) Input_GetMousePos() (x, y float64) {
-	var nx C.float
-	var ny C.float
+	var nx, ny C.float
+
 	C.HGE_Input_GetMousePos(h.hge, &nx, &ny)
+
 	return float64(nx), float64(ny)
 }
 
@@ -939,7 +929,8 @@ func (h *HGE) Gfx_RenderQuad(quad *Quad) {
 
 func (h *HGE) Gfx_StartBatch(prim_type int, tex Texture, blend int) (ver *Vertex, max_prim int, ok bool) {
 	mp := C.int(0)
-	var v = C.HGE_Gfx_StartBatch(h.hge, C.int(prim_type), C.HTEXTURE(tex), C.int(blend), &mp)
+
+	v := C.HGE_Gfx_StartBatch(h.hge, C.int(prim_type), C.HTEXTURE(tex), C.int(blend), &mp)
 
 	if v == nil {
 		return nil, 0, false
@@ -953,10 +944,7 @@ func (h *HGE) Gfx_FinishBatch(nprim int) {
 }
 
 func (hge *HGE) Gfx_SetClipping(arg ...interface{}) {
-	x := 0
-	y := 0
-	w := 0
-	h := 0
+	x, y, w, h := 0, 0, 0, 0
 
 	for i := 0; i < len(arg); i++ {
 		if i == 0 {
@@ -985,13 +973,8 @@ func (hge *HGE) Gfx_SetClipping(arg ...interface{}) {
 }
 
 func (h *HGE) Gfx_SetTransform(arg ...interface{}) {
-	x := 0.0
-	y := 0.0
-	dx := 0.0
-	dy := 0.0
-	rot := 0.0
-	hscale := 0.0
-	vscale := 0.0
+	x, y, dx, dy := 0.0, 0.0, 0.0, 0.0
+	rot, hscale, vscale := 0.0, 0.0, 0.0
 
 	for i := 0; i < len(arg); i++ {
 		if i == 0 {
@@ -1120,10 +1103,7 @@ func (h *HGE) Texture_GetHeight(tex Texture, arg ...interface{}) int {
 
 func (h *HGE) Texture_Lock(tex Texture, arg ...interface{}) *Dword {
 	readonly := true
-	left := 0
-	top := 0
-	width := 0
-	height := 0
+	left, top, width, height := 0, 0, 0, 0
 
 	for i := 0; i < len(arg); i++ {
 		if i == 0 {

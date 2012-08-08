@@ -108,12 +108,8 @@ func NewFont(filename string, arg ...interface{}) *Font {
 
 	f.hge = Create(VERSION)
 
-	f.height = 0.0
-	f.scale = 1.0
-	f.proportion = 1.0
-	f.rot = 0.0
-	f.tracking = 0.0
-	f.spacing = 1.0
+	f.height, f.scale, f.proportion, f.rot = 0.0, 1.0, 1.0, 0.0
+	f.tracking, f.spacing = 0.0, 1.0
 	f.texture = 0
 
 	f.z = 0.5

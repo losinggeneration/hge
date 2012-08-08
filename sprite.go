@@ -19,10 +19,8 @@ func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
 
 	sprite.Hge = Create(VERSION)
 
-	sprite.TX = texx
-	sprite.TY = texy
-	sprite.Width = w
-	sprite.Height = h
+	sprite.TX, sprite.TY = texx, texy
+	sprite.Width, sprite.Height = w, h
 
 	if texture != 0 {
 		sprite.TexWidth = float64(sprite.Hge.Texture_GetWidth(texture))
@@ -32,11 +30,8 @@ func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
 		sprite.TexHeight = 1.0
 	}
 
-	sprite.HotX = 0
-	sprite.HotY = 0
-	sprite.XFlip = false
-	sprite.YFlip = false
-	sprite.HSFlip = false
+	sprite.HotX, sprite.HotY = 0, 0
+	sprite.XFlip, sprite.YFlip, sprite.HSFlip = false, false, false
 	sprite.Quad.Tex = texture
 
 	texx1 := texx / sprite.TexWidth
@@ -44,14 +39,10 @@ func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
 	texx2 := (texx + w) / sprite.TexWidth
 	texy2 := (texy + h) / sprite.TexHeight
 
-	sprite.Quad.V[0].TX = float32(texx1)
-	sprite.Quad.V[0].TY = float32(texy1)
-	sprite.Quad.V[1].TX = float32(texx2)
-	sprite.Quad.V[1].TY = float32(texy1)
-	sprite.Quad.V[2].TX = float32(texx2)
-	sprite.Quad.V[2].TY = float32(texy2)
-	sprite.Quad.V[3].TX = float32(texx1)
-	sprite.Quad.V[3].TY = float32(texy2)
+	sprite.Quad.V[0].TX, sprite.Quad.V[0].TY = float32(texx1), float32(texy1)
+	sprite.Quad.V[1].TX, sprite.Quad.V[1].TY = float32(texx2), float32(texy1)
+	sprite.Quad.V[2].TX, sprite.Quad.V[2].TY = float32(texx2), float32(texy2)
+	sprite.Quad.V[3].TX, sprite.Quad.V[3].TY = float32(texx1), float32(texy2)
 
 	sprite.Quad.V[0].Z = 0.5
 	sprite.Quad.V[1].Z = 0.5
@@ -74,14 +65,10 @@ func (sprite *Sprite) Render(x, y float64) {
 	tempx2 := x + sprite.Width - sprite.HotX
 	tempy2 := y + sprite.Height - sprite.HotY
 
-	sprite.Quad.V[0].X = float32(tempx1)
-	sprite.Quad.V[0].Y = float32(tempy1)
-	sprite.Quad.V[1].X = float32(tempx2)
-	sprite.Quad.V[1].Y = float32(tempy1)
-	sprite.Quad.V[2].X = float32(tempx2)
-	sprite.Quad.V[2].Y = float32(tempy2)
-	sprite.Quad.V[3].X = float32(tempx1)
-	sprite.Quad.V[3].Y = float32(tempy2)
+	sprite.Quad.V[0].X, sprite.Quad.V[0].Y = float32(tempx1), float32(tempy1)
+	sprite.Quad.V[1].X, sprite.Quad.V[1].Y = float32(tempx2), float32(tempy1)
+	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(tempx2), float32(tempy2)
+	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(tempx1), float32(tempy2)
 
 	sprite.Hge.Gfx_RenderQuad(&sprite.Quad)
 }
@@ -90,8 +77,7 @@ func (sprite *Sprite) RenderEx(x, y float64, rot float64, arg ...interface{}) {
 	var tx1, ty1, tx2, ty2 float64
 	var sint, cost float64
 
-	hscale := 1.0
-	vscale := 0.0
+	hscale, vscale := 1.0, 0.0
 
 	for i := 0; i < len(arg); i++ {
 		if i == 0 {
@@ -145,27 +131,19 @@ func (sprite *Sprite) RenderEx(x, y float64, rot float64, arg ...interface{}) {
 }
 
 func (sprite *Sprite) RenderStretch(x1, y1, x2, y2 float64) {
-	sprite.Quad.V[0].X = float32(x1)
-	sprite.Quad.V[0].Y = float32(y1)
-	sprite.Quad.V[1].X = float32(x2)
-	sprite.Quad.V[1].Y = float32(y1)
-	sprite.Quad.V[2].X = float32(x2)
-	sprite.Quad.V[2].Y = float32(y2)
-	sprite.Quad.V[3].X = float32(x1)
-	sprite.Quad.V[3].Y = float32(y2)
+	sprite.Quad.V[0].X, sprite.Quad.V[0].Y = float32(x1), float32(y1)
+	sprite.Quad.V[1].X, sprite.Quad.V[1].Y = float32(x2), float32(y1)
+	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(x2), float32(y2)
+	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(x1), float32(y2)
 
 	sprite.Hge.Gfx_RenderQuad(&sprite.Quad)
 }
 
 func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64) {
-	sprite.Quad.V[0].X = float32(x0)
-	sprite.Quad.V[0].Y = float32(y0)
-	sprite.Quad.V[1].X = float32(x1)
-	sprite.Quad.V[1].Y = float32(y1)
-	sprite.Quad.V[2].X = float32(x2)
-	sprite.Quad.V[2].Y = float32(y2)
-	sprite.Quad.V[3].X = float32(x3)
-	sprite.Quad.V[3].Y = float32(y3)
+	sprite.Quad.V[0].X, sprite.Quad.V[0].Y = float32(x0), float32(y0)
+	sprite.Quad.V[1].X, sprite.Quad.V[1].Y = float32(x1), float32(y1)
+	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(x2), float32(y2)
+	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(x3), float32(y3)
 
 	sprite.Hge.Gfx_RenderQuad(&sprite.Quad)
 }
@@ -180,8 +158,7 @@ func (sprite *Sprite) SetTexture(tex Texture) {
 		tw = float64(sprite.Hge.Texture_GetWidth(tex))
 		th = float64(sprite.Hge.Texture_GetHeight(tex))
 	} else {
-		tw = 1.0
-		th = 1.0
+		tw, th = 1.0, 1.0
 	}
 
 	if tw != sprite.TexWidth || th != sprite.TexHeight {
@@ -190,32 +167,25 @@ func (sprite *Sprite) SetTexture(tex Texture) {
 		tx2 = float64(sprite.Quad.V[2].TX) * sprite.TexWidth
 		ty2 = float64(sprite.Quad.V[2].TY) * sprite.TexHeight
 
-		sprite.TexWidth = tw
-		sprite.TexHeight = th
+		sprite.TexWidth, sprite.TexHeight = tw, th
 
 		tx1 /= tw
 		ty1 /= th
 		tx2 /= tw
 		ty2 /= th
 
-		sprite.Quad.V[0].TX = float32(tx1)
-		sprite.Quad.V[0].TY = float32(ty1)
-		sprite.Quad.V[1].TX = float32(tx2)
-		sprite.Quad.V[1].TY = float32(ty1)
-		sprite.Quad.V[2].TX = float32(tx2)
-		sprite.Quad.V[2].TY = float32(ty2)
-		sprite.Quad.V[3].TX = float32(tx1)
-		sprite.Quad.V[3].TY = float32(ty2)
+		sprite.Quad.V[0].TX, sprite.Quad.V[0].TY = float32(tx1), float32(ty1)
+		sprite.Quad.V[1].TX, sprite.Quad.V[1].TY = float32(tx2), float32(ty1)
+		sprite.Quad.V[2].TX, sprite.Quad.V[2].TY = float32(tx2), float32(ty2)
+		sprite.Quad.V[3].TX, sprite.Quad.V[3].TY = float32(tx1), float32(ty2)
 	}
 }
 
 func (sprite *Sprite) SetTextureRect(x, y, w, h float64, adjSize bool) {
-	sprite.TX = x
-	sprite.TY = y
+	sprite.TX, sprite.TY = x, y
 
 	if adjSize {
-		sprite.Width = w
-		sprite.Height = h
+		sprite.Width, sprite.Height = w, h
 	}
 
 	tx1 := sprite.TX / sprite.TexWidth
@@ -223,20 +193,14 @@ func (sprite *Sprite) SetTextureRect(x, y, w, h float64, adjSize bool) {
 	tx2 := (sprite.TX + w) / sprite.TexWidth
 	ty2 := (sprite.TY + h) / sprite.TexHeight
 
-	sprite.Quad.V[0].TX = float32(tx1)
-	sprite.Quad.V[0].TY = float32(ty1)
-	sprite.Quad.V[1].TX = float32(tx2)
-	sprite.Quad.V[1].TY = float32(ty1)
-	sprite.Quad.V[2].TX = float32(tx2)
-	sprite.Quad.V[2].TY = float32(ty2)
-	sprite.Quad.V[3].TX = float32(tx1)
-	sprite.Quad.V[3].TY = float32(ty2)
+	sprite.Quad.V[0].TX, sprite.Quad.V[0].TY = float32(tx1), float32(ty1)
+	sprite.Quad.V[1].TX, sprite.Quad.V[1].TY = float32(tx2), float32(ty1)
+	sprite.Quad.V[2].TX, sprite.Quad.V[2].TY = float32(tx2), float32(ty2)
+	sprite.Quad.V[3].TX, sprite.Quad.V[3].TY = float32(tx1), float32(ty2)
 
-	bX := sprite.XFlip
-	bY := sprite.YFlip
-	bHS := sprite.HSFlip
-	sprite.XFlip = false
-	sprite.YFlip = false
+	bX, bY, bHS := sprite.XFlip, sprite.YFlip, sprite.HSFlip
+	sprite.XFlip, sprite.YFlip = false, false
+
 	sprite.SetFlip(bX, bY, bHS)
 }
 
@@ -283,8 +247,7 @@ func (sprite *Sprite) SetBlendMode(blend int) {
 }
 
 func (sprite *Sprite) SetHotSpot(x, y float64) {
-	sprite.HotX = x
-	sprite.HotY = y
+	sprite.HotX, sprite.HotY = x, y
 }
 
 func (sprite *Sprite) SetFlip(x, y, hotSpot bool) {
@@ -376,14 +339,12 @@ func (sprite *Sprite) GetBlendMode() int {
 }
 
 func (sprite *Sprite) GetHotSpot() (x, y float64) {
-	x = sprite.HotX
-	y = sprite.HotY
+	x, y = sprite.HotX, sprite.HotY
 	return
 }
 
 func (sprite *Sprite) GetFlip() (x, y bool) {
-	x = sprite.XFlip
-	y = sprite.YFlip
+	x, y = sprite.XFlip, sprite.YFlip
 	return
 }
 
