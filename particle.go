@@ -58,7 +58,7 @@ type ParticleSystem struct {
 }
 
 func NewParticleSystem(filename string, sprite *Sprite, a ...interface{}) *ParticleSystem {
-	fps := float64(0.0)
+	fps := 0.0
 
 	if len(a) == 1 {
 		if f, ok := a[0].(float64); ok {
@@ -76,12 +76,9 @@ func NewParticleSystem(filename string, sprite *Sprite, a ...interface{}) *Parti
 		return nil
 	}
 
-	ps.location.X = 0.0
-	ps.prev_location.X = 0.0
-	ps.location.Y = 0.0
-	ps.prev_location.Y = 0.0
-	ps.tx = 0
-	ps.ty = 0
+	ps.location.X, ps.prev_location.X = 0.0, 0.0
+	ps.location.Y, ps.prev_location.Y = 0.0, 0.0
+	ps.tx, ps.ty = 0, 0
 
 	ps.emission_residue = 0.0
 	ps.particles_alive = 0
@@ -100,7 +97,7 @@ func NewParticleSystem(filename string, sprite *Sprite, a ...interface{}) *Parti
 }
 
 func NewParticleSystemWithInfo(psi *ParticleSystemInfo, a ...interface{}) *ParticleSystem {
-	fps := float64(0.0)
+	fps := 0.0
 
 	if len(a) == 1 {
 		if f, ok := a[0].(float64); ok {
@@ -112,12 +109,9 @@ func NewParticleSystemWithInfo(psi *ParticleSystemInfo, a ...interface{}) *Parti
 
 	ps.hge = Create(VERSION)
 
-	ps.location.X = 0.0
-	ps.prev_location.X = 0.0
-	ps.location.Y = 0.0
-	ps.prev_location.Y = 0.0
-	ps.tx = 0
-	ps.ty = 0
+	ps.location.X, ps.prev_location.X = 0.0, 0.0
+	ps.location.Y, ps.prev_location.Y = 0.0, 0.0
+	ps.tx, ps.ty = 0, 0
 
 	ps.emission_residue = 0.0
 	ps.particles_alive = 0
@@ -372,7 +366,7 @@ type ParticleManager struct {
 }
 
 func NewParticleManager(a ...interface{}) ParticleManager {
-	fps := float64(0.0)
+	fps := 0.0
 
 	if len(a) == 1 {
 		if f, ok := a[0].(float64); ok {
