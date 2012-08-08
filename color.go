@@ -17,7 +17,11 @@ type ColorRGB struct {
 	R, G, B, A float32
 }
 
-type Color ColorRGB
+type Color interface {
+	Clamp()
+	SetHWColor(col Dword)
+	GetHWColor() Dword
+}
 
 func NewColorRGB(r, g, b, a float32) ColorRGB {
 	var c ColorRGB
