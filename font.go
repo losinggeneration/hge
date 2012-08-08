@@ -44,7 +44,7 @@ type Font struct {
 	tracking   float64
 	spacing    float64
 
-	col   Dword
+	color Dword
 	z     float64
 	blend int
 }
@@ -78,7 +78,12 @@ func tokenizeLine(line string) (string, string, error) {
 
 func tokenizeChar(value string) (chr byte, x, y, w, h, a, c float64) {
 	z := strings.Split(value, ",")
-	chr = z[0][0]
+	if len(z[0]) == 3 {
+		chr = z[0][1]
+	} else if len(z[0]) == 1 {
+		chr = ','
+	}
+
 	x1, _ := strconv.ParseFloat(z[1], 32)
 	x = x1
 	y1, _ := strconv.ParseFloat(z[2], 32)
@@ -114,7 +119,7 @@ func NewFont(filename string, arg ...interface{}) *Font {
 
 	f.z = 0.5
 	f.blend = BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE
-	f.col = 0xFFFFFFFF
+	f.color = 0xFFFFFFFF
 
 	data, size := f.hge.Resource_Load(filename)
 	if data == nil || size == 0 {
@@ -135,7 +140,8 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	for i := 1; i < len(lines); i++ {
 		option, value, err := tokenizeLine(lines[i])
 
-		if err == nil || len(lines[i]) == 0 || len(option) == 0 || len(value) == 0 {
+		if err != nil || len(lines[i]) == 0 || len(option) == 0 || len(value) == 0 {
+			f.hge.System_Log("Unreadable line in font file:", filename)
 			continue
 		}
 
@@ -149,6 +155,7 @@ func NewFont(filename string, arg ...interface{}) *Font {
 			f.letters[chr] = &sprt
 			f.pre[chr] = a
 			f.post[chr] = c
+			f.height = h
 		}
 	}
 
@@ -170,6 +177,7 @@ func (f *Font) Render(x, y float64, align int, str string) {
 		if str[j] == '\n' {
 			y += f.height * f.scale * f.spacing
 			fx = x
+
 			if align == TEXT_RIGHT {
 				fx -= f.GetStringWidth(string(str[j+1]), false)
 			}
@@ -197,12 +205,12 @@ func (f *Font) Printf(x, y float64, align int, format string, arg ...interface{}
 func (f *Font) Printfb(x, y, w, h float64, align int, format string, arg ...interface{}) {
 }
 
-func (f *Font) SetColor(col Dword) {
-	f.col = col
+func (f *Font) SetColor(color Dword) {
+	f.color = color
 
 	for i := 0; i < 256; i++ {
 		if f.letters[i] != nil {
-			f.letters[i].SetColor(col)
+			f.letters[i].SetColor(color)
 		}
 	}
 }
@@ -248,7 +256,7 @@ func (f *Font) SetSpacing(spacing float64) {
 }
 
 func (f Font) GetColor() Dword {
-	return f.col
+	return f.color
 }
 
 func (f Font) GetZ() float64 {
