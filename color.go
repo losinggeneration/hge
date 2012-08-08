@@ -17,6 +17,8 @@ type ColorRGB struct {
 	R, G, B, A float32
 }
 
+type Color ColorRGB
+
 func NewColorRGB(r, g, b, a float32) ColorRGB {
 	var c ColorRGB
 
