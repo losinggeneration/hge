@@ -10,7 +10,7 @@ var (
 
 	spr, spt hge.Sprite
 	fnt      *hge.Font
-	// par *ParticleSystem
+	par hge.ParticleSystem
 
 	tex hge.Texture
 	snd hge.Effect
@@ -79,9 +79,9 @@ func FrameFunc() int {
 	}
 
 	// Update particle system
-	// par->info.nEmission=(int)(dx*dx+dy*dy)*2;
-	// par->MoveTo(x,y);
-	// par->Update(dt);
+	par.Info.Emission=(int)(dx*dx+dy*dy)*2
+	par.MoveTo(x,y)
+	par.Update(dt)
 
 	return 0
 }
@@ -89,7 +89,7 @@ func FrameFunc() int {
 func RenderFunc() int {
 	h.Gfx_BeginScene()
 	h.Gfx_Clear(0)
-	// par->Render();
+	par.Render();
 	spr.Render(x, y)
 	fnt.Printf(5, 5, hge.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", h.Timer_GetDelta(), h.Timer_GetFPS())
 	h.Gfx_EndScene()
@@ -132,8 +132,8 @@ func main() {
 		spt = hge.NewSprite(tex, 32, 32, 32, 32)
 		spt.SetBlendMode(hge.BLEND_COLORMUL | hge.BLEND_ALPHAADD | hge.BLEND_NOZWRITE)
 		spt.SetHotSpot(16, 16)
-		// par=new hgeParticleSystem("trail.psi",spt);
-		// par->Fire();
+		par = hge.NewParticleSystem("trail.psi", &spt)
+		par.Fire()
 
 		h.System_Start()
 
