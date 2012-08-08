@@ -19,6 +19,7 @@ func main() {
 	h = hge.Create(hge.VERSION)
 	defer h.Release()
 
+	h.System_SetState(hge.LOGFILE, "tutorial01.log")
 	h.System_SetState(hge.FRAMEFUNC, FrameFunc)
 	h.System_SetState(hge.TITLE, "HGE Tutorial 01 - Minimal HGE application")
 	h.System_SetState(hge.WINDOWED, true)
