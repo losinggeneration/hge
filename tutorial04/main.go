@@ -124,6 +124,7 @@ func RenderFunc() int {
 
 func main() {
 	hge = Create(VERSION)
+	defer hge.Release()
 
 	hge.System_SetState(LOGFILE, "hge_tut04.log")
 	hge.System_SetState(FRAMEFUNC, FrameFunc)
@@ -139,16 +140,19 @@ func main() {
 	target = 0
 
 	if hge.System_Initiate() {
+		defer hge.System_Shutdown()
 		snd = hge.Effect_Load("menu.ogg")
 		tex = hge.Texture_Load("particles.png")
 		if snd == 0 || tex == 0 {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
-			fmt.Printf("Error: Can't load one of the following files:\nmenu.wav, particles.png, font1.fnt, font1.png, trail.psi\n")
-			hge.System_Shutdown()
-			hge.Release()
+			fmt.Printf("Error: Can't load one of the following files:\nmenu.ogg, particles.png, font1.fnt, font1.png, trail.psi\n")
 			return
 		}
+
+		// Delete created objects and free loaded resources
+		defer hge.Effect_Free(snd)
+		defer hge.Texture_Free(tex)
 
 		spr = NewSprite(tex, 96, 64, 32, 32)
 		spr.SetColor(0xFFFFA000)
@@ -156,28 +160,29 @@ func main() {
 
 		fnt = NewFont("font1.fnt")
 
+		if fnt == nil {
+			fmt.Println("Error: Can't load font1.fnt or font1.png")
+			return
+		}
+
 		spt = NewSprite(tex, 32, 32, 32, 32)
 		spt.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
 		spt.SetHotSpot(16, 16)
 		par = NewParticleSystem("trail.psi", spt)
+
+		if par == nil {
+			fmt.Println("Error: Cannot load trail.psi")
+			return
+		}
 		par.Fire()
 
 		// Create a render target and a sprite for it
 		target = hge.Target_Create(512, 512, false)
+		defer hge.Target_Free(target)
 		tar = NewSprite(hge.Target_GetTexture(target), 0, 0, 512, 512)
 		tar.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
 
 		// Let's rock now!
 		hge.System_Start()
-
-		// Delete created objects and free loaded resources
-		hge.Target_Free(target)
-		hge.Texture_Free(tex)
-		hge.Effect_Free(snd)
 	}
-
-	// Clean up and shutdown
-	hge.System_Shutdown()
-	hge.Release()
-	return
 }
