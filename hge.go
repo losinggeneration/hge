@@ -441,6 +441,34 @@ func (h *HGE) Resource_Free(res Resource) {
 	C.HGE_Resource_Free(h.hge, unsafe.Pointer(res))
 }
 
+// Loads a resource, puts the loaded data into a byte array, and frees the data.
+func (h *HGE) ResourceLoadBytes(filename string) []byte {
+	data, size := h.Resource_Load(filename)
+
+	if data == nil {
+		return nil
+	}
+
+	b := C.GoBytes(unsafe.Pointer(data), C.int(size))
+	h.Resource_Free(data)
+
+	return b
+}
+
+// Loads a resource, puts the data into a string, and frees the data.
+func (h *HGE) ResourceLoadString(filename string) *string {
+	data, size := h.Resource_Load(filename)
+
+	if data == nil {
+		return nil
+	}
+
+	s := C.GoStringN((*C.char)(data), C.int(size))
+	h.Resource_Free(data)
+
+	return &s
+}
+
 // Attaches a resource pack.
 func (h *HGE) Resource_AttachPack(filename string, oargs ...interface{}) bool {
 	fname := C.CString(filename)

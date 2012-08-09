@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"unsafe"
 )
 
 const (
@@ -121,15 +120,13 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	f.blend = BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE
 	f.color = 0xFFFFFFFF
 
-	data, size := f.hge.Resource_Load(filename)
-	if data == nil || size == 0 {
+	desc := f.hge.ResourceLoadString(filename)
+
+	if desc == nil {
 		return nil
 	}
 
-	desc := C.GoBytes(unsafe.Pointer(data), C.int(size))
-	f.hge.Resource_Free(data)
-
-	lines := getLines(string(desc))
+	lines := getLines(string(*desc))
 
 	if len(lines) == 0 || lines[0] != fntHEADERTAG {
 		f.hge.System_Log("Font %s has incorrect format.", filename)

@@ -81,8 +81,11 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 		return nil
 	}
 
-	ptr := C.GoBytes(unsafe.Pointer(psi), C.int(size))
-	ps.hge.Resource_Free(psi)
+	ptr := ps.hge.ResourceLoadBytes(filename)
+
+	if ptr == nil {
+		return nil
+	}
 
 	ps.Info.Sprite = sprite
 
