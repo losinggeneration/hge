@@ -90,7 +90,7 @@ func RenderFunc() int {
 	h.Gfx_BeginScene()
 	h.Gfx_Clear(0)
 	// currently broken
-	// par.Render();
+	par.Render()
 	spr.Render(x, y)
 	fnt.Printf(5, 5, hge.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", h.Timer_GetDelta(), h.Timer_GetFPS())
 	h.Gfx_EndScene()
@@ -138,7 +138,7 @@ func main() {
 		spt.SetBlendMode(hge.BLEND_COLORMUL | hge.BLEND_ALPHAADD | hge.BLEND_NOZWRITE)
 		spt.SetHotSpot(16, 16)
 
-		par = hge.NewParticleSystem("trail.psi", &spt)
+		par = hge.NewParticleSystem("trail.psi", spt)
 		if par == nil {
 			fmt.Println("Error loading trail.psi")
 			return

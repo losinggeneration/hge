@@ -1,29 +1,34 @@
 package hge
 
 import (
+	"C"
 	"math"
+	"reflect"
+	"unsafe"
 )
 
 const (
-	hge_MAX_PARTICLES = 500
-	hge_MAX_PSYSTEMS  = 100
+	hgeMAX_PARTICLES = 500
+	hgeMAX_PSYSTEMS  = 100
 )
+
+type cast unsafe.Pointer
 
 type particle struct {
 	location Vector
 	velocity Vector
 
-	gravity, radial_accel, tangential_accel float64
-	spin, spin_delta                        float64
-	size, size_delta                        float64
-	color, color_delta                      ColorRGB
+	gravity, radialAccel, tangentialAccel float64
+	spin, spinDelta                       float64
+	size, sizeDelta                       float64
+	color, colorDelta                     ColorRGB
 
-	age, terminal_age float64
+	age, terminalAge float64
 }
 
 type ParticleSystemInfo struct {
-	Sprite                     *Sprite // texture + blend mode
-	Emission                   int     // particles per sec
+	Sprite                     Sprite // texture + blend mode
+	Emission                   int    // particles per sec
 	Lifetime, LifeMin, LifeMax float64
 	Direction, Spread          float64
 
@@ -46,18 +51,18 @@ type ParticleSystem struct {
 
 	hge *HGE
 
-	update_speed, residue, age, emission_residue float64
-	prev_location, location                      Vector
+	updateSpeed, residue, age, emissionResidue float64
+	prevLocation, location                     Vector
 
 	tx, ty float64
 
-	particles_alive     int
-	bounding_box        Rect
-	update_bounding_box bool
-	particles           []particle
+	particlesAlive    int
+	boundingBox       Rect
+	updateBoundingBox bool
+	particles         []particle
 }
 
-func NewParticleSystem(filename string, sprite *Sprite, a ...interface{}) *ParticleSystem {
+func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *ParticleSystem {
 	fps := 0.0
 
 	if len(a) == 1 {
@@ -76,27 +81,72 @@ func NewParticleSystem(filename string, sprite *Sprite, a ...interface{}) *Parti
 		return nil
 	}
 
-	ps.location.X, ps.prev_location.X = 0.0, 0.0
-	ps.location.Y, ps.prev_location.Y = 0.0, 0.0
+	ptr := C.GoBytes(unsafe.Pointer(psi), C.int(size))
+	ps.hge.Resource_Free(psi)
+
+	ps.Info.Sprite = sprite
+
+	// skip the first four bytes
+	i := uintptr(4)
+
+	// Ok, First we reflect the ParticleSystemInfo struct
+	s := reflect.ValueOf(&ps.Info).Elem()
+
+	// Then we loop through each element, skipping sprite for obvious reasons
+	for j := 1; j < s.NumField(); j++ {
+		// Then we get the field of the struct
+		f := s.Field(j)
+
+		// Here we examine the type
+		switch f.Type().String() {
+		case "float64":
+			// Then we set the structure's field to the value at the current
+			// byte(s)
+			// We cast the value pointed to by the ptr[i] with unsafe.Pointer
+			f.SetFloat(float64(*(*float32)(cast(&ptr[i]))))
+			// Next we skip ahead based on the size of the data read
+			i += unsafe.Sizeof(float32(0.0))
+
+		case "int":
+			f.SetInt(int64(*(*int32)(cast(&ptr[i]))))
+			i += unsafe.Sizeof(int32(0))
+
+		case "bool":
+			f.SetBool(*(*bool)(cast(&ptr[i])))
+			i += unsafe.Sizeof(bool(false))
+			i += 3 // padding
+
+		case "hge.ColorRGB":
+			for k := 0; k < 4; k++ {
+				f.Field(k).SetFloat(float64(*(*float32)(cast(&ptr[i]))))
+				i += unsafe.Sizeof(float32(0.0))
+			}
+		}
+	}
+
+	ps.location.X, ps.prevLocation.X = 0.0, 0.0
+	ps.location.Y, ps.prevLocation.Y = 0.0, 0.0
 	ps.tx, ps.ty = 0, 0
 
-	ps.emission_residue = 0.0
-	ps.particles_alive = 0
+	ps.emissionResidue = 0.0
+	ps.particlesAlive = 0
 	ps.age = -2.0
 	if fps != 0.0 {
-		ps.update_speed = 1.0 / fps
+		ps.updateSpeed = 1.0 / fps
 	} else {
-		ps.update_speed = 0.0
+		ps.updateSpeed = 0.0
 	}
 	ps.residue = 0.0
 
-	ps.bounding_box.Clear()
-	ps.update_bounding_box = false
+	ps.boundingBox.Clear()
+	ps.updateBoundingBox = false
+
+	ps.particles = make([]particle, hgeMAX_PARTICLES+1)
 
 	return ps
 }
 
-func NewParticleSystemWithInfo(psi *ParticleSystemInfo, a ...interface{}) *ParticleSystem {
+func NewParticleSystemWithInfo(psi ParticleSystemInfo, a ...interface{}) *ParticleSystem {
 	fps := 0.0
 
 	if len(a) == 1 {
@@ -109,19 +159,23 @@ func NewParticleSystemWithInfo(psi *ParticleSystemInfo, a ...interface{}) *Parti
 
 	ps.hge = Create(VERSION)
 
-	ps.location.X, ps.prev_location.X = 0.0, 0.0
-	ps.location.Y, ps.prev_location.Y = 0.0, 0.0
+	ps.Info = psi
+
+	ps.location.X, ps.prevLocation.X = 0.0, 0.0
+	ps.location.Y, ps.prevLocation.Y = 0.0, 0.0
 	ps.tx, ps.ty = 0, 0
 
-	ps.emission_residue = 0.0
-	ps.particles_alive = 0
+	ps.emissionResidue = 0.0
+	ps.particlesAlive = 0
 	ps.age = -2.0
 	if fps != 0.0 {
-		ps.update_speed = 1.0 / fps
+		ps.updateSpeed = 1.0 / fps
 	} else {
-		ps.update_speed = 0.0
+		ps.updateSpeed = 0.0
 	}
 	ps.residue = 0.0
+
+	ps.particles = make([]particle, hgeMAX_PARTICLES)
 
 	return ps
 }
@@ -129,7 +183,7 @@ func NewParticleSystemWithInfo(psi *ParticleSystemInfo, a ...interface{}) *Parti
 func (ps *ParticleSystem) Render() {
 	col := ps.Info.Sprite.GetColor()
 
-	for i := 0; i < ps.particles_alive; i++ {
+	for i := 0; i < ps.particlesAlive; i++ {
 		par := ps.particles[i]
 		ps.Info.Sprite.SetColor(par.color.GetHWColor())
 		ps.Info.Sprite.RenderEx(par.location.X+ps.tx, par.location.Y+ps.ty, par.spin*par.age, par.size)
@@ -164,20 +218,20 @@ func (ps *ParticleSystem) Stop(a ...interface{}) {
 
 	ps.age = -2.0
 	if kill_particles {
-		ps.particles_alive = 0
-		ps.bounding_box.Clear()
+		ps.particlesAlive = 0
+		ps.boundingBox.Clear()
 	}
 }
 
-func (ps *ParticleSystem) Update(delta_time float64) {
-	if ps.update_speed == 0.0 {
-		ps.update(delta_time)
+func (ps *ParticleSystem) Update(deltaTime float64) {
+	if ps.updateSpeed == 0.0 {
+		ps.update(deltaTime)
 	} else {
-		ps.residue += delta_time
-		if ps.residue >= ps.update_speed {
-			ps.update(ps.update_speed)
-			for ps.residue >= ps.update_speed {
-				ps.residue -= ps.update_speed
+		ps.residue += deltaTime
+		if ps.residue >= ps.updateSpeed {
+			ps.update(ps.updateSpeed)
+			for ps.residue >= ps.updateSpeed {
+				ps.residue -= ps.updateSpeed
 			}
 		}
 	}
@@ -196,18 +250,18 @@ func (ps *ParticleSystem) MoveTo(x, y float64, a ...interface{}) {
 		dx := x - ps.location.X
 		dy := y - ps.location.Y
 
-		for i := 0; i < ps.particles_alive; i++ {
+		for i := 0; i < ps.particlesAlive; i++ {
 			ps.particles[i].location.X += dx
 			ps.particles[i].location.Y += dy
 		}
 
-		ps.prev_location.X = ps.prev_location.X + dx
-		ps.prev_location.Y = ps.prev_location.Y + dy
+		ps.prevLocation.X = ps.prevLocation.X + dx
+		ps.prevLocation.Y = ps.prevLocation.Y + dy
 	} else {
 		if ps.age == -2.0 {
-			ps.prev_location.X, ps.prev_location.Y = x, y
+			ps.prevLocation.X, ps.prevLocation.Y = x, y
 		} else {
-			ps.prev_location.X, ps.prev_location.Y = ps.location.X, ps.location.Y
+			ps.prevLocation.X, ps.prevLocation.Y = ps.location.X, ps.location.Y
 		}
 	}
 
@@ -219,11 +273,11 @@ func (ps *ParticleSystem) Transpose(x, y float64) {
 }
 
 func (ps *ParticleSystem) TrackBoundingBox(track bool) {
-	ps.update_bounding_box = track
+	ps.updateBoundingBox = track
 }
 
 func (ps ParticleSystem) GetParticlesAlive() int {
-	return ps.particles_alive
+	return ps.particlesAlive
 }
 
 func (ps ParticleSystem) GetAge() float64 {
@@ -239,30 +293,30 @@ func (ps ParticleSystem) GetTransposition() (x, y float64) {
 }
 
 func (ps ParticleSystem) GetBoundingBox(rect *Rect) *Rect {
-	rect.SetRect(ps.bounding_box)
+	rect.SetRect(ps.boundingBox)
 	return rect
 }
 
-func (ps *ParticleSystem) update(delta_time float64) {
+func (ps *ParticleSystem) update(deltaTime float64) {
 	if ps.age >= 0 {
-		ps.age += delta_time
+		ps.age += deltaTime
 		if ps.age >= ps.Info.Lifetime {
 			ps.age = -2.0
 		}
 	}
 
 	// update all alive particles
-	if ps.update_bounding_box {
-		ps.bounding_box.Clear()
+	if ps.updateBoundingBox {
+		ps.boundingBox.Clear()
 	}
 
-	for i := 0; i < ps.particles_alive; i++ {
-		par := ps.particles[i]
-		par.age += delta_time
-		if par.age >= par.terminal_age {
-			ps.particles_alive--
+	for i := 0; i < ps.particlesAlive; i++ {
+		par := &ps.particles[i]
+		par.age += deltaTime
+		if par.age >= par.terminalAge {
+			ps.particlesAlive--
 
-			// memcpy(par, &particles[nParticlesAlive], sizeof(hgeParticle));
+			par = &ps.particles[ps.particlesAlive]
 			i--
 			continue
 		}
@@ -270,86 +324,87 @@ func (ps *ParticleSystem) update(delta_time float64) {
 		accel := par.location.Subtract(ps.location)
 		accel.Normalize()
 		accel2 := accel
-		accel.MultiplyEqual(par.radial_accel)
+		accel.MultiplyEqual(par.radialAccel)
 
-		// vecAccel2.Rotate(M_PI_2);
+		// accel2.Rotate(Pi_2);
 		// the following is faster
 		ang := accel2.X
 		accel2.X = -accel2.Y
 		accel2.Y = ang
 
-		accel2.MultiplyEqual(par.tangential_accel)
-		par.velocity.AddEqual((accel.Add(accel2)).Multiply(delta_time))
-		par.velocity.Y += par.gravity * delta_time
+		accel2.MultiplyEqual(par.tangentialAccel)
+		par.velocity.AddEqual((accel.Add(accel2)).Multiply(deltaTime))
+		par.velocity.Y += par.gravity * deltaTime
 
 		par.location.AddEqual(par.velocity)
 
-		par.spin += par.spin_delta * delta_time
-		par.size += par.size_delta * delta_time
-		// par.color += par.color_delta*delta_time
+		par.spin += par.spinDelta * deltaTime
+		par.size += par.sizeDelta * deltaTime
+		par.color.AddEqual(par.colorDelta.MulScalar(deltaTime))
 
-		if ps.update_bounding_box {
-			ps.bounding_box.Encapsulate(par.location.X, par.location.Y)
+		if ps.updateBoundingBox {
+			ps.boundingBox.Encapsulate(par.location.X, par.location.Y)
 		}
 	}
 
 	// generate new particles
 	if ps.age != -2.0 {
-		particles_needed := ps.Info.Emission*int(delta_time) + int(ps.emission_residue)
-		particles_created := particles_needed
-		ps.emission_residue = float64(particles_needed - particles_created)
+		particles_needed := float64(ps.Info.Emission)*deltaTime + ps.emissionResidue
+		particles_created := int(particles_needed)
+		ps.emissionResidue = particles_needed - float64(particles_created)
 
-		par := ps.particles[ps.particles_alive]
+		par := &ps.particles[ps.particlesAlive]
 
 		for i := 0; i < particles_created; i++ {
-			if ps.particles_alive >= hge_MAX_PARTICLES {
+			if ps.particlesAlive >= hgeMAX_PARTICLES {
 				break
 			}
 
 			par.age = 0.0
-			par.terminal_age = ps.hge.Random_Float(ps.Info.LifeMin, ps.Info.LifeMax)
+			par.terminalAge = ps.hge.Random_Float(ps.Info.LifeMin, ps.Info.LifeMax)
 
-			//par.location = ps.prev_location + (ps.location-ps.prev_location)*ps.hge.Random_Float(0.0, 1.0)
+			par.location = ps.prevLocation.Add(ps.location.Subtract(ps.prevLocation).Multiply(ps.hge.Random_Float(0.0, 1.0)))
 			par.location.X += ps.hge.Random_Float(-2.0, 2.0)
 			par.location.Y += ps.hge.Random_Float(-2.0, 2.0)
 
 			ang := ps.Info.Direction - Pi_2 + ps.hge.Random_Float(0, ps.Info.Spread) - ps.Info.Spread/2.0
-			//if ps.Info.Relative {
-			//	ang += (ps.prev_location - ps.location).Angle() + Pi_2
-			//}
+			if ps.Info.Relative {
+				ang += ps.prevLocation.Subtract(ps.location).Angle() + Pi_2
+			}
 			par.velocity.X = math.Cos(ang)
 			par.velocity.Y = math.Sin(ang)
-			//par.velocity *= ps.hge.Random_Float(ps.Info.SpeedMin, ps.Info.SpeedMax)
+			par.velocity.MultiplyEqual(ps.hge.Random_Float(ps.Info.SpeedMin, ps.Info.SpeedMax))
 
 			par.gravity = ps.hge.Random_Float(ps.Info.GravityMin, ps.Info.GravityMax)
-			par.radial_accel = ps.hge.Random_Float(ps.Info.RadialAccelMin, ps.Info.RadialAccelMax)
-			par.tangential_accel = ps.hge.Random_Float(ps.Info.TangentialAccelMin, ps.Info.TangentialAccelMax)
+			par.radialAccel = ps.hge.Random_Float(ps.Info.RadialAccelMin, ps.Info.RadialAccelMax)
+			par.tangentialAccel = ps.hge.Random_Float(ps.Info.TangentialAccelMin, ps.Info.TangentialAccelMax)
 
 			par.size = ps.hge.Random_Float(ps.Info.SizeStart, ps.Info.SizeStart+(ps.Info.SizeEnd-ps.Info.SizeStart)*ps.Info.SizeVar)
-			par.size_delta = (ps.Info.SizeEnd - par.size) / par.terminal_age
+			par.sizeDelta = (ps.Info.SizeEnd - par.size) / par.terminalAge
 
 			par.spin = ps.hge.Random_Float(ps.Info.SpinStart, ps.Info.SpinStart+(ps.Info.SpinEnd-ps.Info.SpinStart)*ps.Info.SpinVar)
-			par.spin_delta = (ps.Info.SpinEnd - par.spin) / par.terminal_age
+			par.spinDelta = (ps.Info.SpinEnd - par.spin) / par.terminalAge
 
 			par.color.R = ps.hge.Random_Float(ps.Info.ColorStart.R, ps.Info.ColorStart.R+(ps.Info.ColorEnd.R-ps.Info.ColorStart.R)*ps.Info.ColorVar)
 			par.color.G = ps.hge.Random_Float(ps.Info.ColorStart.G, ps.Info.ColorStart.G+(ps.Info.ColorEnd.G-ps.Info.ColorStart.G)*ps.Info.ColorVar)
 			par.color.B = ps.hge.Random_Float(ps.Info.ColorStart.B, ps.Info.ColorStart.B+(ps.Info.ColorEnd.B-ps.Info.ColorStart.B)*ps.Info.ColorVar)
 			par.color.A = ps.hge.Random_Float(ps.Info.ColorStart.A, ps.Info.ColorStart.A+(ps.Info.ColorEnd.A-ps.Info.ColorStart.A)*ps.Info.AlphaVar)
 
-			par.color_delta.R = (ps.Info.ColorEnd.R - par.color.R) / par.terminal_age
-			par.color_delta.G = (ps.Info.ColorEnd.G - par.color.G) / par.terminal_age
-			par.color_delta.B = (ps.Info.ColorEnd.B - par.color.B) / par.terminal_age
-			par.color_delta.A = (ps.Info.ColorEnd.A - par.color.A) / par.terminal_age
+			par.colorDelta.R = (ps.Info.ColorEnd.R - par.color.R) / par.terminalAge
+			par.colorDelta.G = (ps.Info.ColorEnd.G - par.color.G) / par.terminalAge
+			par.colorDelta.B = (ps.Info.ColorEnd.B - par.color.B) / par.terminalAge
+			par.colorDelta.A = (ps.Info.ColorEnd.A - par.color.A) / par.terminalAge
 
-			if ps.update_bounding_box {
-				ps.bounding_box.Encapsulate(par.location.X, par.location.Y)
+			if ps.updateBoundingBox {
+				ps.boundingBox.Encapsulate(par.location.X, par.location.Y)
 			}
 
-			ps.particles_alive++
-			par = ps.particles[ps.particles_alive]
+			ps.particlesAlive++
+			par = &ps.particles[ps.particlesAlive]
 		}
 	}
-	ps.prev_location = ps.location
+
+	ps.prevLocation = ps.location
 
 }
 
@@ -375,6 +430,8 @@ func NewParticleManager(a ...interface{}) ParticleManager {
 	pm.fps = fps
 	pm.x, pm.y = 0.0, 0.0
 
+	pm.list = make([]*ParticleSystem, hgeMAX_PSYSTEMS+1)
+
 	return pm
 }
 
@@ -396,8 +453,8 @@ func (pm *ParticleManager) Render() {
 	}
 }
 
-func (pm *ParticleManager) SpawPS(psi *ParticleSystemInfo, x, y float64) *ParticleSystem {
-	if pm.ps == hge_MAX_PSYSTEMS {
+func (pm *ParticleManager) SpawPS(psi ParticleSystemInfo, x, y float64) *ParticleSystem {
+	if pm.ps == hgeMAX_PSYSTEMS {
 		return nil
 	}
 
