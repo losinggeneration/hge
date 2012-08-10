@@ -126,7 +126,7 @@ func main() {
 	hge = Create(VERSION)
 	defer hge.Release()
 
-	hge.System_SetState(LOGFILE, "hge_tut04.log")
+	hge.System_SetState(LOGFILE, "tutorial04.log")
 	hge.System_SetState(FRAMEFUNC, FrameFunc)
 	hge.System_SetState(RENDERFUNC, RenderFunc)
 	hge.System_SetState(GFXRESTOREFUNC, GfxRestoreFunc)
