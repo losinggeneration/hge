@@ -16,7 +16,7 @@ const (
 	VERSION = C.HGE_VERSION
 )
 
-type Dword C.DWORD
+type Dword uint32
 
 // Common math constants
 const (
