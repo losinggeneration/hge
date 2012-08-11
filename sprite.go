@@ -181,7 +181,15 @@ func (sprite *Sprite) SetTexture(tex Texture) {
 	}
 }
 
-func (sprite *Sprite) SetTextureRect(x, y, w, h float64, adjSize bool) {
+func (sprite *Sprite) SetTextureRect(x, y, w, h float64, a ...interface{}) {
+	adjSize := true
+
+	if len(a) == 1 {
+		if b, ok := a[0].(bool); ok {
+			adjSize = b
+		}
+	}
+
 	sprite.TX, sprite.TY = x, y
 
 	if adjSize {
