@@ -1,9 +1,14 @@
 package hge
 
-// #cgo pkg-config: hge-unix-c
-// #include "hge_c.h"
-// #include "callback.h"
-//void goHGE_System_Log(HGE_t *h, const char *str) { printf(str); HGE_System_Log(h, str); }
+/*
+#cgo pkg-config: hge-unix-c
+#include "hge_c.h"
+#include "callback.h"
+#include <stdio.h>
+void goHGE_System_Log(HGE_t *h, const char *str) {
+	HGE_System_Log(h, str);
+}
+*/
 import "C"
 
 import (
