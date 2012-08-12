@@ -56,8 +56,8 @@ func getLines(file string) []string {
 		return false
 	})
 
-	for i := 0; i < len(lines); i++ {
-		lines[i] = strings.TrimSpace(lines[i])
+	for i, line := range lines {
+		lines[i] = strings.TrimSpace(line)
 	}
 
 	return lines
@@ -134,10 +134,10 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	}
 
 	// parse the font description
-	for i := 1; i < len(lines); i++ {
-		option, value, err := tokenizeLine(lines[i])
+	for _, line := range lines {
+		option, value, err := tokenizeLine(line)
 
-		if err != nil || len(lines[i]) == 0 || len(option) == 0 || len(value) == 0 {
+		if err != nil || len(line) == 0 || len(option) == 0 || len(value) == 0 {
 			f.hge.System_Log("Unreadable line in font file:", filename)
 			continue
 		}
@@ -170,26 +170,26 @@ func (f *Font) Render(x, y float64, align int, str string) {
 		fx -= f.GetStringWidth(str, false) / 2.0
 	}
 
-	for j := 0; j < len(str); j++ {
-		if str[j] == '\n' {
+	for i, chr := range str {
+		if chr == '\n' {
 			y += f.height * f.scale * f.spacing
 			fx = x
 
 			if align == TEXT_RIGHT {
-				fx -= f.GetStringWidth(string(str[j+1]), false)
+				fx -= f.GetStringWidth(string(str[i+1]), false)
 			}
 			if align == TEXT_CENTER {
-				fx -= f.GetStringWidth(string(str[j+1]), false) / 2.0
+				fx -= f.GetStringWidth(string(str[i+1]), false) / 2.0
 			}
 		} else {
-			i := str[j]
-			if f.letters[i] == nil {
-				i = '?'
+			j := chr
+			if f.letters[j] == nil {
+				j = '?'
 			}
-			if f.letters[i] != nil {
-				fx += f.pre[i] * f.scale * f.proportion
-				f.letters[i].RenderEx(fx, y, f.rot, f.scale*f.proportion, f.scale)
-				fx += (f.letters[i].GetWidth() + f.post[i] + f.tracking) * f.scale * f.proportion
+			if f.letters[j] != nil {
+				fx += f.pre[j] * f.scale * f.proportion
+				f.letters[j].RenderEx(fx, y, f.rot, f.scale*f.proportion, f.scale)
+				fx += (f.letters[j].GetWidth() + f.post[j] + f.tracking) * f.scale * f.proportion
 			}
 		}
 	}
@@ -310,19 +310,18 @@ func (f Font) GetStringWidth(str string, arg ...interface{}) float64 {
 		}
 	}
 
-	for j := 0; j < len(str); j++ {
+	for _, chr := range str {
 		linew := 0.0
 
-		for ; str[j] != '\n'; j++ {
-			i := str[j]
+		if chr != '\n' {
+			i := chr
+
 			if f.letters[i] == nil {
 				i = '?'
 			}
 			if f.letters[i] != nil {
 				linew += f.letters[i].GetWidth() + f.pre[i] + f.post[i] + f.tracking
 			}
-
-			j++
 		}
 
 		if !multiline {
@@ -333,8 +332,8 @@ func (f Font) GetStringWidth(str string, arg ...interface{}) float64 {
 			w = linew
 		}
 
-		for str[j] == '\n' || str[j] == '\r' {
-			j++
+		for chr == '\n' || chr == '\r' {
+			continue
 		}
 	}
 
