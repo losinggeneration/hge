@@ -1,0 +1,439 @@
+package gui
+
+import (
+	"container/list"
+	. "github.com/losinggeneration/hge-go/helpers/rect"
+	. "github.com/losinggeneration/hge-go/helpers/sprite"
+	. "github.com/losinggeneration/hge-go/hge"
+)
+
+const (
+	GUI_NONAVKEYS = 0
+	GUI_LEFTRIGHT = 1
+	GUI_UPDOWN    = 2
+	GUI_CYCLED    = 4
+)
+
+type GUIObject struct {
+	Id                       int
+	Static, Visible, Enabled bool
+	Rect                     Rect
+	Color                    Dword
+	*GUI
+	*HGE
+
+	Render func()
+	Update func(dt float64)
+
+	Enter     func()
+	Leave     func()
+	Reset     func()
+	IsDone    func() bool
+	Focus     func(focused bool)
+	MouseOver func(over bool)
+
+	MouseMove    func(x, y float64) bool
+	MouseLButton func(down bool) bool
+	MouseRButton func(down bool) bool
+	MouseWheel   func(notches int) bool
+	KeyClick     func(key, chr int) bool
+
+	SetColor func(color Dword)
+}
+
+func (gobj *GUIObject) Initialize() {
+	gobj.HGE = Create(VERSION)
+
+	gobj.Render = nil
+	gobj.Update = func(dt float64) {}
+
+	gobj.Enter = func() {}
+	gobj.Leave = func() {}
+	gobj.Reset = func() {}
+	gobj.IsDone = func() bool { return true }
+	gobj.Focus = func(focused bool) {}
+	gobj.MouseOver = func(over bool) {}
+
+	gobj.MouseMove = func(x, y float64) bool { return false }
+	gobj.MouseLButton = func(down bool) bool { return false }
+	gobj.MouseRButton = func(down bool) bool { return false }
+	gobj.MouseWheel = func(notches int) bool { return false }
+	gobj.KeyClick = func(key, chr int) bool { return false }
+
+	gobj.SetColor = func(color Dword) { gobj.Color = color }
+}
+
+type GUI struct {
+	hge                                      *HGE
+	ctrls                                    *list.List
+	ctrlLock, ctrlFocus, ctrlOver            *GUIObject
+	navMode, enterLeave                      int
+	cursor                                   *Sprite
+	mx, my                                   float64
+	wheel                                    int
+	lPressed, lReleased, rPressed, rReleased bool
+}
+
+func NewGUI() GUI {
+	var g GUI
+
+	g.hge = Create(VERSION)
+
+	g.ctrls = list.New()
+
+	g.navMode = GUI_NONAVKEYS
+
+	return g
+}
+
+func getElementById(id int, list *list.List) *list.Element {
+	for e := list.Front(); e != nil; e = e.Next() {
+		ctrl := e.Value.(*GUIObject)
+		if ctrl.Id == id {
+			return e
+		}
+	}
+
+	return nil
+}
+
+func (g *GUI) AddCtrl(ctrl *GUIObject) {
+	e := getElementById(ctrl.Id, g.ctrls)
+
+	if e != nil {
+		g.DelCtrl(ctrl.Id)
+	}
+
+	ctrl.GUI = g
+	g.ctrls.PushBack(ctrl)
+}
+
+func (g *GUI) DelCtrl(id int) {
+	e := getElementById(id, g.ctrls)
+
+	if e != nil {
+		g.ctrls.Remove(e)
+	}
+}
+
+func (g GUI) GetCtrl(id int) *GUIObject {
+	e := getElementById(id, g.ctrls)
+
+	if e == nil {
+		g.hge.System_Log("No such GUI ctrl id (%d)", id)
+		return nil
+	}
+
+	return e.Value.(*GUIObject)
+}
+
+func (g *GUI) MoveCtrl(id int, x, y float64) {
+	var ctrl = g.GetCtrl(id)
+	if ctrl == nil {
+		return
+	}
+
+	ctrl.Rect.X2 = x + ctrl.Rect.X2 - ctrl.Rect.X1
+	ctrl.Rect.Y2 = y + ctrl.Rect.Y2 - ctrl.Rect.Y1
+	ctrl.Rect.X1 = x
+	ctrl.Rect.Y1 = y
+}
+
+func (g *GUI) ShowCtrl(id int, visible bool) {
+	ctrl := g.GetCtrl(id)
+	if ctrl == nil {
+		return
+	}
+	ctrl.Visible = visible
+}
+
+func (g *GUI) EnableCtrl(id int, enabled bool) {
+	ctrl := g.GetCtrl(id)
+	if ctrl == nil {
+		return
+	}
+	ctrl.Enabled = enabled
+}
+
+func (g *GUI) SetNavMode(mode int) {
+	g.navMode = mode
+}
+
+func (g *GUI) SetCursor(spr *Sprite) {
+	g.cursor = spr
+}
+
+func (g *GUI) SetColor(color Dword) {
+	for e := g.ctrls.Front(); e != nil; e = e.Next() {
+		e.Value.(*GUIObject).SetColor(color)
+	}
+}
+
+func (g *GUI) SetFocus(id int) {
+	ctrlNewFocus := g.GetCtrl(id)
+
+	if ctrlNewFocus == g.ctrlFocus {
+		return
+	}
+
+	if ctrlNewFocus == nil {
+		if g.ctrlFocus != nil {
+			g.ctrlFocus.Focus(false)
+			g.ctrlFocus = nil
+		}
+	} else if !ctrlNewFocus.Static && ctrlNewFocus.Visible && ctrlNewFocus.Enabled {
+		if g.ctrlFocus != nil {
+			g.ctrlFocus.Focus(false)
+		}
+		ctrlNewFocus.Focus(true)
+		g.ctrlFocus = ctrlNewFocus
+	}
+}
+
+func (g GUI) GetFocus() int {
+	if g.ctrlFocus != nil {
+		return g.ctrlFocus.Id
+	}
+
+	return 0
+}
+
+func (g *GUI) Enter() {
+	for e := g.ctrls.Front(); e != nil; e = e.Next() {
+		e.Value.(*GUIObject).Enter()
+	}
+
+	g.enterLeave = 2
+}
+
+func (g *GUI) Leave() {
+	for e := g.ctrls.Front(); e != nil; e = e.Next() {
+		e.Value.(*GUIObject).Leave()
+	}
+
+	g.ctrlFocus, g.ctrlOver, g.ctrlLock = nil, nil, nil
+	g.enterLeave = 1
+}
+
+func (g *GUI) Reset() {
+	for e := g.ctrls.Front(); e != nil; e = e.Next() {
+		e.Value.(*GUIObject).Reset()
+	}
+
+	g.ctrlLock, g.ctrlOver, g.ctrlFocus = nil, nil, nil
+}
+
+func (g *GUI) Move(dx, dy float64) {
+	for e := g.ctrls.Front(); e != nil; e = e.Next() {
+		ctrl := e.Value.(*GUIObject)
+		ctrl.Rect.X1 += dx
+		ctrl.Rect.X2 += dx
+		ctrl.Rect.Y1 += dy
+		ctrl.Rect.Y2 += dy
+	}
+}
+
+func (g *GUI) Update(dt float64) int {
+	// Update the mouse variables
+	g.mx, g.my = g.hge.Input_GetMousePos()
+	g.lPressed = g.hge.Input_KeyDown(K_LBUTTON)
+	g.lReleased = g.hge.Input_KeyUp(K_LBUTTON)
+	g.rPressed = g.hge.Input_KeyDown(K_RBUTTON)
+	g.rReleased = g.hge.Input_KeyUp(K_RBUTTON)
+	g.wheel = g.hge.Input_GetMouseWheel()
+
+	// Update all controls
+	for e := g.ctrls.Front(); e != nil; e = e.Next() {
+		e.Value.(*GUIObject).Update(dt)
+	}
+
+	// Handle Enter/Leave
+	if g.enterLeave > 0 {
+		done := true
+		for e := g.ctrls.Front(); e != nil; e = e.Next() {
+			if !e.Value.(*GUIObject).IsDone() {
+				done = false
+				break
+			}
+		}
+		if !done {
+			return 0
+		} else {
+			if g.enterLeave == 1 {
+				return -1
+			} else {
+				g.enterLeave = 0
+			}
+		}
+	}
+
+	// Handle keys
+	key := g.hge.Input_GetKey()
+	if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == K_LEFT) ||
+		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == K_UP) {
+		ctrl := g.ctrlFocus
+		if ctrl == nil {
+			e := g.ctrls.Front()
+			if e == nil {
+				return 0
+			}
+
+			ctrl = e.Value.(*GUIObject)
+			if ctrl == nil {
+				return 0
+			}
+		}
+
+		for e := getElementById(ctrl.Id, g.ctrls).Prev(); ; e = e.Prev() {
+			if e == nil && (g.navMode&GUI_CYCLED) == GUI_CYCLED || g.ctrlFocus == nil {
+				ctrl = g.ctrls.Back().Value.(*GUIObject)
+			} else {
+				ctrl = e.Value.(*GUIObject)
+			}
+
+			if ctrl == g.ctrlFocus {
+				break
+			}
+
+			if ctrl.Static == false || ctrl.Visible == true || ctrl.Enabled == true {
+				break
+			}
+		}
+
+		if ctrl != g.ctrlFocus {
+			if g.ctrlFocus != nil {
+				g.ctrlFocus.Focus(false)
+			}
+			if ctrl != nil {
+				ctrl.Focus(true)
+			}
+			g.ctrlFocus = ctrl
+		}
+	} else if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == K_RIGHT) ||
+		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == K_DOWN) {
+		ctrl := g.ctrlFocus
+		if ctrl == nil {
+			e := g.ctrls.Back()
+			if e == nil {
+				return 0
+			}
+
+			ctrl = e.Value.(*GUIObject)
+			if ctrl == nil {
+				return 0
+			}
+		}
+
+		for e := getElementById(ctrl.Id, g.ctrls).Next(); ; e = e.Next() {
+			if e == nil && (g.navMode&GUI_CYCLED) == GUI_CYCLED || g.ctrlFocus == nil {
+				ctrl = g.ctrls.Front().Value.(*GUIObject)
+			} else {
+				ctrl = e.Value.(*GUIObject)
+			}
+
+			if ctrl == g.ctrlFocus {
+				break
+			}
+
+			if ctrl.Static == false || ctrl.Visible == true || ctrl.Enabled == true {
+				break
+			}
+		}
+
+		if ctrl != g.ctrlFocus {
+			if g.ctrlFocus != nil {
+				g.ctrlFocus.Focus(false)
+			}
+			if ctrl != nil {
+				ctrl.Focus(true)
+			}
+			g.ctrlFocus = ctrl
+		}
+	} else if g.ctrlFocus != nil && key > 0 && key != K_LBUTTON && key != K_RBUTTON {
+		if g.ctrlFocus.KeyClick(key, g.hge.Input_GetChar()) {
+			return g.ctrlFocus.Id
+		}
+	}
+
+	// Handle mouse
+	lDown := g.hge.Input_GetKeyState(K_LBUTTON)
+	rDown := g.hge.Input_GetKeyState(K_RBUTTON)
+
+	if g.ctrlLock != nil {
+		ctrl := g.ctrlLock
+		if !lDown && !rDown {
+			g.ctrlLock = nil
+		}
+		if g.processCtrl(ctrl) {
+			return ctrl.Id
+		}
+	} else {
+		for e := g.ctrls.Front(); e != nil; e = e.Next() {
+			ctrl := e.Value.(*GUIObject)
+			if ctrl.Rect.TestPoint(g.mx, g.my) && ctrl.Enabled {
+				if g.ctrlOver != ctrl {
+					if g.ctrlOver != nil {
+						g.ctrlOver.MouseOver(false)
+					}
+
+					ctrl.MouseOver(true)
+					g.ctrlOver = ctrl
+				}
+
+				if g.processCtrl(ctrl) {
+					return ctrl.Id
+				} else {
+					return 0
+				}
+			}
+		}
+
+		if g.ctrlOver != nil {
+			g.ctrlOver.MouseOver(false)
+			g.ctrlOver = nil
+		}
+
+	}
+
+	return 0
+}
+
+func (g *GUI) Render() {
+	for e := g.ctrls.Front(); e != nil; e = e.Next() {
+		ctrl := e.Value.(*GUIObject)
+		if ctrl.Visible {
+			ctrl.Render()
+		}
+	}
+
+	if g.hge.Input_IsMouseOver() && g.cursor != nil {
+		g.cursor.Render(g.mx, g.my)
+	}
+}
+
+func (g *GUI) processCtrl(ctrl *GUIObject) bool {
+	result := false
+
+	if g.lPressed {
+		g.ctrlLock = ctrl
+		g.SetFocus(ctrl.Id)
+		result = result || ctrl.MouseLButton(true)
+	}
+	if g.rPressed {
+		g.ctrlLock = ctrl
+		g.SetFocus(ctrl.Id)
+		result = result || ctrl.MouseRButton(true)
+	}
+	if g.lReleased {
+		result = result || ctrl.MouseLButton(false)
+	}
+	if g.rReleased {
+		result = result || ctrl.MouseRButton(false)
+	}
+	if g.wheel > 0 {
+		result = result || ctrl.MouseWheel(g.wheel)
+	}
+	result = result || ctrl.MouseMove(g.mx-ctrl.Rect.X1, g.my-ctrl.Rect.Y1)
+
+	return result
+}

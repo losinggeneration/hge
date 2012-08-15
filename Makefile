@@ -1,14 +1,17 @@
+DIRS=hge helpers/animation helpers/color helpers/distortionmesh helpers/font helpers/gui helpers/guictrls helpers/particle helpers/rect helpers/sprite helpers/strings helpers/vector
+
 all:
-	go build
+	for i in $(DIRS); do (cd $$i; go build); done
 
 tutorials: install
-	for i in tutorial*; do (cd $$i; go build); done
+	for i in tutorials/tutorial*; do (cd $$i; go build); done
 
 fmt:
 	go fmt
 
 clean:
 	rm *~
+	for i in tutorials/tutorial*; do rm $$i/$$i; done
 
 install:
-	go install
+	for i in $(DIRS); do (cd $$i; go install); done
