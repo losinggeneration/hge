@@ -1,0 +1,13 @@
+* From C++, the hgeResourceManager is not implemented yet.
+* Font needs to be extended to fully support the specified font file format.
+* DistortionMesh seems to possibly be having issues because it's using float64
+  instead of float32 (speculation.)
+* Figuring out logical places to integrate channels (input handling perhaps.)
+* Figuring out where interfaces could be better used.
+* Making the C binding API more Go-like and making a compatibility layer under
+  a "legacy" directory.
+* Ask for feedback about how the helpers are split up.
+* Tests
+* Documentation
+* Cleanups
+* Code review
