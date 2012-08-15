@@ -62,13 +62,9 @@ func NewGUIButton(id int, x, y, w, h float64, tex Texture, tx, ty float64) *GUIB
 	b.GUIObject.Initialize()
 
 	b.GUIObject.Id = id
-	b.GUIObject.Static = false
 	b.GUIObject.Visible = true
 	b.GUIObject.Enabled = true
 	b.GUIObject.Rect.Set(x, y, x+w, y+h)
-
-	b.pressed = false
-	b.trigger = false
 
 	b.up = NewSprite(tex, tx, ty, w, h)
 	b.down = NewSprite(tex, tx+w, ty, w, h)
@@ -128,27 +124,23 @@ type GUISlider struct {
 }
 
 func NewGUISlider(id int, x, y, w, h float64, tex Texture, tx, ty, sw, sh float64, a ...interface{}) *GUISlider {
-	vertical := false
+	s := new(GUISlider)
+
 	if len(a) == 1 {
 		if b, ok := a[0].(bool); ok {
-			vertical = b
+			s.vertical = b
 		}
 	}
-
-	s := new(GUISlider)
 
 	s.GUIObject.Initialize()
 
 	s.GUIObject.Id = id
-	s.GUIObject.Static = false
 	s.GUIObject.Visible = true
 	s.GUIObject.Enabled = true
-	s.pressed = false
-	s.vertical = vertical
 	s.GUIObject.Rect.Set(x, y, x+w, y+h)
 
 	s.mode = SLIDER_BAR
-	s.min, s.max, s.val = 0, 100, 50
+	s.max, s.val = 100, 50
 	s.sl_w, s.sl_h = sw, sh
 
 	s.Sprite = NewSprite(tex, tx, ty, sw, sh)
@@ -277,7 +269,6 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 	l.GUIObject.Initialize()
 
 	l.GUIObject.Id = id
-	l.GUIObject.Static = false
 	l.GUIObject.Visible = true
 	l.GUIObject.Enabled = true
 	l.GUIObject.Rect.Set(x, y, x+w, y+h)
@@ -287,9 +278,6 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 	l.color = color
 	l.highlightColor = highlightColor
 	l.List = list.New()
-
-	l.selectedItem, l.topItem = 0, 0
-	l.mx, l.my = 0, 0
 
 	l.GUIObject.Render = func() {
 		item := l.List.Front()

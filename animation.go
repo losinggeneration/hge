@@ -26,7 +26,6 @@ func NewAnimation(tex Texture, frames int, fps, x, y, w, h float64) Animation {
 
 	a.sinceLastFrame = -1.0
 	a.speed = 1.0 / fps
-	a.playing = false
 	a.frames = frames
 
 	a.mode = ANIM_FWD | ANIM_LOOP

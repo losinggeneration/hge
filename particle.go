@@ -63,15 +63,14 @@ type ParticleSystem struct {
 }
 
 func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *ParticleSystem {
-	fps := 0.0
-
+	ps := new(ParticleSystem)
 	if len(a) == 1 {
-		if f, ok := a[0].(float64); ok {
-			fps = f
+		if fps, ok := a[0].(float64); ok {
+			if fps != 0.0 {
+				ps.updateSpeed = 1.0 / fps
+			}
 		}
 	}
-
-	ps := new(ParticleSystem)
 
 	ps.hge = Create(VERSION)
 
@@ -86,8 +85,6 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 	if ptr == nil {
 		return nil
 	}
-
-	ps.Info.Sprite = sprite
 
 	// skip the first four bytes
 	i := uintptr(4)
@@ -127,22 +124,8 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 		}
 	}
 
-	ps.location.X, ps.prevLocation.X = 0.0, 0.0
-	ps.location.Y, ps.prevLocation.Y = 0.0, 0.0
-	ps.tx, ps.ty = 0, 0
-
-	ps.emissionResidue = 0.0
-	ps.particlesAlive = 0
+	ps.Info.Sprite = sprite
 	ps.age = -2.0
-	if fps != 0.0 {
-		ps.updateSpeed = 1.0 / fps
-	} else {
-		ps.updateSpeed = 0.0
-	}
-	ps.residue = 0.0
-
-	ps.boundingBox.Clear()
-	ps.updateBoundingBox = false
 
 	ps.particles = make([]particle, hgeMAX_PARTICLES+1)
 
@@ -150,33 +133,18 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 }
 
 func NewParticleSystemWithInfo(psi ParticleSystemInfo, a ...interface{}) *ParticleSystem {
-	fps := 0.0
-
+	ps := new(ParticleSystem)
 	if len(a) == 1 {
-		if f, ok := a[0].(float64); ok {
-			fps = f
+		if fps, ok := a[0].(float64); ok {
+			if fps != 0.0 {
+				ps.updateSpeed = 1.0 / fps
+			}
 		}
 	}
 
-	ps := new(ParticleSystem)
-
 	ps.hge = Create(VERSION)
-
 	ps.Info = psi
-
-	ps.location.X, ps.prevLocation.X = 0.0, 0.0
-	ps.location.Y, ps.prevLocation.Y = 0.0, 0.0
-	ps.tx, ps.ty = 0, 0
-
-	ps.emissionResidue = 0.0
-	ps.particlesAlive = 0
 	ps.age = -2.0
-	if fps != 0.0 {
-		ps.updateSpeed = 1.0 / fps
-	} else {
-		ps.updateSpeed = 0.0
-	}
-	ps.residue = 0.0
 
 	ps.particles = make([]particle, hgeMAX_PARTICLES)
 

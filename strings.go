@@ -27,7 +27,7 @@ func NewStringTable(filename string) *StringTable {
 	}
 
 	var (
-		inComment, inIdentifier, inValue = false, false, false
+		inComment, inIdentifier, inValue bool
 		identifier, value                string
 	)
 

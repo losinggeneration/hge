@@ -30,8 +30,6 @@ func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
 		sprite.TexHeight = 1.0
 	}
 
-	sprite.HotX, sprite.HotY = 0, 0
-	sprite.XFlip, sprite.YFlip, sprite.HSFlip = false, false, false
 	sprite.Quad.Tex = texture
 
 	texx1 := texx / sprite.TexWidth

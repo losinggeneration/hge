@@ -22,17 +22,10 @@ func NewDistortionMesh(cols, rows int) DistortionMesh {
 
 	dm.rows = rows
 	dm.cols = cols
-	dm.cellw, dm.cellh = 0, 0
-	dm.quad.Tex = 0
 	dm.quad.Blend = BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_ZWRITE
 	dm.dispArray = make([]Vertex, rows*cols)
 
 	for i := 0; i < rows*cols; i++ {
-		dm.dispArray[i].X = 0.0
-		dm.dispArray[i].Y = 0.0
-		dm.dispArray[i].TX = 0.0
-		dm.dispArray[i].TY = 0.0
-
 		dm.dispArray[i].Z = 0.5
 		dm.dispArray[i].Col = 0xFFFFFFFF
 	}

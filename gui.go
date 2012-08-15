@@ -78,13 +78,7 @@ func NewGUI() GUI {
 
 	g.ctrls = list.New()
 
-	g.ctrlLock, g.ctrlFocus, g.ctrlOver = nil, nil, nil
-
 	g.navMode = GUI_NONAVKEYS
-	g.lPressed, g.lReleased, g.rPressed, g.rReleased = false, false, false, false
-	g.wheel, g.enterLeave = 0, 0
-	g.mx, g.my = 0.0, 0.0
-	g.cursor = nil
 
 	return g
 }
