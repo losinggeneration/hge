@@ -481,7 +481,7 @@ func LoadBytes(filename string) []byte {
 		return nil
 	}
 
-	b := C.GoBytes(unsafe.Pointer(r), C.int(size))
+	b := C.GoBytes(unsafe.Pointer(*r), C.int(size))
 	r.Free()
 
 	return b
@@ -495,7 +495,7 @@ func LoadString(filename string) *string {
 		return nil
 	}
 
-	s := C.GoStringN((*C.char)(unsafe.Pointer(r)), C.int(size))
+	s := C.GoStringN((*C.char)(unsafe.Pointer(*r)), C.int(size))
 	r.Free()
 
 	return &s
