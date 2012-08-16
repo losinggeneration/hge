@@ -5,6 +5,7 @@ import (
 	"github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
 	HGE "github.com/losinggeneration/hge-go/hge"
+	hge "github.com/losinggeneration/hge-go/legacy"
 )
 
 const (
@@ -26,7 +27,7 @@ type Obj struct {
 var (
 	objs           [MAX_OBJECTS]Obj
 	objects, blend int
-	hge            *HGE.HGE
+	h              *hge.HGE
 
 	// Resource handles
 	tex, bgtex HGE.Texture
@@ -60,17 +61,17 @@ func setBlend(newBlend int) {
 	spr.SetBlendMode(sprBlend[newBlend])
 	fnt.SetColor(fntColor[newBlend])
 	for i := 0; i < MAX_OBJECTS; i++ {
-		objs[i].color = sprColors[newBlend][hge.Random_Int(0, 4)]
+		objs[i].color = sprColors[newBlend][h.Random_Int(0, 4)]
 	}
 }
 
 func frame() int {
-	// 	float dt=hge.Timer_GetDelta();
-	dt := hge.Timer_GetDelta()
+	// 	float dt=h.Timer_GetDelta();
+	dt := h.Timer_GetDelta()
 	// 	int i;
 	//
 	// Process keys
-	switch hge.Input_GetKey() {
+	switch h.Input_GetKey() {
 	case HGE.K_UP:
 		if objects < MAX_OBJECTS {
 			objects += 100
@@ -108,7 +109,7 @@ func frame() int {
 
 func render() int {
 	// Render the scene
-	hge.Gfx_BeginScene()
+	h.Gfx_BeginScene()
 	bgspr.Render(0, 0)
 
 	for i := 0; i < objects; i++ {
@@ -116,39 +117,39 @@ func render() int {
 		spr.RenderEx(objs[i].x, objs[i].y, objs[i].rot, objs[i].scale)
 	}
 
-	fnt.Printf(7, 7, font.TEXT_LEFT, "UP and DOWN to adjust number of hares: %d\nSPACE to change blending mode: %d\nFPS: %d", objects, blend, hge.Timer_GetFPS())
-	hge.Gfx_EndScene()
+	fnt.Printf(7, 7, font.TEXT_LEFT, "UP and DOWN to adjust number of hares: %d\nSPACE to change blending mode: %d\nFPS: %d", objects, blend, h.Timer_GetFPS())
+	h.Gfx_EndScene()
 
 	return 0
 }
 
 func main() {
-	hge = HGE.Create(HGE.VERSION)
-	defer hge.Release()
+	h = hge.Create(HGE.VERSION)
+	defer h.Release()
 
 	// Set desired system states and initialize HGE
-	hge.System_SetState(HGE.LOGFILE, "tutorial07.log")
-	hge.System_SetState(HGE.FRAMEFUNC, frame)
-	hge.System_SetState(HGE.RENDERFUNC, render)
-	hge.System_SetState(HGE.TITLE, "HGE Tutorial 07 - Thousand of Hares")
-	hge.System_SetState(HGE.USESOUND, false)
-	hge.System_SetState(HGE.WINDOWED, true)
-	hge.System_SetState(HGE.SCREENWIDTH, SCREEN_WIDTH)
-	hge.System_SetState(HGE.SCREENHEIGHT, SCREEN_HEIGHT)
-	hge.System_SetState(HGE.SCREENBPP, 32)
+	h.System_SetState(HGE.LOGFILE, "tutorial07.log")
+	h.System_SetState(HGE.FRAMEFUNC, frame)
+	h.System_SetState(HGE.RENDERFUNC, render)
+	h.System_SetState(HGE.TITLE, "HGE Tutorial 07 - Thousand of Hares")
+	h.System_SetState(HGE.USESOUND, false)
+	h.System_SetState(HGE.WINDOWED, true)
+	h.System_SetState(HGE.SCREENWIDTH, SCREEN_WIDTH)
+	h.System_SetState(HGE.SCREENHEIGHT, SCREEN_HEIGHT)
+	h.System_SetState(HGE.SCREENBPP, 32)
 
-	if hge.System_Initiate() {
-		defer hge.System_Shutdown()
+	if h.System_Initiate() {
+		defer h.System_Shutdown()
 		// Load textures
-		bgtex = hge.Texture_Load("bg2.png")
-		tex = hge.Texture_Load("zazaka.png")
+		bgtex = h.Texture_Load("bg2.png")
+		tex = h.Texture_Load("zazaka.png")
 		if bgtex == 0 || tex == 0 {
 			fmt.Println("Error: Can't load bg2.png or zazaka.png\n")
 			return
 		}
 		// Delete created objects and free loaded resources
-		defer hge.Texture_Free(tex)
-		defer hge.Texture_Free(bgtex)
+		defer h.Texture_Free(tex)
+		defer h.Texture_Free(bgtex)
 
 		// Load font, create sprites
 		fnt = font.NewFont("font1.fnt")
@@ -166,19 +167,19 @@ func main() {
 		objects = 1000
 
 		for i := 0; i < MAX_OBJECTS; i++ {
-			objs[i].x = hge.Random_Float(0, SCREEN_WIDTH)
-			objs[i].y = hge.Random_Float(0, SCREEN_HEIGHT)
-			objs[i].dx = hge.Random_Float(-200, 200)
-			objs[i].dy = hge.Random_Float(-200, 200)
-			objs[i].scale = hge.Random_Float(0.5, 2.0)
-			objs[i].dscale = hge.Random_Float(-1.0, 1.0)
-			objs[i].rot = hge.Random_Float(0, HGE.Pi*2)
-			objs[i].drot = hge.Random_Float(-1.0, 1.0)
+			objs[i].x = h.Random_Float(0, SCREEN_WIDTH)
+			objs[i].y = h.Random_Float(0, SCREEN_HEIGHT)
+			objs[i].dx = h.Random_Float(-200, 200)
+			objs[i].dy = h.Random_Float(-200, 200)
+			objs[i].scale = h.Random_Float(0.5, 2.0)
+			objs[i].dscale = h.Random_Float(-1.0, 1.0)
+			objs[i].rot = h.Random_Float(0, HGE.Pi*2)
+			objs[i].drot = h.Random_Float(-1.0, 1.0)
 		}
 
 		setBlend(0)
 
 		// Let's rock now!
-		hge.System_Start()
+		h.System_Start()
 	}
 }

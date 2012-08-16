@@ -5,7 +5,8 @@ import (
 	"github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/particle"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
+	HGE "github.com/losinggeneration/hge-go/hge"
+	hge "github.com/losinggeneration/hge-go/legacy"
 )
 
 var (
@@ -15,8 +16,8 @@ var (
 	fnt      *font.Font
 	par      *particle.ParticleSystem
 
-	tex hge.Texture
-	snd hge.Effect
+	tex HGE.Texture
+	snd HGE.Effect
 
 	x  = 100.0
 	y  = 100.0
@@ -39,19 +40,19 @@ func FrameFunc() int {
 	dt := float64(h.Timer_GetDelta())
 
 	// Process keys
-	if h.Input_GetKeyState(hge.K_ESCAPE) {
+	if h.Input_GetKeyState(HGE.K_ESCAPE) {
 		return 1
 	}
-	if h.Input_GetKeyState(hge.K_LEFT) {
+	if h.Input_GetKeyState(HGE.K_LEFT) {
 		dx -= speed * dt
 	}
-	if h.Input_GetKeyState(hge.K_RIGHT) {
+	if h.Input_GetKeyState(HGE.K_RIGHT) {
 		dx += speed * dt
 	}
-	if h.Input_GetKeyState(hge.K_UP) {
+	if h.Input_GetKeyState(HGE.K_UP) {
 		dy -= speed * dt
 	}
-	if h.Input_GetKeyState(hge.K_DOWN) {
+	if h.Input_GetKeyState(HGE.K_DOWN) {
 		dy += speed * dt
 	}
 
@@ -102,17 +103,17 @@ func RenderFunc() int {
 }
 
 func main() {
-	h = hge.Create(hge.VERSION)
+	h = hge.Create(HGE.VERSION)
 
-	h.System_SetState(hge.LOGFILE, "tutorial03.log")
-	h.System_SetState(hge.FRAMEFUNC, FrameFunc)
-	h.System_SetState(hge.RENDERFUNC, RenderFunc)
-	h.System_SetState(hge.TITLE, "HGE Tutorial 03 - Using helper classes")
-	h.System_SetState(hge.FPS, 100)
-	h.System_SetState(hge.WINDOWED, true)
-	h.System_SetState(hge.SCREENWIDTH, 800)
-	h.System_SetState(hge.SCREENHEIGHT, 600)
-	h.System_SetState(hge.SCREENBPP, 32)
+	h.System_SetState(HGE.LOGFILE, "tutorial03.log")
+	h.System_SetState(HGE.FRAMEFUNC, FrameFunc)
+	h.System_SetState(HGE.RENDERFUNC, RenderFunc)
+	h.System_SetState(HGE.TITLE, "HGE Tutorial 03 - Using helper classes")
+	h.System_SetState(HGE.FPS, 100)
+	h.System_SetState(HGE.WINDOWED, true)
+	h.System_SetState(HGE.SCREENWIDTH, 800)
+	h.System_SetState(HGE.SCREENHEIGHT, 600)
+	h.System_SetState(HGE.SCREENBPP, 32)
 
 	defer h.Release()
 
@@ -138,7 +139,7 @@ func main() {
 		}
 
 		spt = sprite.NewSprite(tex, 32, 32, 32, 32)
-		spt.SetBlendMode(hge.BLEND_COLORMUL | hge.BLEND_ALPHAADD | hge.BLEND_NOZWRITE)
+		spt.SetBlendMode(HGE.BLEND_COLORMUL | HGE.BLEND_ALPHAADD | HGE.BLEND_NOZWRITE)
 		spt.SetHotSpot(16, 16)
 
 		par = particle.NewParticleSystem("trail.psi", spt)

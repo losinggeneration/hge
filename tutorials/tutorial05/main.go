@@ -4,13 +4,14 @@ import (
 	"fmt"
 	dist "github.com/losinggeneration/hge-go/helpers/distortionmesh"
 	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/hge"
+	HGE "github.com/losinggeneration/hge-go/hge"
+	hge "github.com/losinggeneration/hge-go/legacy"
 	"math"
 )
 
 var (
 	h   *hge.HGE
-	tex hge.Texture
+	tex HGE.Texture
 	dis dist.DistortionMesh
 	fnt *font.Font
 )
@@ -33,17 +34,17 @@ func FrameFunc() int {
 
 	// Process keys
 	switch h.Input_GetKey() {
-	case hge.K_ESCAPE:
+	case HGE.K_ESCAPE:
 		return 1
 
-	case hge.K_SPACE:
+	case HGE.K_SPACE:
 		trans++
 
 		if trans > 2 {
 			trans = 0
 		}
 
-		dis.Clear(hge.Dword(0xFF000000))
+		dis.Clear(HGE.Dword(0xFF000000))
 	}
 
 	// Calculate new displacements and coloring for one of the three effects
@@ -59,7 +60,7 @@ func FrameFunc() int {
 		for i := 0; i < rows; i++ {
 			for j := 1; j < cols-1; j++ {
 				dis.SetDisplacement(j, i, math.Cos(t*float64(5+j)/2)*15, 0, dist.DISP_NODE)
-				col := hge.Dword((math.Cos(t*float64(5+(i+j))/2) + 1) * 35)
+				col := HGE.Dword((math.Cos(t*float64(5+(i+j))/2) + 1) * 35)
 				dis.SetColor(j, i, 0xFF<<24|col<<16|col<<8|col)
 			}
 		}
@@ -72,7 +73,7 @@ func FrameFunc() int {
 				dx := math.Sin(a)*(i*cellh-256) + math.Cos(a)*(j*cellw-256)
 				dy := math.Cos(a)*(i*cellh-256) - math.Sin(a)*(j*cellw-256)
 				dis.SetDisplacement(int(j), int(i), dx, dy, dist.DISP_CENTER)
-				col := hge.Dword((math.Cos(r+t*4) + 1) * 40)
+				col := HGE.Dword((math.Cos(r+t*4) + 1) * 40)
 				dis.SetColor(int(j), int(i), 0xFF<<24|col<<16|(col/2)<<8)
 			}
 		}
@@ -93,18 +94,18 @@ func RenderFunc() int {
 }
 
 func main() {
-	h = hge.Create(hge.VERSION)
+	h = hge.Create(HGE.VERSION)
 	defer h.Release()
 
-	h.System_SetState(hge.LOGFILE, "tutorial05.log")
-	h.System_SetState(hge.FRAMEFUNC, FrameFunc)
-	h.System_SetState(hge.RENDERFUNC, RenderFunc)
-	h.System_SetState(hge.TITLE, "HGE Tutorial 05 - Using distortion mesh")
-	h.System_SetState(hge.WINDOWED, true)
-	h.System_SetState(hge.SCREENWIDTH, 800)
-	h.System_SetState(hge.SCREENHEIGHT, 600)
-	h.System_SetState(hge.SCREENBPP, 32)
-	h.System_SetState(hge.USESOUND, false)
+	h.System_SetState(HGE.LOGFILE, "tutorial05.log")
+	h.System_SetState(HGE.FRAMEFUNC, FrameFunc)
+	h.System_SetState(HGE.RENDERFUNC, RenderFunc)
+	h.System_SetState(HGE.TITLE, "HGE Tutorial 05 - Using distortion mesh")
+	h.System_SetState(HGE.WINDOWED, true)
+	h.System_SetState(HGE.SCREENWIDTH, 800)
+	h.System_SetState(HGE.SCREENHEIGHT, 600)
+	h.System_SetState(HGE.SCREENBPP, 32)
+	h.System_SetState(HGE.USESOUND, false)
 
 	if h.System_Initiate() {
 		defer h.System_Shutdown()
@@ -118,8 +119,8 @@ func main() {
 		dis = dist.NewDistortionMesh(cols, rows)
 		dis.SetTexture(tex)
 		dis.SetTextureRect(0, 0, 512, 512)
-		dis.SetBlendMode(hge.BLEND_COLORADD | hge.BLEND_ALPHABLEND | hge.BLEND_ZWRITE)
-		dis.Clear(hge.Dword(0xFF000000))
+		dis.SetBlendMode(HGE.BLEND_COLORADD | HGE.BLEND_ALPHABLEND | HGE.BLEND_ZWRITE)
+		dis.Clear(HGE.Dword(0xFF000000))
 
 		// Load a font
 		fnt = font.NewFont("font1.fnt")
