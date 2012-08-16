@@ -138,10 +138,14 @@ func NewFont(filename string, arg ...interface{}) *Font {
 
 	// parse the font description
 	for _, line := range lines {
+		if line == fntHEADERTAG {
+			continue
+		}
+
 		option, value, err := tokenizeLine(line)
 
 		if err != nil || len(line) == 0 || len(option) == 0 || len(value) == 0 {
-			f.hge.System_Log("Unreadable line in font file:", filename)
+			f.hge.System_Log("Unreadable line (%s) in font file: %s", line, filename)
 			continue
 		}
 

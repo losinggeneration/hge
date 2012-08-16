@@ -83,12 +83,14 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 	psi, size := ps.hge.Resource_Load(filename)
 
 	if psi == nil || size == 0 {
+		ps.hge.System_Log("Particle file (%s) seems to be empty.", filename)
 		return nil
 	}
 
 	ptr := ps.hge.ResourceLoadBytes(filename)
 
 	if ptr == nil {
+		ps.hge.System_Log("Particle file (%s) seems to be empty.", filename)
 		return nil
 	}
 
