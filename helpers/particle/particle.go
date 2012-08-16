@@ -121,7 +121,7 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 			i += unsafe.Sizeof(bool(false))
 			i += 3 // padding
 
-		case "hge.ColorRGB":
+		case "color.ColorRGB":
 			for k := 0; k < 4; k++ {
 				f.Field(k).SetFloat(float64(*(*float32)(cast(&ptr[i]))))
 				i += unsafe.Sizeof(float32(0.0))
