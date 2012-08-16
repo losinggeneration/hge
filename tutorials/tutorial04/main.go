@@ -5,22 +5,19 @@ import (
 	. "github.com/losinggeneration/hge-go/helpers/font"
 	. "github.com/losinggeneration/hge-go/helpers/particle"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	hge "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/legacy"
+	. "github.com/losinggeneration/hge-go/hge"
 )
 
 var (
-	h *HGE
-
 	spr, spt, tar Sprite
 	fnt           *Font
 	par           *ParticleSystem
 
-	tex hge.Texture
-	snd hge.Effect
+	tex Texture
+	snd Effect
 
 	// HGE render target handle
-	target hge.Target
+	target Target
 
 	x  = 100.0
 	y  = 100.0
@@ -36,7 +33,7 @@ const (
 func boom() {
 	pan := int((x - 256) / 2.56)
 	pitch := (dx*dx+dy*dy)*0.0005 + 0.2
-	h.Effect_PlayEx(snd, 100, pan, pitch)
+	snd.PlayEx(100, pan, pitch)
 }
 
 // This function will be called by HGE when
@@ -45,29 +42,29 @@ func boom() {
 // target's texture handle that changes during recreation.
 func GfxRestoreFunc() int {
 	if target != 0 {
-		tar.SetTexture(h.Target_GetTexture(target))
+		tar.SetTexture(target.Texture())
 	}
 
 	return 0
 }
 
 func FrameFunc() int {
-	dt := h.Timer_GetDelta()
+	dt := NewTimer().Delta()
 
 	// Process keys
-	if h.Input_GetKeyState(hge.K_ESCAPE) {
+	if NewKey(K_ESCAPE).State() {
 		return 1
 	}
-	if h.Input_GetKeyState(hge.K_LEFT) {
+	if NewKey(K_LEFT).State() {
 		dx -= speed * dt
 	}
-	if h.Input_GetKeyState(hge.K_RIGHT) {
+	if NewKey(K_RIGHT).State() {
 		dx += speed * dt
 	}
-	if h.Input_GetKeyState(hge.K_UP) {
+	if NewKey(K_UP).State() {
 		dy -= speed * dt
 	}
-	if h.Input_GetKeyState(hge.K_DOWN) {
+	if NewKey(K_DOWN).State() {
 		dy += speed * dt
 	}
 
@@ -107,46 +104,45 @@ func FrameFunc() int {
 
 func RenderFunc() int {
 	// Render graphics to the texture
-	h.Gfx_BeginScene(target)
-	h.Gfx_Clear(0)
+	GfxBeginScene(target)
+	GfxClear(0)
 	par.Render()
 	spr.Render(x, y)
-	h.Gfx_EndScene()
+	GfxEndScene()
 
 	// Now put several instances of the rendered texture to the screen
-	h.Gfx_BeginScene()
-	h.Gfx_Clear(0)
+	GfxBeginScene()
+	GfxClear(0)
 	for i := 0.0; i < 6.0; i++ {
-		tar.SetColor(hge.Dword(0xFFFFFF | ((int)((5-i)*40+55) << 24)))
-		tar.RenderEx(i*100.0, i*50.0, i*hge.Pi/8, 1.0-i*0.1)
+		tar.SetColor(Dword(0xFFFFFF | ((int)((5-i)*40+55) << 24)))
+		tar.RenderEx(i*100.0, i*50.0, i*Pi/8, 1.0-i*0.1)
 	}
-	fnt.Printf(5, 5, TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", h.Timer_GetDelta(), h.Timer_GetFPS())
-	h.Gfx_EndScene()
+	fnt.Printf(5, 5, TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", NewTimer().Delta(), GetFPS())
+	GfxEndScene()
 
 	return 0
 }
 
 func main() {
-	h = Create(hge.VERSION)
-	defer h.Release()
+	defer Free()
 
-	h.System_SetState(hge.LOGFILE, "tutorial04.log")
-	h.System_SetState(hge.FRAMEFUNC, FrameFunc)
-	h.System_SetState(hge.RENDERFUNC, RenderFunc)
-	h.System_SetState(hge.GFXRESTOREFUNC, GfxRestoreFunc)
-	h.System_SetState(hge.TITLE, "HGE Tutorial 04 - Using render targets")
-	h.System_SetState(hge.FPS, 100)
-	h.System_SetState(hge.WINDOWED, true)
-	h.System_SetState(hge.SCREENWIDTH, 800)
-	h.System_SetState(hge.SCREENHEIGHT, 600)
-	h.System_SetState(hge.SCREENBPP, 32)
+	SetState(LOGFILE, "tutorial04.log")
+	SetState(FRAMEFUNC, FrameFunc)
+	SetState(RENDERFUNC, RenderFunc)
+	SetState(GFXRESTOREFUNC, GfxRestoreFunc)
+	SetState(TITLE, "HGE Tutorial 04 - Using render targets")
+	SetState(FPS, 100)
+	SetState(WINDOWED, true)
+	SetState(SCREENWIDTH, 800)
+	SetState(SCREENHEIGHT, 600)
+	SetState(SCREENBPP, 32)
 
 	target = 0
 
-	if h.System_Initiate() {
-		defer h.System_Shutdown()
-		snd = h.Effect_Load("menu.ogg")
-		tex = h.Texture_Load("particles.png")
+	if err := Initiate(); err == nil {
+		defer Shutdown()
+		snd = NewEffect("menu.ogg")
+		tex = LoadTexture("particles.png")
 		if snd == 0 || tex == 0 {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
@@ -155,8 +151,8 @@ func main() {
 		}
 
 		// Delete created objects and free loaded resources
-		defer h.Effect_Free(snd)
-		defer h.Texture_Free(tex)
+		defer snd.Free()
+		defer tex.Free()
 
 		spr = NewSprite(tex, 96, 64, 32, 32)
 		spr.SetColor(0xFFFFA000)
@@ -170,7 +166,7 @@ func main() {
 		}
 
 		spt = NewSprite(tex, 32, 32, 32, 32)
-		spt.SetBlendMode(hge.BLEND_COLORMUL | hge.BLEND_ALPHAADD | hge.BLEND_NOZWRITE)
+		spt.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
 		spt.SetHotSpot(16, 16)
 		par = NewParticleSystem("trail.psi", spt)
 
@@ -181,12 +177,12 @@ func main() {
 		par.Fire()
 
 		// Create a render target and a sprite for it
-		target = h.Target_Create(512, 512, false)
-		defer h.Target_Free(target)
-		tar = NewSprite(h.Target_GetTexture(target), 0, 0, 512, 512)
-		tar.SetBlendMode(hge.BLEND_COLORMUL | hge.BLEND_ALPHAADD | hge.BLEND_NOZWRITE)
+		target = NewTarget(512, 512, false)
+		defer target.Free()
+		tar = NewSprite(target.Texture(), 0, 0, 512, 512)
+		tar.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
 
 		// Let's rock now!
-		h.System_Start()
+		Start()
 	}
 }
