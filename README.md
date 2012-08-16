@@ -1,3 +1,6 @@
+# WARNING
+This API is not the final API. Expect breakage if you use it. I will try the best I can to provide a legacy API for those wanting to use the C like API.
+
 # Haaf's Game Engine (HGE) in Go!
 
 ======================
