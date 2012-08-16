@@ -125,10 +125,11 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	desc := f.hge.ResourceLoadString(filename)
 
 	if desc == nil {
+		f.hge.System_Log("Font %s seems to be empty.", filename)
 		return nil
 	}
 
-	lines := getLines(string(*desc))
+	lines := getLines(*desc)
 
 	if len(lines) == 0 || lines[0] != fntHEADERTAG {
 		f.hge.System_Log("Font %s has incorrect format.", filename)
