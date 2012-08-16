@@ -346,7 +346,7 @@ func (h *HGE) Input_GetEvent(event *hge.InputEvent) bool {
 }
 
 func (h *HGE) Gfx_BeginScene(a ...interface{}) bool {
-	return hge.GfxBeginScene(a)
+	return hge.GfxBeginScene(a...)
 }
 
 func (h *HGE) Gfx_EndScene() {
