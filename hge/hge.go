@@ -227,10 +227,8 @@ func btoi(b bool) C.BOOL {
 	return 0
 }
 
-// HGE struct
-type hge struct {
-	h *C.HGE_t
-}
+// HGE struct from C
+type hge *C.HGE_t
 
 type Error struct{}
 
@@ -238,14 +236,14 @@ func (e *Error) Error() string {
 	return GetErrorMessage()
 }
 
-var h *hge
+var h hge
 
 func init() {
 	h = newHGE(VERSION)
 }
 
 // Creates a new instance of an hge structure
-func newHGE(a ...interface{}) *hge {
+func newHGE(a ...interface{}) hge {
 	ver := VERSION
 
 	if len(a) == 1 {
@@ -254,20 +252,19 @@ func newHGE(a ...interface{}) *hge {
 		}
 	}
 
-	h := new(hge)
-	h.h = C.HGE_Create(C.int(ver))
+	h = C.HGE_Create(C.int(ver))
 
 	return h
 }
 
 // Releases the memory the C++ library allocated for the HGE struct
 func Free() {
-	C.HGE_Release(h.h)
+	C.HGE_Release(h)
 }
 
 // Initializes hardware and software needed to run engine.
 func Initiate() error {
-	if C.HGE_System_Initiate(h.h) == 0 {
+	if C.HGE_System_Initiate(h) == 0 {
 		return &Error{}
 	}
 
@@ -276,12 +273,12 @@ func Initiate() error {
 
 //  Restores video mode and frees allocated resources.
 func Shutdown() {
-	C.HGE_System_Shutdown(h.h)
+	C.HGE_System_Shutdown(h)
 }
 
 // Starts running user defined frame function.
 func Start() error {
-	if C.HGE_System_Start(h.h) == 0 {
+	if C.HGE_System_Start(h) == 0 {
 		return &Error{}
 	}
 
@@ -290,7 +287,7 @@ func Start() error {
 
 //  Returns last occured HGE error description.
 func GetErrorMessage() string {
-	return C.GoString(C.HGE_System_GetErrorMessage(h.h))
+	return C.GoString(C.HGE_System_GetErrorMessage(h))
 }
 
 // Writes a formatted message to the log file.
@@ -306,7 +303,7 @@ func Log(format string, v ...interface{}) {
 	fstr := C.CString(str)
 	defer C.free(unsafe.Pointer(fstr))
 
-	C.goHGE_System_Log(h.h, fstr)
+	C.goHGE_System_Log(h, fstr)
 }
 
 // Launches an URL or external executable/data file.
@@ -314,7 +311,7 @@ func Launch(url string) bool {
 	urlstr := C.CString(url)
 	defer C.free(unsafe.Pointer(urlstr))
 
-	return C.HGE_System_Launch(h.h, urlstr) == 1
+	return C.HGE_System_Launch(h, urlstr) == 1
 }
 
 //  Saves current screen snapshot into a file.
@@ -324,12 +321,12 @@ func Snapshot(a ...interface{}) {
 			fname := C.CString(filename)
 			defer C.free(unsafe.Pointer(fname))
 
-			C.HGE_System_Snapshot(h.h, fname)
+			C.HGE_System_Snapshot(h, fname)
 			return
 		}
 	}
 
-	C.HGE_System_Snapshot(h.h, nil)
+	C.HGE_System_Snapshot(h, nil)
 }
 
 // Sets internal system states.
@@ -376,40 +373,40 @@ func SetState(a ...interface{}) {
 }
 
 func setStateBool(state BoolState, value bool) {
-	C.HGE_System_SetStateBool(h.h, C.HGE_BoolState_t(state), btoi(value))
+	C.HGE_System_SetStateBool(h, C.HGE_BoolState_t(state), btoi(value))
 }
 
 func setStateFunc(state FuncState, value StateFunc) {
 	funcCBs[state] = value
 	switch state {
 	case FRAMEFUNC:
-		C.setFrameFunc(h.h, C.HGE_FuncState_t(state))
+		C.setFrameFunc(h, C.HGE_FuncState_t(state))
 	case RENDERFUNC:
-		C.setRenderFunc(h.h, C.HGE_FuncState_t(state))
+		C.setRenderFunc(h, C.HGE_FuncState_t(state))
 	case FOCUSLOSTFUNC:
-		C.setFocusLostFunc(h.h, C.HGE_FuncState_t(state))
+		C.setFocusLostFunc(h, C.HGE_FuncState_t(state))
 	case FOCUSGAINFUNC:
-		C.setFocusGainFunc(h.h, C.HGE_FuncState_t(state))
+		C.setFocusGainFunc(h, C.HGE_FuncState_t(state))
 	case GFXRESTOREFUNC:
-		C.setGfxRestoreFunc(h.h, C.HGE_FuncState_t(state))
+		C.setGfxRestoreFunc(h, C.HGE_FuncState_t(state))
 	case EXITFUNC:
-		C.setExitFunc(h.h, C.HGE_FuncState_t(state))
+		C.setExitFunc(h, C.HGE_FuncState_t(state))
 	}
 }
 
 func setStateHwnd(state HwndState, value *Hwnd) {
-	C.HGE_System_SetStateHwnd(h.h, C.HGE_HwndState_t(state), value.hwnd)
+	C.HGE_System_SetStateHwnd(h, C.HGE_HwndState_t(state), value.hwnd)
 }
 
 func setStateInt(state IntState, value int) {
-	C.HGE_System_SetStateInt(h.h, C.HGE_IntState_t(state), C.int(value))
+	C.HGE_System_SetStateInt(h, C.HGE_IntState_t(state), C.int(value))
 }
 
 func setStateString(state StringState, value string) {
 	val := C.CString(value)
 	defer C.free(unsafe.Pointer(val))
 
-	C.HGE_System_SetStateString(h.h, C.HGE_StringState_t(state), val)
+	C.HGE_System_SetStateString(h, C.HGE_StringState_t(state), val)
 }
 
 // Returns internal system state values.
@@ -437,7 +434,7 @@ func GetState(a ...interface{}) interface{} {
 }
 
 func getStateBool(state BoolState) bool {
-	return C.HGE_System_GetStateBool(h.h, C.HGE_BoolState_t(state)) == 1
+	return C.HGE_System_GetStateBool(h, C.HGE_BoolState_t(state)) == 1
 }
 
 func getStateFunc(state FuncState) StateFunc {
@@ -448,16 +445,16 @@ func getStateFunc(state FuncState) StateFunc {
 
 func getStateHwnd(state HwndState) Hwnd {
 	var hwnd Hwnd
-	hwnd.hwnd = C.HGE_System_GetStateHwnd(h.h, C.HGE_HwndState_t(state))
+	hwnd.hwnd = C.HGE_System_GetStateHwnd(h, C.HGE_HwndState_t(state))
 	return hwnd
 }
 
 func getStateInt(state IntState) int {
-	return int(C.HGE_System_GetStateInt(h.h, C.HGE_IntState_t(state)))
+	return int(C.HGE_System_GetStateInt(h, C.HGE_IntState_t(state)))
 }
 
 func getStateString(state StringState) string {
-	return C.GoString(C.HGE_System_GetStateString(h.h, C.HGE_StringState_t(state)))
+	return C.GoString(C.HGE_System_GetStateString(h, C.HGE_StringState_t(state)))
 }
 
 // Loads a resource into memory from disk.
@@ -466,14 +463,14 @@ func NewResource(filename string) (*Resource, Dword) {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
-	r := Resource(C.HGE_Resource_Load(h.h, fname, &s))
+	r := Resource(C.HGE_Resource_Load(h, fname, &s))
 
 	return &r, Dword(s)
 }
 
 // Deletes a previously loaded resource from memory.
 func (r Resource) Free() {
-	C.HGE_Resource_Free(h.h, unsafe.Pointer(r))
+	C.HGE_Resource_Free(h, unsafe.Pointer(r))
 }
 
 // Loads a resource, puts the loaded data into a byte array, and frees the data.
@@ -505,7 +502,7 @@ func LoadString(filename string) *string {
 }
 
 // Attaches a resource pack.
-func (r Resource) AttachPack(filename string, a ...interface{}) bool {
+func (_ Resource) AttachPack(filename string, a ...interface{}) bool {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
@@ -518,65 +515,65 @@ func (r Resource) AttachPack(filename string, a ...interface{}) bool {
 			defer C.free(unsafe.Pointer(password))
 		}
 
-		return C.HGE_Resource_AttachPack(h.h, fname, password) == 1
+		return C.HGE_Resource_AttachPack(h, fname, password) == 1
 	}
 
-	return C.HGE_Resource_AttachPack(h.h, fname, nil) == 1
+	return C.HGE_Resource_AttachPack(h, fname, nil) == 1
 }
 
 // Removes a resource pack.
-func (r Resource) RemovePack(filename string) {
+func (_ Resource) RemovePack(filename string) {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
-	C.HGE_Resource_RemovePack(h.h, fname)
+	C.HGE_Resource_RemovePack(h, fname)
 }
 
 // Removes all resource packs previously attached.
-func (r Resource) RemoveAllPacks() {
-	C.HGE_Resource_RemoveAllPacks(h.h)
+func (_ Resource) RemoveAllPacks() {
+	C.HGE_Resource_RemoveAllPacks(h)
 }
 
 // Builds absolute file path.
-func (r Resource) MakePath(a ...interface{}) string {
+func (_ Resource) MakePath(a ...interface{}) string {
 	if len(a) == 1 {
 		if filename, ok := a[0].(string); ok {
 			fname := C.CString(filename)
 			defer C.free(unsafe.Pointer(fname))
 
-			return C.GoString(C.HGE_Resource_MakePath(h.h, fname))
+			return C.GoString(C.HGE_Resource_MakePath(h, fname))
 		}
 	}
 
-	return C.GoString(C.HGE_Resource_MakePath(h.h, nil))
+	return C.GoString(C.HGE_Resource_MakePath(h, nil))
 }
 
 // Enumerates files by given wildcard.
-func (r Resource) EnumFiles(a ...interface{}) string {
+func (_ Resource) EnumFiles(a ...interface{}) string {
 	if len(a) == 1 {
 		if wildcard, ok := a[0].(string); ok {
 			wcard := C.CString(wildcard)
 			defer C.free(unsafe.Pointer(wcard))
 
-			return C.GoString(C.HGE_Resource_EnumFiles(h.h, wcard))
+			return C.GoString(C.HGE_Resource_EnumFiles(h, wcard))
 		}
 	}
 
-	return C.GoString(C.HGE_Resource_EnumFiles(h.h, nil))
+	return C.GoString(C.HGE_Resource_EnumFiles(h, nil))
 }
 
 // Enumerates folders by given wildcard.
-func (r Resource) EnumFolders(a ...interface{}) string {
+func (_ Resource) EnumFolders(a ...interface{}) string {
 	if len(a) == 1 {
 		if wildcard, ok := a[0].(string); ok {
 			wcard := C.CString(wildcard)
 			defer C.free(unsafe.Pointer(wcard))
 
-			return C.GoString(C.HGE_Resource_EnumFolders(h.h, wcard))
+			return C.GoString(C.HGE_Resource_EnumFolders(h, wcard))
 		}
 	}
 
-	return C.GoString(C.HGE_Resource_EnumFolders(h.h, nil))
+	return C.GoString(C.HGE_Resource_EnumFolders(h, nil))
 }
 
 type Ini struct {
@@ -592,7 +589,7 @@ func (i Ini) SetInt(value int) {
 	defer C.free(unsafe.Pointer(s))
 	defer C.free(unsafe.Pointer(n))
 
-	C.HGE_Ini_SetInt(h.h, s, n, C.int(value))
+	C.HGE_Ini_SetInt(h, s, n, C.int(value))
 }
 
 func (i Ini) GetInt(def_val int) int {
@@ -600,7 +597,7 @@ func (i Ini) GetInt(def_val int) int {
 	defer C.free(unsafe.Pointer(s))
 	defer C.free(unsafe.Pointer(n))
 
-	return int(C.HGE_Ini_GetInt(h.h, s, n, C.int(def_val)))
+	return int(C.HGE_Ini_GetInt(h, s, n, C.int(def_val)))
 }
 
 func (i Ini) SetFloat(value float64) {
@@ -608,7 +605,7 @@ func (i Ini) SetFloat(value float64) {
 	defer C.free(unsafe.Pointer(s))
 	defer C.free(unsafe.Pointer(n))
 
-	C.HGE_Ini_SetFloat(h.h, s, n, C.float(value))
+	C.HGE_Ini_SetFloat(h, s, n, C.float(value))
 }
 
 func (i Ini) GetFloat(def_val float64) float64 {
@@ -616,7 +613,7 @@ func (i Ini) GetFloat(def_val float64) float64 {
 	defer C.free(unsafe.Pointer(s))
 	defer C.free(unsafe.Pointer(n))
 
-	return float64(C.HGE_Ini_GetFloat(h.h, s, n, C.float(def_val)))
+	return float64(C.HGE_Ini_GetFloat(h, s, n, C.float(def_val)))
 }
 
 func (i Ini) SetString(value string) {
@@ -625,7 +622,7 @@ func (i Ini) SetString(value string) {
 	defer C.free(unsafe.Pointer(n))
 	defer C.free(unsafe.Pointer(v))
 
-	C.HGE_Ini_SetString(h.h, s, n, v)
+	C.HGE_Ini_SetString(h, s, n, v)
 }
 
 func (i Ini) GetString(def_val string) string {
@@ -634,25 +631,25 @@ func (i Ini) GetString(def_val string) string {
 	defer C.free(unsafe.Pointer(n))
 	defer C.free(unsafe.Pointer(df))
 
-	return C.GoString(C.HGE_Ini_GetString(h.h, s, n, df))
+	return C.GoString(C.HGE_Ini_GetString(h, s, n, df))
 }
 
 func RandomSeed(a ...interface{}) {
 	if len(a) == 1 {
 		if seed, ok := a[0].(int); ok {
-			C.HGE_Random_Seed(h.h, C.int(seed))
+			C.HGE_Random_Seed(h, C.int(seed))
 		}
 	}
 
-	C.HGE_Random_Seed(h.h, 0)
+	C.HGE_Random_Seed(h, 0)
 }
 
 func RandomInt(min, max int) int {
-	return int(C.HGE_Random_Int(h.h, C.int(min), C.int(max)))
+	return int(C.HGE_Random_Int(h, C.int(min), C.int(max)))
 }
 
 func RandomFloat(min, max float64) float64 {
-	return float64(C.HGE_Random_Float(h.h, C.float(min), C.float(max)))
+	return float64(C.HGE_Random_Float(h, C.float(min), C.float(max)))
 }
 
 type Timer float64
@@ -672,17 +669,17 @@ func NewTimer(a ...interface{}) *Timer {
 }
 
 func (t *Timer) Time() float64 {
-	*t = Timer(C.HGE_Timer_GetTime(h.h))
+	*t = Timer(C.HGE_Timer_GetTime(h))
 	return float64(*t)
 }
 
 func (t *Timer) Delta() float64 {
-	*t = Timer(C.HGE_Timer_GetDelta(h.h))
+	*t = Timer(C.HGE_Timer_GetDelta(h))
 	return float64(*t)
 }
 
 func GetFPS() int {
-	return int(C.HGE_Timer_GetFPS(h.h))
+	return int(C.HGE_Timer_GetFPS(h))
 }
 
 func NewEffect(filename string, a ...interface{}) Effect {
@@ -691,19 +688,19 @@ func NewEffect(filename string, a ...interface{}) Effect {
 
 	if len(a) == 1 {
 		if size, ok := a[0].(Dword); ok {
-			C.HGE_Effect_Load(h.h, fname, C.DWORD(size))
+			C.HGE_Effect_Load(h, fname, C.DWORD(size))
 		}
 	}
 
-	return Effect(C.HGE_Effect_Load(h.h, fname, 0))
+	return Effect(C.HGE_Effect_Load(h, fname, 0))
 }
 
 func (e Effect) Free() {
-	C.HGE_Effect_Free(h.h, (C.HEFFECT(e)))
+	C.HGE_Effect_Free(h, (C.HEFFECT(e)))
 }
 
 func (e Effect) Play() Channel {
-	return Channel(C.HGE_Effect_Play(h.h, C.HEFFECT(e)))
+	return Channel(C.HGE_Effect_Play(h, C.HEFFECT(e)))
 }
 
 func (e Effect) PlayEx(a ...interface{}) Channel {
@@ -737,18 +734,18 @@ func (e Effect) PlayEx(a ...interface{}) Channel {
 		}
 	}
 
-	return Channel(C.HGE_Effect_PlayEx(h.h, C.HEFFECT(e), C.int(volume), C.int(pan), C.float(pitch), btoi(loop)))
+	return Channel(C.HGE_Effect_PlayEx(h, C.HEFFECT(e), C.int(volume), C.int(pan), C.float(pitch), btoi(loop)))
 }
 
 func NewMusic(filename string, size Dword) Music {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
-	return Music(C.HGE_Music_Load(h.h, fname, C.DWORD(size)))
+	return Music(C.HGE_Music_Load(h, fname, C.DWORD(size)))
 }
 
 func (m Music) Free() {
-	C.HGE_Music_Free(h.h, C.HMUSIC(m))
+	C.HGE_Music_Free(h, C.HMUSIC(m))
 }
 
 func (m Music) Play(loop bool, a ...interface{}) Channel {
@@ -772,58 +769,58 @@ func (m Music) Play(loop bool, a ...interface{}) Channel {
 		}
 	}
 
-	return Channel(C.HGE_Music_Play(h.h, C.HMUSIC(m), btoi(loop), C.int(volume), C.int(order), C.int(row)))
+	return Channel(C.HGE_Music_Play(h, C.HMUSIC(m), btoi(loop), C.int(volume), C.int(order), C.int(row)))
 }
 
 func (m Music) SetAmplification(ampl int) {
-	C.HGE_Music_SetAmplification(h.h, C.HMUSIC(m), C.int(ampl))
+	C.HGE_Music_SetAmplification(h, C.HMUSIC(m), C.int(ampl))
 }
 
 func (m Music) Amplification() int {
-	return int(C.HGE_Music_GetAmplification(h.h, C.HMUSIC(m)))
+	return int(C.HGE_Music_GetAmplification(h, C.HMUSIC(m)))
 }
 
 func (m Music) Len() int {
-	return int(C.HGE_Music_GetLength(h.h, C.HMUSIC(m)))
+	return int(C.HGE_Music_GetLength(h, C.HMUSIC(m)))
 }
 
 func (m Music) SetPos(order, row int) {
-	C.HGE_Music_SetPos(h.h, C.HMUSIC(m), C.int(order), C.int(row))
+	C.HGE_Music_SetPos(h, C.HMUSIC(m), C.int(order), C.int(row))
 }
 
 func (m Music) Pos() (order, row int, ok bool) {
 	var o, r C.int
 
-	ok = C.HGE_Music_GetPos(h.h, C.HMUSIC(m), &o, &r) == 1
+	ok = C.HGE_Music_GetPos(h, C.HMUSIC(m), &o, &r) == 1
 
 	return int(o), int(r), ok
 }
 
 func (m Music) SetInstrVolume(instr int, volume int) {
-	C.HGE_Music_SetInstrVolume(h.h, C.HMUSIC(m), C.int(instr), C.int(volume))
+	C.HGE_Music_SetInstrVolume(h, C.HMUSIC(m), C.int(instr), C.int(volume))
 }
 
 func (m Music) InstrVolume(instr int) int {
-	return int(C.HGE_Music_GetInstrVolume(h.h, C.HMUSIC(m), C.int(instr)))
+	return int(C.HGE_Music_GetInstrVolume(h, C.HMUSIC(m), C.int(instr)))
 }
 
 func (m Music) SetChannelVolume(channel, volume int) {
-	C.HGE_Music_SetChannelVolume(h.h, C.HMUSIC(m), C.int(channel), C.int(volume))
+	C.HGE_Music_SetChannelVolume(h, C.HMUSIC(m), C.int(channel), C.int(volume))
 }
 
 func (m Music) ChannelVolume(channel int) int {
-	return int(C.HGE_Music_GetChannelVolume(h.h, C.HMUSIC(m), C.int(channel)))
+	return int(C.HGE_Music_GetChannelVolume(h, C.HMUSIC(m), C.int(channel)))
 }
 
 func NewStream(filename string, size Dword) Stream {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
-	return Stream(C.HGE_Stream_Load(h.h, fname, C.DWORD(size)))
+	return Stream(C.HGE_Stream_Load(h, fname, C.DWORD(size)))
 }
 
 func (s Stream) Free() {
-	C.HGE_Stream_Free(h.h, C.HSTREAM(s))
+	C.HGE_Stream_Free(h, C.HSTREAM(s))
 }
 
 func (s Stream) Play(loop bool, a ...interface{}) Channel {
@@ -835,59 +832,59 @@ func (s Stream) Play(loop bool, a ...interface{}) Channel {
 		}
 	}
 
-	return Channel(C.HGE_Stream_Play(h.h, C.HSTREAM(s), btoi(loop), C.int(volume)))
+	return Channel(C.HGE_Stream_Play(h, C.HSTREAM(s), btoi(loop), C.int(volume)))
 }
 
 func (c Channel) SetPanning(pan int) {
-	C.HGE_Channel_SetPanning(h.h, C.HCHANNEL(c), C.int(pan))
+	C.HGE_Channel_SetPanning(h, C.HCHANNEL(c), C.int(pan))
 }
 
 func (c Channel) SetVolume(volume int) {
-	C.HGE_Channel_SetVolume(h.h, C.HCHANNEL(c), C.int(volume))
+	C.HGE_Channel_SetVolume(h, C.HCHANNEL(c), C.int(volume))
 }
 
 func (c Channel) SetPitch(pitch float64) {
-	C.HGE_Channel_SetPitch(h.h, C.HCHANNEL(c), C.float(pitch))
+	C.HGE_Channel_SetPitch(h, C.HCHANNEL(c), C.float(pitch))
 }
 
 func (c Channel) Pause() {
-	C.HGE_Channel_Pause(h.h, C.HCHANNEL(c))
+	C.HGE_Channel_Pause(h, C.HCHANNEL(c))
 }
 
 func (c Channel) Resume() {
-	C.HGE_Channel_Resume(h.h, C.HCHANNEL(c))
+	C.HGE_Channel_Resume(h, C.HCHANNEL(c))
 }
 
 func (c Channel) Stop() {
-	C.HGE_Channel_Stop(h.h, C.HCHANNEL(c))
+	C.HGE_Channel_Stop(h, C.HCHANNEL(c))
 }
 
 func (c Channel) PauseAll() {
-	C.HGE_Channel_PauseAll(h.h)
+	C.HGE_Channel_PauseAll(h)
 }
 
 func (c Channel) ResumeAll() {
-	C.HGE_Channel_ResumeAll(h.h)
+	C.HGE_Channel_ResumeAll(h)
 }
 
 func (c Channel) StopAll() {
-	C.HGE_Channel_StopAll(h.h)
+	C.HGE_Channel_StopAll(h)
 }
 
 func (c Channel) IsPlaying() bool {
-	return C.HGE_Channel_IsPlaying(h.h, C.HCHANNEL(c)) == 1
+	return C.HGE_Channel_IsPlaying(h, C.HCHANNEL(c)) == 1
 }
 
 func (c Channel) Len() float64 {
-	return float64(C.HGE_Channel_GetLength(h.h, C.HCHANNEL(c)))
+	return float64(C.HGE_Channel_GetLength(h, C.HCHANNEL(c)))
 }
 
 func (c Channel) Pos() float64 {
-	return float64(C.HGE_Channel_GetPos(h.h, C.HCHANNEL(c)))
+	return float64(C.HGE_Channel_GetPos(h, C.HCHANNEL(c)))
 }
 
 func (c Channel) SetPos(seconds float64) {
-	C.HGE_Channel_SetPos(h.h, C.HCHANNEL(c), C.float(seconds))
+	C.HGE_Channel_SetPos(h, C.HCHANNEL(c), C.float(seconds))
 }
 
 func (c Channel) SlideTo(time float64, a ...interface{}) {
@@ -915,31 +912,31 @@ func (c Channel) SlideTo(time float64, a ...interface{}) {
 		}
 	}
 
-	C.HGE_Channel_SlideTo(h.h, C.HCHANNEL(c), C.float(time), C.int(volume), C.int(pan), C.float(pitch))
+	C.HGE_Channel_SlideTo(h, C.HCHANNEL(c), C.float(time), C.int(volume), C.int(pan), C.float(pitch))
 }
 
 func (c Channel) IsSliding() bool {
-	return C.HGE_Channel_IsSliding(h.h, C.HCHANNEL(c)) == 1
+	return C.HGE_Channel_IsSliding(h, C.HCHANNEL(c)) == 1
 }
 
 func MousePos() (x, y float64) {
 	var nx, ny C.float
 
-	C.HGE_Input_GetMousePos(h.h, &nx, &ny)
+	C.HGE_Input_GetMousePos(h, &nx, &ny)
 
 	return float64(nx), float64(ny)
 }
 
 func SetMousePos(x, y float64) {
-	C.HGE_Input_SetMousePos(h.h, C.float(x), C.float(y))
+	C.HGE_Input_SetMousePos(h, C.float(x), C.float(y))
 }
 
 func MouseWheel() int {
-	return int(C.HGE_Input_GetMouseWheel(h.h))
+	return int(C.HGE_Input_GetMouseWheel(h))
 }
 
 func IsMouseOver() bool {
-	return C.HGE_Input_IsMouseOver(h.h) == 1
+	return C.HGE_Input_IsMouseOver(h) == 1
 }
 
 func NewKey(i int) Key {
@@ -947,49 +944,49 @@ func NewKey(i int) Key {
 }
 
 func (k Key) Down() bool {
-	return C.HGE_Input_KeyDown(h.h, C.int(k)) == 1
+	return C.HGE_Input_KeyDown(h, C.int(k)) == 1
 }
 
 func (k Key) Up() bool {
-	return C.HGE_Input_KeyUp(h.h, C.int(k)) == 1
+	return C.HGE_Input_KeyUp(h, C.int(k)) == 1
 }
 
 func (k Key) State() bool {
-	return C.HGE_Input_GetKeyState(h.h, C.int(k)) == 1
+	return C.HGE_Input_GetKeyState(h, C.int(k)) == 1
 }
 func (k Key) Name() string {
-	return C.GoString(C.HGE_Input_GetKeyName(h.h, C.int(k)))
+	return C.GoString(C.HGE_Input_GetKeyName(h, C.int(k)))
 }
 
 func GetKey() Key {
-	return Key(C.HGE_Input_GetKey(h.h))
+	return Key(C.HGE_Input_GetKey(h))
 }
 
 func GetChar() int {
-	return int(C.HGE_Input_GetChar(h.h))
+	return int(C.HGE_Input_GetChar(h))
 }
 
 func GetEvent() (e *InputEvent, b bool) {
-	b = C.HGE_Input_GetEvent(h.h, (*C.HGE_InputEvent_t)(unsafe.Pointer(e))) == 1
+	b = C.HGE_Input_GetEvent(h, (*C.HGE_InputEvent_t)(unsafe.Pointer(e))) == 1
 	return e, b
 }
 
 func GfxBeginScene(a ...interface{}) bool {
 	if len(a) == 1 {
 		if target, ok := a[0].(Target); ok {
-			return C.HGE_Gfx_BeginScene(h.h, C.HTARGET(target)) == 1
+			return C.HGE_Gfx_BeginScene(h, C.HTARGET(target)) == 1
 		}
 	}
 
-	return C.HGE_Gfx_BeginScene(h.h, 0) == 1
+	return C.HGE_Gfx_BeginScene(h, 0) == 1
 }
 
 func GfxEndScene() {
-	C.HGE_Gfx_EndScene(h.h)
+	C.HGE_Gfx_EndScene(h)
 }
 
 func GfxClear(color Dword) {
-	C.HGE_Gfx_Clear(h.h, C.DWORD(color))
+	C.HGE_Gfx_Clear(h, C.DWORD(color))
 }
 
 func GfxRenderLine(x1, y1, x2, y2 float64, a ...interface{}) {
@@ -1012,21 +1009,21 @@ func GfxRenderLine(x1, y1, x2, y2 float64, a ...interface{}) {
 		}
 	}
 
-	C.HGE_Gfx_RenderLine(h.h, C.float(x1), C.float(y1), C.float(x2), C.float(y2), C.DWORD(color), C.float(z))
+	C.HGE_Gfx_RenderLine(h, C.float(x1), C.float(y1), C.float(x2), C.float(y2), C.DWORD(color), C.float(z))
 }
 
 func (t *Triple) Render() {
-	C.HGE_Gfx_RenderTriple(h.h, (*C.HGE_Triple_t)(unsafe.Pointer(t)))
+	C.HGE_Gfx_RenderTriple(h, (*C.HGE_Triple_t)(unsafe.Pointer(t)))
 }
 
 func (q *Quad) Render() {
-	C.HGE_Gfx_RenderQuad(h.h, (*C.HGE_Quad_t)(unsafe.Pointer(q)))
+	C.HGE_Gfx_RenderQuad(h, (*C.HGE_Quad_t)(unsafe.Pointer(q)))
 }
 
 func GfxStartBatch(prim_type int, tex Texture, blend int) (ver *Vertex, max_prim int, ok bool) {
 	mp := C.int(0)
 
-	v := C.HGE_Gfx_StartBatch(h.h, C.int(prim_type), C.HTEXTURE(tex), C.int(blend), &mp)
+	v := C.HGE_Gfx_StartBatch(h, C.int(prim_type), C.HTEXTURE(tex), C.int(blend), &mp)
 
 	if v == nil {
 		return nil, 0, false
@@ -1036,7 +1033,7 @@ func GfxStartBatch(prim_type int, tex Texture, blend int) (ver *Vertex, max_prim
 }
 
 func GfxFinishBatch(prim int) {
-	C.HGE_Gfx_FinishBatch(h.h, C.int(prim))
+	C.HGE_Gfx_FinishBatch(h, C.int(prim))
 }
 
 func GfxSetClipping(a ...interface{}) {
@@ -1065,7 +1062,7 @@ func GfxSetClipping(a ...interface{}) {
 		}
 	}
 
-	C.HGE_Gfx_SetClipping(h.h, C.int(x), C.int(y), C.int(w), C.int(hi))
+	C.HGE_Gfx_SetClipping(h, C.int(x), C.int(y), C.int(w), C.int(hi))
 }
 
 func GfxSetTransform(a ...interface{}) {
@@ -1133,23 +1130,23 @@ func GfxSetTransform(a ...interface{}) {
 		}
 	}
 
-	C.HGE_Gfx_SetTransform(h.h, C.float(x), C.float(y), C.float(dx), C.float(dy), C.float(rot), C.float(hscale), C.float(vscale))
+	C.HGE_Gfx_SetTransform(h, C.float(x), C.float(y), C.float(dx), C.float(dy), C.float(rot), C.float(hscale), C.float(vscale))
 }
 
 func NewTarget(width, height int, zbuffer bool) Target {
-	return Target(C.HGE_Target_Create(h.h, C.int(width), C.int(height), btoi(zbuffer)))
+	return Target(C.HGE_Target_Create(h, C.int(width), C.int(height), btoi(zbuffer)))
 }
 
 func (t Target) Free() {
-	C.HGE_Target_Free(h.h, C.HTARGET(t))
+	C.HGE_Target_Free(h, C.HTARGET(t))
 }
 
 func (t Target) Texture() Texture {
-	return Texture(C.HGE_Target_GetTexture(h.h, C.HTARGET(t)))
+	return Texture(C.HGE_Target_GetTexture(h, C.HTARGET(t)))
 }
 
 func NewTexture(width, height int) Texture {
-	return Texture(C.HGE_Texture_Create(h.h, C.int(width), C.int(height)))
+	return Texture(C.HGE_Texture_Create(h, C.int(width), C.int(height)))
 }
 
 func LoadTexture(filename string, a ...interface{}) Texture {
@@ -1172,31 +1169,31 @@ func LoadTexture(filename string, a ...interface{}) Texture {
 		}
 	}
 
-	return Texture(C.HGE_Texture_Load(h.h, fname, C.DWORD(size), btoi(mipmap)))
+	return Texture(C.HGE_Texture_Load(h, fname, C.DWORD(size), btoi(mipmap)))
 }
 
 func (t Texture) Free() {
-	C.HGE_Texture_Free(h.h, C.HTEXTURE(t))
+	C.HGE_Texture_Free(h, C.HTEXTURE(t))
 }
 
 func (t Texture) Width(a ...interface{}) int {
 	if len(a) == 1 {
 		if original, ok := a[0].(bool); ok {
-			return int(C.HGE_Texture_GetWidth(h.h, C.HTEXTURE(t), btoi(original)))
+			return int(C.HGE_Texture_GetWidth(h, C.HTEXTURE(t), btoi(original)))
 		}
 	}
 
-	return int(C.HGE_Texture_GetWidth(h.h, C.HTEXTURE(t), btoi(false)))
+	return int(C.HGE_Texture_GetWidth(h, C.HTEXTURE(t), btoi(false)))
 }
 
 func (t Texture) Height(a ...interface{}) int {
 	if len(a) == 1 {
 		if original, ok := a[0].(bool); ok {
-			return int(C.HGE_Texture_GetWidth(h.h, C.HTEXTURE(t), btoi(original)))
+			return int(C.HGE_Texture_GetWidth(h, C.HTEXTURE(t), btoi(original)))
 		}
 	}
 
-	return int(C.HGE_Texture_GetHeight(h.h, C.HTEXTURE(t), btoi(false)))
+	return int(C.HGE_Texture_GetHeight(h, C.HTEXTURE(t), btoi(false)))
 }
 
 func (t Texture) Lock(a ...interface{}) *Dword {
@@ -1231,12 +1228,12 @@ func (t Texture) Lock(a ...interface{}) *Dword {
 		}
 	}
 
-	d := C.HGE_Texture_Lock(h.h, C.HTEXTURE(t), btoi(readonly), C.int(left), C.int(top), C.int(width), C.int(height))
+	d := C.HGE_Texture_Lock(h, C.HTEXTURE(t), btoi(readonly), C.int(left), C.int(top), C.int(width), C.int(height))
 	return (*Dword)(d)
 }
 
 func (t Texture) Unlock() {
-	C.HGE_Texture_Unlock(h.h, C.HTEXTURE(t))
+	C.HGE_Texture_Unlock(h, C.HTEXTURE(t))
 }
 
 // HGE_ Virtual-key codes
