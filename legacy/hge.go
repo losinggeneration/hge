@@ -68,8 +68,7 @@ func (h *HGE) System_GetState(a ...interface{}) interface{} {
 
 // Loads a resource into memory from disk.
 func (h *HGE) Resource_Load(filename string) (*hge.Resource, hge.Dword) {
-	r, s := hge.NewResource(filename)
-	return r, s
+	return hge.NewResource(filename)
 }
 
 // Deletes a previously loaded resource from memory.
