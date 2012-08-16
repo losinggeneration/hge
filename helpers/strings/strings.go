@@ -1,7 +1,8 @@
 package strings
 
 import (
-	. "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/legacy"
 	"strings"
 )
 
@@ -16,7 +17,7 @@ type StringTable struct {
 
 func NewStringTable(filename string) *StringTable {
 	st := new(StringTable)
-	hge := Create(VERSION)
+	hge := Create(hge.VERSION)
 
 	st.stringsMap = make(map[string]string)
 

@@ -5,7 +5,8 @@ import (
 	"errors"
 	"fmt"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
+	hge "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/legacy"
 	"strconv"
 	"strings"
 )
@@ -34,7 +35,7 @@ const (
 type Font struct {
 	hge *HGE
 
-	texture    Texture
+	texture    hge.Texture
 	letters    [256]*Sprite
 	pre        [256]float64
 	post       [256]float64
@@ -45,7 +46,7 @@ type Font struct {
 	tracking   float64
 	spacing    float64
 
-	color Dword
+	color hge.Dword
 	z     float64
 	blend int
 }
@@ -112,13 +113,13 @@ func NewFont(filename string, arg ...interface{}) *Font {
 
 	f := new(Font)
 
-	f.hge = Create(VERSION)
+	f.hge = Create(hge.VERSION)
 
 	f.scale, f.proportion = 1.0, 1.0
 	f.spacing = 1.0
 
 	f.z = 0.5
-	f.blend = BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE
+	f.blend = hge.BLEND_COLORMUL | hge.BLEND_ALPHABLEND | hge.BLEND_NOZWRITE
 	f.color = 0xFFFFFFFF
 
 	desc := f.hge.ResourceLoadString(filename)
@@ -203,7 +204,7 @@ func (f *Font) Printf(x, y float64, align int, format string, arg ...interface{}
 func (f *Font) Printfb(x, y, w, h float64, align int, format string, arg ...interface{}) {
 }
 
-func (f *Font) SetColor(color Dword) {
+func (f *Font) SetColor(color hge.Dword) {
 	f.color = color
 
 	for i := 0; i < 256; i++ {
@@ -253,7 +254,7 @@ func (f *Font) SetSpacing(spacing float64) {
 	f.spacing = spacing
 }
 
-func (f Font) GetColor() Dword {
+func (f Font) GetColor() hge.Dword {
 	return f.color
 }
 

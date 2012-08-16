@@ -2,24 +2,25 @@ package sprite
 
 import (
 	. "github.com/losinggeneration/hge-go/helpers/rect"
-	. "github.com/losinggeneration/hge-go/hge"
+	hge "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/legacy"
 	"math"
 )
 
 type Sprite struct {
 	*HGE
 
-	Quad                  Quad
+	Quad                  hge.Quad
 	TX, TY, Width, Height float64
 	TexWidth, TexHeight   float64
 	HotX, HotY            float64
 	XFlip, YFlip, HSFlip  bool
 }
 
-func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
+func NewSprite(texture hge.Texture, texx, texy, w, h float64) Sprite {
 	var sprite Sprite
 
-	sprite.HGE = Create(VERSION)
+	sprite.HGE = Create(hge.VERSION)
 
 	sprite.TX, sprite.TY = texx, texy
 	sprite.Width, sprite.Height = w, h
@@ -54,7 +55,7 @@ func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
 	sprite.Quad.V[2].Col = 0xffffffff
 	sprite.Quad.V[3].Col = 0xffffffff
 
-	sprite.Quad.Blend = BLEND_DEFAULT
+	sprite.Quad.Blend = hge.BLEND_DEFAULT
 
 	return sprite
 }
@@ -148,7 +149,7 @@ func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64) {
 	sprite.HGE.Gfx_RenderQuad(&sprite.Quad)
 }
 
-func (sprite *Sprite) SetTexture(tex Texture) {
+func (sprite *Sprite) SetTexture(tex hge.Texture) {
 	var tx1, ty1, tx2, ty2 float64
 	var tw, th float64
 
@@ -212,7 +213,7 @@ func (sprite *Sprite) SetTextureRect(x, y, w, h float64, a ...interface{}) {
 	sprite.SetFlip(bX, bY, bHS)
 }
 
-func (sprite *Sprite) SetColor(col Dword, arg ...interface{}) {
+func (sprite *Sprite) SetColor(col hge.Dword, arg ...interface{}) {
 	i := -1
 
 	if len(arg) == 1 {
@@ -312,7 +313,7 @@ func (sprite *Sprite) SetFlip(x, y, hotSpot bool) {
 	}
 }
 
-func (sprite *Sprite) GetTexture() Texture {
+func (sprite *Sprite) GetTexture() hge.Texture {
 	return sprite.Quad.Tex
 }
 
@@ -320,7 +321,7 @@ func (sprite *Sprite) GetTextureRect() (x, y, w, h float64) {
 	return sprite.TX, sprite.TY, sprite.Width, sprite.Height
 }
 
-func (sprite *Sprite) GetColor(arg ...interface{}) Dword {
+func (sprite *Sprite) GetColor(arg ...interface{}) hge.Dword {
 	i := 0
 	if len(arg) == 1 {
 		if ni, ok := arg[0].(int); ok {

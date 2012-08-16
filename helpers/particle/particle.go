@@ -6,7 +6,8 @@ import (
 	. "github.com/losinggeneration/hge-go/helpers/rect"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
 	. "github.com/losinggeneration/hge-go/helpers/vector"
-	. "github.com/losinggeneration/hge-go/hge"
+	hge "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/legacy"
 	"math"
 	"reflect"
 	"unsafe"
@@ -77,7 +78,7 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 		}
 	}
 
-	ps.hge = Create(VERSION)
+	ps.hge = Create(hge.VERSION)
 
 	psi, size := ps.hge.Resource_Load(filename)
 
@@ -147,7 +148,7 @@ func NewParticleSystemWithInfo(psi ParticleSystemInfo, a ...interface{}) *Partic
 		}
 	}
 
-	ps.hge = Create(VERSION)
+	ps.hge = Create(hge.VERSION)
 	ps.Info = psi
 	ps.age = -2.0
 
@@ -343,9 +344,9 @@ func (ps *ParticleSystem) update(deltaTime float64) {
 			par.location.X += ps.hge.Random_Float(-2.0, 2.0)
 			par.location.Y += ps.hge.Random_Float(-2.0, 2.0)
 
-			ang := ps.Info.Direction - Pi_2 + ps.hge.Random_Float(0, ps.Info.Spread) - ps.Info.Spread/2.0
+			ang := ps.Info.Direction - hge.Pi_2 + ps.hge.Random_Float(0, ps.Info.Spread) - ps.Info.Spread/2.0
 			if ps.Info.Relative {
-				ang += ps.prevLocation.Subtract(ps.location).Angle() + Pi_2
+				ang += ps.prevLocation.Subtract(ps.location).Angle() + hge.Pi_2
 			}
 			par.velocity.X = math.Cos(ang)
 			par.velocity.Y = math.Sin(ang)
