@@ -657,6 +657,20 @@ func RandomFloat(min, max float64) float64 {
 
 type Timer float64
 
+func NewTimer(a ...interface{}) *Timer {
+	t := new(Timer)
+	*t = 0.0
+	if len(a) == 1 {
+		switch a[0].(type) {
+		case float64:
+			*t = Timer(a[0].(float64))
+		case float32:
+			*t = Timer(a[0].(float32))
+		}
+	}
+	return t
+}
+
 func (t *Timer) Time() float64 {
 	*t = Timer(C.HGE_Timer_GetTime(h.h))
 	return float64(*t)
@@ -765,11 +779,11 @@ func (m Music) SetAmplification(ampl int) {
 	C.HGE_Music_SetAmplification(h.h, C.HMUSIC(m), C.int(ampl))
 }
 
-func (m Music) GetAmplification() int {
+func (m Music) Amplification() int {
 	return int(C.HGE_Music_GetAmplification(h.h, C.HMUSIC(m)))
 }
 
-func (m Music) GetLength() int {
+func (m Music) Len() int {
 	return int(C.HGE_Music_GetLength(h.h, C.HMUSIC(m)))
 }
 
@@ -777,7 +791,7 @@ func (m Music) SetPos(order, row int) {
 	C.HGE_Music_SetPos(h.h, C.HMUSIC(m), C.int(order), C.int(row))
 }
 
-func (m Music) GetPos() (order, row int, ok bool) {
+func (m Music) Pos() (order, row int, ok bool) {
 	var o, r C.int
 
 	ok = C.HGE_Music_GetPos(h.h, C.HMUSIC(m), &o, &r) == 1
@@ -789,7 +803,7 @@ func (m Music) SetInstrVolume(instr int, volume int) {
 	C.HGE_Music_SetInstrVolume(h.h, C.HMUSIC(m), C.int(instr), C.int(volume))
 }
 
-func (m Music) GetInstrVolume(instr int) int {
+func (m Music) InstrVolume(instr int) int {
 	return int(C.HGE_Music_GetInstrVolume(h.h, C.HMUSIC(m), C.int(instr)))
 }
 
@@ -797,7 +811,7 @@ func (m Music) SetChannelVolume(channel, volume int) {
 	C.HGE_Music_SetChannelVolume(h.h, C.HMUSIC(m), C.int(channel), C.int(volume))
 }
 
-func (m Music) GetChannelVolume(channel int) int {
+func (m Music) ChannelVolume(channel int) int {
 	return int(C.HGE_Music_GetChannelVolume(h.h, C.HMUSIC(m), C.int(channel)))
 }
 
@@ -864,11 +878,11 @@ func (c Channel) IsPlaying() bool {
 	return C.HGE_Channel_IsPlaying(h.h, C.HCHANNEL(c)) == 1
 }
 
-func (c Channel) GetLength() float64 {
+func (c Channel) Len() float64 {
 	return float64(C.HGE_Channel_GetLength(h.h, C.HCHANNEL(c)))
 }
 
-func (c Channel) GetPos() float64 {
+func (c Channel) Pos() float64 {
 	return float64(C.HGE_Channel_GetPos(h.h, C.HCHANNEL(c)))
 }
 
@@ -908,7 +922,7 @@ func (c Channel) IsSliding() bool {
 	return C.HGE_Channel_IsSliding(h.h, C.HCHANNEL(c)) == 1
 }
 
-func GetMousePos() (x, y float64) {
+func MousePos() (x, y float64) {
 	var nx, ny C.float
 
 	C.HGE_Input_GetMousePos(h.h, &nx, &ny)
@@ -920,7 +934,7 @@ func SetMousePos(x, y float64) {
 	C.HGE_Input_SetMousePos(h.h, C.float(x), C.float(y))
 }
 
-func GetMouseWheel() int {
+func MouseWheel() int {
 	return int(C.HGE_Input_GetMouseWheel(h.h))
 }
 
@@ -1130,7 +1144,7 @@ func (t Target) Free() {
 	C.HGE_Target_Free(h.h, C.HTARGET(t))
 }
 
-func (t Target) GetTexture() Texture {
+func (t Target) Texture() Texture {
 	return Texture(C.HGE_Target_GetTexture(h.h, C.HTARGET(t)))
 }
 
