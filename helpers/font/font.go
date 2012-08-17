@@ -5,8 +5,7 @@ import (
 	"errors"
 	"fmt"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	hge "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/legacy"
+	"github.com/losinggeneration/hge-go/hge"
 	"strconv"
 	"strings"
 )
@@ -30,11 +29,9 @@ const (
 )
 
 /*
- * * HGE Font class
+ * Font struct
  */
 type Font struct {
-	hge *HGE
-
 	texture    hge.Texture
 	letters    [256]*Sprite
 	pre        [256]float64
@@ -113,8 +110,6 @@ func NewFont(filename string, arg ...interface{}) *Font {
 
 	f := new(Font)
 
-	f.hge = Create(hge.VERSION)
-
 	f.scale, f.proportion = 1.0, 1.0
 	f.spacing = 1.0
 
@@ -122,17 +117,17 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	f.blend = hge.BLEND_COLORMUL | hge.BLEND_ALPHABLEND | hge.BLEND_NOZWRITE
 	f.color = 0xFFFFFFFF
 
-	desc := f.hge.ResourceLoadString(filename)
+	desc := hge.LoadString(filename)
 
 	if desc == nil {
-		f.hge.System_Log("Font %s seems to be empty.", filename)
+		hge.Log("Font %s seems to be empty.", filename)
 		return nil
 	}
 
 	lines := getLines(*desc)
 
 	if len(lines) == 0 || lines[0] != fntHEADERTAG {
-		f.hge.System_Log("Font %s has incorrect format.", filename)
+		hge.Log("Font %s has incorrect format.", filename)
 		return nil
 	}
 
@@ -145,12 +140,12 @@ func NewFont(filename string, arg ...interface{}) *Font {
 		option, value, err := tokenizeLine(line)
 
 		if err != nil || len(line) == 0 || len(option) == 0 || len(value) == 0 {
-			f.hge.System_Log("Unreadable line (%s) in font file: %s", line, filename)
+			hge.Log("Unreadable line (%s) in font file: %s", line, filename)
 			continue
 		}
 
 		if option == fntBITMAPTAG {
-			f.texture = f.hge.Texture_Load(value, 0, mipmap)
+			f.texture = hge.LoadTexture(value, 0, mipmap)
 		} else if option == fntCHARTAG {
 			chr, x, y, w, h, a, c := tokenizeChar(value)
 
