@@ -6,8 +6,7 @@ import (
 	. "github.com/losinggeneration/hge-go/helpers/rect"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
 	. "github.com/losinggeneration/hge-go/helpers/vector"
-	hge "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/legacy"
+	"github.com/losinggeneration/hge-go/hge"
 	"math"
 	"reflect"
 	"unsafe"
@@ -55,8 +54,6 @@ type ParticleSystemInfo struct {
 type ParticleSystem struct {
 	Info ParticleSystemInfo
 
-	hge *HGE
-
 	updateSpeed, residue, age, emissionResidue float64
 	prevLocation, location                     Vector
 
@@ -78,19 +75,10 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 		}
 	}
 
-	ps.hge = Create(hge.VERSION)
-
-	psi, size := ps.hge.Resource_Load(filename)
-
-	if psi == nil || size == 0 {
-		ps.hge.System_Log("Particle file (%s) seems to be empty.", filename)
-		return nil
-	}
-
-	ptr := ps.hge.ResourceLoadBytes(filename)
+	ptr := hge.LoadBytes(filename)
 
 	if ptr == nil {
-		ps.hge.System_Log("Particle file (%s) seems to be empty.", filename)
+		hge.Log("Particle file (%s) seems to be empty.", filename)
 		return nil
 	}
 
@@ -150,7 +138,6 @@ func NewParticleSystemWithInfo(psi ParticleSystemInfo, a ...interface{}) *Partic
 		}
 	}
 
-	ps.hge = Create(hge.VERSION)
 	ps.Info = psi
 	ps.age = -2.0
 
@@ -340,34 +327,34 @@ func (ps *ParticleSystem) update(deltaTime float64) {
 			}
 
 			par.age = 0.0
-			par.terminalAge = ps.hge.Random_Float(ps.Info.LifeMin, ps.Info.LifeMax)
+			par.terminalAge = hge.RandomFloat(ps.Info.LifeMin, ps.Info.LifeMax)
 
-			par.location = ps.prevLocation.Add(ps.location.Sub(ps.prevLocation).Mul(ps.hge.Random_Float(0.0, 1.0)))
-			par.location.X += ps.hge.Random_Float(-2.0, 2.0)
-			par.location.Y += ps.hge.Random_Float(-2.0, 2.0)
+			par.location = ps.prevLocation.Add(ps.location.Sub(ps.prevLocation).Mul(hge.RandomFloat(0.0, 1.0)))
+			par.location.X += hge.RandomFloat(-2.0, 2.0)
+			par.location.Y += hge.RandomFloat(-2.0, 2.0)
 
-			ang := ps.Info.Direction - hge.Pi_2 + ps.hge.Random_Float(0, ps.Info.Spread) - ps.Info.Spread/2.0
+			ang := ps.Info.Direction - hge.Pi_2 + hge.RandomFloat(0, ps.Info.Spread) - ps.Info.Spread/2.0
 			if ps.Info.Relative {
 				ang += ps.prevLocation.Sub(ps.location).Angle() + hge.Pi_2
 			}
 			par.velocity.X = math.Cos(ang)
 			par.velocity.Y = math.Sin(ang)
-			par.velocity.MulEqual(ps.hge.Random_Float(ps.Info.SpeedMin, ps.Info.SpeedMax))
+			par.velocity.MulEqual(hge.RandomFloat(ps.Info.SpeedMin, ps.Info.SpeedMax))
 
-			par.gravity = ps.hge.Random_Float(ps.Info.GravityMin, ps.Info.GravityMax)
-			par.radialAccel = ps.hge.Random_Float(ps.Info.RadialAccelMin, ps.Info.RadialAccelMax)
-			par.tangentialAccel = ps.hge.Random_Float(ps.Info.TangentialAccelMin, ps.Info.TangentialAccelMax)
+			par.gravity = hge.RandomFloat(ps.Info.GravityMin, ps.Info.GravityMax)
+			par.radialAccel = hge.RandomFloat(ps.Info.RadialAccelMin, ps.Info.RadialAccelMax)
+			par.tangentialAccel = hge.RandomFloat(ps.Info.TangentialAccelMin, ps.Info.TangentialAccelMax)
 
-			par.size = ps.hge.Random_Float(ps.Info.SizeStart, ps.Info.SizeStart+(ps.Info.SizeEnd-ps.Info.SizeStart)*ps.Info.SizeVar)
+			par.size = hge.RandomFloat(ps.Info.SizeStart, ps.Info.SizeStart+(ps.Info.SizeEnd-ps.Info.SizeStart)*ps.Info.SizeVar)
 			par.sizeDelta = (ps.Info.SizeEnd - par.size) / par.terminalAge
 
-			par.spin = ps.hge.Random_Float(ps.Info.SpinStart, ps.Info.SpinStart+(ps.Info.SpinEnd-ps.Info.SpinStart)*ps.Info.SpinVar)
+			par.spin = hge.RandomFloat(ps.Info.SpinStart, ps.Info.SpinStart+(ps.Info.SpinEnd-ps.Info.SpinStart)*ps.Info.SpinVar)
 			par.spinDelta = (ps.Info.SpinEnd - par.spin) / par.terminalAge
 
-			par.color.R = ps.hge.Random_Float(ps.Info.ColorStart.R, ps.Info.ColorStart.R+(ps.Info.ColorEnd.R-ps.Info.ColorStart.R)*ps.Info.ColorVar)
-			par.color.G = ps.hge.Random_Float(ps.Info.ColorStart.G, ps.Info.ColorStart.G+(ps.Info.ColorEnd.G-ps.Info.ColorStart.G)*ps.Info.ColorVar)
-			par.color.B = ps.hge.Random_Float(ps.Info.ColorStart.B, ps.Info.ColorStart.B+(ps.Info.ColorEnd.B-ps.Info.ColorStart.B)*ps.Info.ColorVar)
-			par.color.A = ps.hge.Random_Float(ps.Info.ColorStart.A, ps.Info.ColorStart.A+(ps.Info.ColorEnd.A-ps.Info.ColorStart.A)*ps.Info.AlphaVar)
+			par.color.R = hge.RandomFloat(ps.Info.ColorStart.R, ps.Info.ColorStart.R+(ps.Info.ColorEnd.R-ps.Info.ColorStart.R)*ps.Info.ColorVar)
+			par.color.G = hge.RandomFloat(ps.Info.ColorStart.G, ps.Info.ColorStart.G+(ps.Info.ColorEnd.G-ps.Info.ColorStart.G)*ps.Info.ColorVar)
+			par.color.B = hge.RandomFloat(ps.Info.ColorStart.B, ps.Info.ColorStart.B+(ps.Info.ColorEnd.B-ps.Info.ColorStart.B)*ps.Info.ColorVar)
+			par.color.A = hge.RandomFloat(ps.Info.ColorStart.A, ps.Info.ColorStart.A+(ps.Info.ColorEnd.A-ps.Info.ColorStart.A)*ps.Info.AlphaVar)
 
 			par.colorDelta.R = (ps.Info.ColorEnd.R - par.color.R) / par.terminalAge
 			par.colorDelta.G = (ps.Info.ColorEnd.G - par.color.G) / par.terminalAge
