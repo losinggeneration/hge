@@ -689,7 +689,7 @@ func NewEffect(filename string, a ...interface{}) Effect {
 
 	if len(a) == 1 {
 		if size, ok := a[0].(Dword); ok {
-			C.HGE_Effect_Load(h, fname, C.DWORD(size))
+			return Effect(C.HGE_Effect_Load(h, fname, C.DWORD(size)))
 		}
 	}
 
