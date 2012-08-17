@@ -5,12 +5,10 @@ import (
 	dist "github.com/losinggeneration/hge-go/helpers/distortionmesh"
 	"github.com/losinggeneration/hge-go/helpers/font"
 	HGE "github.com/losinggeneration/hge-go/hge"
-	hge "github.com/losinggeneration/hge-go/legacy"
 	"math"
 )
 
 var (
-	h   *hge.HGE
 	tex HGE.Texture
 	dis dist.DistortionMesh
 	fnt *font.Font
@@ -30,10 +28,10 @@ var trans = 0
 var t = 0.0
 
 func FrameFunc() int {
-	t += h.Timer_GetDelta()
+	t += HGE.NewTimer().Delta()
 
 	// Process keys
-	switch h.Input_GetKey() {
+	switch HGE.GetKey() {
 	case HGE.K_ESCAPE:
 		return 1
 
@@ -84,37 +82,36 @@ func FrameFunc() int {
 
 func RenderFunc() int {
 	// Render graphics
-	h.Gfx_BeginScene()
-	h.Gfx_Clear(0)
+	HGE.GfxBeginScene()
+	HGE.GfxClear(0)
 	dis.Render(meshx, meshy)
-	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d\n\nUse your\nSPACE!", h.Timer_GetDelta(), h.Timer_GetFPS())
-	h.Gfx_EndScene()
+	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d\n\nUse your\nSPACE!", HGE.NewTimer().Delta(), HGE.GetFPS())
+	HGE.GfxEndScene()
 
 	return 0
 }
 
 func main() {
-	h = hge.Create(HGE.VERSION)
-	defer h.Release()
+	defer HGE.Free()
 
-	h.System_SetState(HGE.LOGFILE, "tutorial05.log")
-	h.System_SetState(HGE.FRAMEFUNC, FrameFunc)
-	h.System_SetState(HGE.RENDERFUNC, RenderFunc)
-	h.System_SetState(HGE.TITLE, "HGE Tutorial 05 - Using distortion mesh")
-	h.System_SetState(HGE.WINDOWED, true)
-	h.System_SetState(HGE.SCREENWIDTH, 800)
-	h.System_SetState(HGE.SCREENHEIGHT, 600)
-	h.System_SetState(HGE.SCREENBPP, 32)
-	h.System_SetState(HGE.USESOUND, false)
+	HGE.SetState(HGE.LOGFILE, "tutorial05.log")
+	HGE.SetState(HGE.FRAMEFUNC, FrameFunc)
+	HGE.SetState(HGE.RENDERFUNC, RenderFunc)
+	HGE.SetState(HGE.TITLE, "HGE Tutorial 05 - Using distortion mesh")
+	HGE.SetState(HGE.WINDOWED, true)
+	HGE.SetState(HGE.SCREENWIDTH, 800)
+	HGE.SetState(HGE.SCREENHEIGHT, 600)
+	HGE.SetState(HGE.SCREENBPP, 32)
+	HGE.SetState(HGE.USESOUND, false)
 
-	if h.System_Initiate() {
-		defer h.System_Shutdown()
-		tex = h.Texture_Load("texture.jpg")
+	if err := HGE.Initiate(); err == nil {
+		defer HGE.Shutdown()
+		tex = HGE.LoadTexture("texture.jpg")
 		if tex == 0 {
 			fmt.Println("Error: Can't load texture.jpg")
 			return
 		}
-		defer h.Texture_Free(tex)
+		defer tex.Free()
 
 		dis = dist.NewDistortionMesh(cols, rows)
 		dis.SetTexture(tex)
@@ -131,6 +128,6 @@ func main() {
 		}
 
 		// Let's rock now!
-		h.System_Start()
+		HGE.Start()
 	}
 }
