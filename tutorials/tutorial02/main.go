@@ -3,22 +3,23 @@
  * Copyright (C) 2003-2007, Relish Games
  * hge.relishgames.com
  *
- * hge_tut02 - Using input, sound and rendering
+ * hge_tut02 - Using input, sound and rendering using the legacy API
  */
 
 package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/hge"
+	HGE "github.com/losinggeneration/hge-go/hge"
+	hge "github.com/losinggeneration/hge-go/legacy"
 )
 
 var (
 	h *hge.HGE
 
-	quad hge.Quad
+	quad HGE.Quad
 
-	snd hge.Effect
+	snd HGE.Effect
 
 	x  = 100.0
 	y  = 100.0
@@ -41,19 +42,19 @@ func FrameFunc() int {
 	dt := float64(h.Timer_GetDelta())
 
 	// Process keys
-	if h.Input_GetKeyState(hge.K_ESCAPE) {
+	if h.Input_GetKeyState(HGE.K_ESCAPE) {
 		return 1
 	}
-	if h.Input_GetKeyState(hge.K_LEFT) {
+	if h.Input_GetKeyState(HGE.K_LEFT) {
 		dx -= speed * dt
 	}
-	if h.Input_GetKeyState(hge.K_RIGHT) {
+	if h.Input_GetKeyState(HGE.K_RIGHT) {
 		dx += speed * dt
 	}
-	if h.Input_GetKeyState(hge.K_UP) {
+	if h.Input_GetKeyState(HGE.K_UP) {
 		dy -= speed * dt
 	}
-	if h.Input_GetKeyState(hge.K_DOWN) {
+	if h.Input_GetKeyState(HGE.K_DOWN) {
 		dy += speed * dt
 	}
 
@@ -122,20 +123,20 @@ func RenderFunc() int {
 
 func main() {
 	// Get HGE interface
-	h = hge.Create(hge.VERSION)
+	h = hge.Create(HGE.VERSION)
 	defer h.Release()
 
 	// Set up log file, frame function, render function and window title
-	h.System_SetState(hge.LOGFILE, "tutorial02.log")
-	h.System_SetState(hge.FRAMEFUNC, FrameFunc)
-	h.System_SetState(hge.RENDERFUNC, RenderFunc)
-	h.System_SetState(hge.TITLE, "HGE Tutorial 02 - Using input, sound and rendering")
+	h.System_SetState(HGE.LOGFILE, "tutorial02.log")
+	h.System_SetState(HGE.FRAMEFUNC, FrameFunc)
+	h.System_SetState(HGE.RENDERFUNC, RenderFunc)
+	h.System_SetState(HGE.TITLE, "HGE Tutorial 02 - Using input, sound and rendering")
 
 	// Set up video mode
-	h.System_SetState(hge.WINDOWED, true)
-	h.System_SetState(hge.SCREENWIDTH, 800)
-	h.System_SetState(hge.SCREENHEIGHT, 600)
-	h.System_SetState(hge.SCREENBPP, 32)
+	h.System_SetState(HGE.WINDOWED, true)
+	h.System_SetState(HGE.SCREENWIDTH, 800)
+	h.System_SetState(HGE.SCREENHEIGHT, 600)
+	h.System_SetState(HGE.SCREENBPP, 32)
 
 	if h.System_Initiate() {
 		defer h.System_Shutdown()
@@ -152,7 +153,7 @@ func main() {
 		defer h.Texture_Free(quad.Tex)
 
 		// Set up quad which we will use for rendering sprite
-		quad.Blend = hge.BLEND_ALPHAADD | hge.BLEND_COLORMUL | hge.BLEND_ZWRITE
+		quad.Blend = HGE.BLEND_ALPHAADD | HGE.BLEND_COLORMUL | HGE.BLEND_ZWRITE
 
 		for i := 0; i < 4; i++ {
 			// Set up z-coordinate of vertices

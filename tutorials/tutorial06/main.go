@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	hge  *HGE.HGE = HGE.Create(HGE.VERSION)
 	GUI  gui.GUI
 	fnt  *font.Font
 	quad HGE.Quad
@@ -20,10 +19,10 @@ var lastId int = 0
 var t float64 = 0.0
 
 func frame() int {
-	dt := hge.Timer_GetDelta()
+	dt := HGE.NewTimer().Delta()
 
 	// If ESCAPE was pressed, tell the GUI to finish
-	if hge.Input_GetKeyState(HGE.K_ESCAPE) {
+	if HGE.NewKey(HGE.K_ESCAPE).State() {
 		lastId = 5
 		GUI.Leave()
 	}
@@ -60,54 +59,56 @@ func frame() int {
 
 func render() int {
 	// Render graphics
-	hge.Gfx_BeginScene()
-	hge.Gfx_RenderQuad(&quad)
+	HGE.GfxBeginScene()
+	quad.Render()
 	GUI.Render()
 	fnt.SetColor(0xFFFFFFFF)
-	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d", hge.Timer_GetDelta(), hge.Timer_GetFPS())
-	hge.Gfx_EndScene()
+	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d", HGE.NewTimer().Delta(), HGE.GetFPS())
+	HGE.GfxEndScene()
 
 	return 0
 }
 
 func main() {
-	defer hge.Release()
+	defer HGE.Free()
 
-	hge.System_SetState(HGE.LOGFILE, "tutorial06.log")
-	hge.System_SetState(HGE.FRAMEFUNC, frame)
-	hge.System_SetState(HGE.RENDERFUNC, render)
-	hge.System_SetState(HGE.TITLE, "HGE Tutorial 06 - Creating menus")
-	hge.System_SetState(HGE.WINDOWED, true)
-	hge.System_SetState(HGE.SCREENWIDTH, 800)
-	hge.System_SetState(HGE.SCREENHEIGHT, 600)
-	hge.System_SetState(HGE.SCREENBPP, 32)
+	HGE.SetState(HGE.LOGFILE, "tutorial06.log")
+	HGE.SetState(HGE.FRAMEFUNC, frame)
+	HGE.SetState(HGE.RENDERFUNC, render)
+	HGE.SetState(HGE.TITLE, "HGE Tutorial 06 - Creating menus")
+	HGE.SetState(HGE.WINDOWED, true)
+	HGE.SetState(HGE.SCREENWIDTH, 800)
+	HGE.SetState(HGE.SCREENHEIGHT, 600)
+	HGE.SetState(HGE.SCREENBPP, 32)
 
-	if hge.System_Initiate() {
-		defer hge.System_Shutdown()
+	if err := HGE.Initiate(); err != nil {
+		fmt.Println("Error: ", HGE.GetErrorMessage())
+	} else {
+		defer HGE.Shutdown()
 
-		quad.Tex = hge.Texture_Load("bg.png")
+		quad.Tex = HGE.LoadTexture("bg.png")
 
 		if quad.Tex == 0 {
 			fmt.Println("Error loading bg.png")
 			return
 		}
-		defer hge.Texture_Free(quad.Tex)
+		defer quad.Tex.Free()
 
-		snd := hge.Effect_Load("menu.ogg")
+		snd := HGE.NewEffect("menu.ogg")
 
 		if snd == 0 {
 			fmt.Println("Error loading menu.ogg")
 			return
 		}
-		defer hge.Effect_Free(snd)
+		defer snd.Free()
 
-		cursorTex := hge.Texture_Load("cursor.png")
+		cursorTex := HGE.LoadTexture("cursor.png")
 
 		if cursorTex == 0 {
 			fmt.Println("Error loading cursor.png")
 			return
 		}
-		defer hge.Texture_Free(cursorTex)
+		defer cursorTex.Free()
 
 		// Set up the quad we will use for background animation
 		quad.Blend = HGE.BLEND_ALPHABLEND | HGE.BLEND_COLORMUL | HGE.BLEND_NOZWRITE
@@ -145,9 +146,7 @@ func main() {
 		GUI.SetFocus(1)
 		GUI.Enter()
 
-		hge.System_Start()
-	} else {
-		fmt.Println("Error: ", hge.System_GetErrorMessage())
+		HGE.Start()
 	}
 
 }

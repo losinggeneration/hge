@@ -2,42 +2,38 @@ package sprite
 
 import (
 	. "github.com/losinggeneration/hge-go/helpers/rect"
-	. "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge"
 	"math"
 )
 
 type Sprite struct {
-	*HGE
-
-	Quad                  Quad
-	TX, TY, Width, Height float64
-	TexWidth, TexHeight   float64
-	HotX, HotY            float64
-	XFlip, YFlip, HSFlip  bool
+	hge.Quad
+	TX, TY, W, H         float64
+	TexW, TexH           float64
+	HotX, HotY           float64
+	XFlip, YFlip, HSFlip bool
 }
 
-func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
+func NewSprite(texture hge.Texture, texx, texy, w, h float64) Sprite {
 	var sprite Sprite
 
-	sprite.HGE = Create(VERSION)
-
 	sprite.TX, sprite.TY = texx, texy
-	sprite.Width, sprite.Height = w, h
+	sprite.W, sprite.H = w, h
 
 	if texture != 0 {
-		sprite.TexWidth = float64(sprite.HGE.Texture_GetWidth(texture))
-		sprite.TexHeight = float64(sprite.HGE.Texture_GetHeight(texture))
+		sprite.TexW = float64(texture.Width())
+		sprite.TexH = float64(texture.Height())
 	} else {
-		sprite.TexWidth = 1.0
-		sprite.TexHeight = 1.0
+		sprite.TexW = 1.0
+		sprite.TexH = 1.0
 	}
 
 	sprite.Quad.Tex = texture
 
-	texx1 := texx / sprite.TexWidth
-	texy1 := texy / sprite.TexHeight
-	texx2 := (texx + w) / sprite.TexWidth
-	texy2 := (texy + h) / sprite.TexHeight
+	texx1 := texx / sprite.TexW
+	texy1 := texy / sprite.TexH
+	texx2 := (texx + w) / sprite.TexW
+	texy2 := (texy + h) / sprite.TexH
 
 	sprite.Quad.V[0].TX, sprite.Quad.V[0].TY = float32(texx1), float32(texy1)
 	sprite.Quad.V[1].TX, sprite.Quad.V[1].TY = float32(texx2), float32(texy1)
@@ -54,7 +50,7 @@ func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
 	sprite.Quad.V[2].Col = 0xffffffff
 	sprite.Quad.V[3].Col = 0xffffffff
 
-	sprite.Quad.Blend = BLEND_DEFAULT
+	sprite.Quad.Blend = hge.BLEND_DEFAULT
 
 	return sprite
 }
@@ -62,15 +58,15 @@ func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
 func (sprite *Sprite) Render(x, y float64) {
 	tempx1 := x - sprite.HotX
 	tempy1 := y - sprite.HotY
-	tempx2 := x + sprite.Width - sprite.HotX
-	tempy2 := y + sprite.Height - sprite.HotY
+	tempx2 := x + sprite.W - sprite.HotX
+	tempy2 := y + sprite.H - sprite.HotY
 
 	sprite.Quad.V[0].X, sprite.Quad.V[0].Y = float32(tempx1), float32(tempy1)
 	sprite.Quad.V[1].X, sprite.Quad.V[1].Y = float32(tempx2), float32(tempy1)
 	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(tempx2), float32(tempy2)
 	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(tempx1), float32(tempy2)
 
-	sprite.HGE.Gfx_RenderQuad(&sprite.Quad)
+	sprite.Quad.Render()
 }
 
 func (sprite *Sprite) RenderEx(x, y float64, rot float64, arg ...interface{}) {
@@ -98,8 +94,8 @@ func (sprite *Sprite) RenderEx(x, y float64, rot float64, arg ...interface{}) {
 
 	tx1 = -sprite.HotX * hscale
 	ty1 = -sprite.HotY * vscale
-	tx2 = (sprite.Width - sprite.HotX) * hscale
-	ty2 = (sprite.Height - sprite.HotY) * vscale
+	tx2 = (sprite.W - sprite.HotX) * hscale
+	ty2 = (sprite.H - sprite.HotY) * vscale
 
 	if rot != 0.0 {
 		cost = math.Cos(rot)
@@ -127,7 +123,7 @@ func (sprite *Sprite) RenderEx(x, y float64, rot float64, arg ...interface{}) {
 		sprite.Quad.V[3].Y = float32(ty2 + y)
 	}
 
-	sprite.HGE.Gfx_RenderQuad(&sprite.Quad)
+	sprite.Quad.Render()
 }
 
 func (sprite *Sprite) RenderStretch(x1, y1, x2, y2 float64) {
@@ -136,7 +132,7 @@ func (sprite *Sprite) RenderStretch(x1, y1, x2, y2 float64) {
 	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(x2), float32(y2)
 	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(x1), float32(y2)
 
-	sprite.HGE.Gfx_RenderQuad(&sprite.Quad)
+	sprite.Quad.Render()
 }
 
 func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64) {
@@ -145,29 +141,29 @@ func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64) {
 	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(x2), float32(y2)
 	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(x3), float32(y3)
 
-	sprite.HGE.Gfx_RenderQuad(&sprite.Quad)
+	sprite.Quad.Render()
 }
 
-func (sprite *Sprite) SetTexture(tex Texture) {
+func (sprite *Sprite) SetTexture(tex hge.Texture) {
 	var tx1, ty1, tx2, ty2 float64
 	var tw, th float64
 
 	sprite.Quad.Tex = tex
 
 	if tex != 0 {
-		tw = float64(sprite.HGE.Texture_GetWidth(tex))
-		th = float64(sprite.HGE.Texture_GetHeight(tex))
+		tw = float64(tex.Width())
+		th = float64(tex.Height())
 	} else {
 		tw, th = 1.0, 1.0
 	}
 
-	if tw != sprite.TexWidth || th != sprite.TexHeight {
-		tx1 = float64(sprite.Quad.V[0].TX) * sprite.TexWidth
-		ty1 = float64(sprite.Quad.V[0].TY) * sprite.TexHeight
-		tx2 = float64(sprite.Quad.V[2].TX) * sprite.TexWidth
-		ty2 = float64(sprite.Quad.V[2].TY) * sprite.TexHeight
+	if tw != sprite.TexW || th != sprite.TexH {
+		tx1 = float64(sprite.Quad.V[0].TX) * sprite.TexW
+		ty1 = float64(sprite.Quad.V[0].TY) * sprite.TexH
+		tx2 = float64(sprite.Quad.V[2].TX) * sprite.TexW
+		ty2 = float64(sprite.Quad.V[2].TY) * sprite.TexH
 
-		sprite.TexWidth, sprite.TexHeight = tw, th
+		sprite.TexW, sprite.TexH = tw, th
 
 		tx1 /= tw
 		ty1 /= th
@@ -193,13 +189,13 @@ func (sprite *Sprite) SetTextureRect(x, y, w, h float64, a ...interface{}) {
 	sprite.TX, sprite.TY = x, y
 
 	if adjSize {
-		sprite.Width, sprite.Height = w, h
+		sprite.W, sprite.H = w, h
 	}
 
-	tx1 := sprite.TX / sprite.TexWidth
-	ty1 := sprite.TY / sprite.TexHeight
-	tx2 := (sprite.TX + w) / sprite.TexWidth
-	ty2 := (sprite.TY + h) / sprite.TexHeight
+	tx1 := sprite.TX / sprite.TexW
+	ty1 := sprite.TY / sprite.TexH
+	tx2 := (sprite.TX + w) / sprite.TexW
+	ty2 := (sprite.TY + h) / sprite.TexH
 
 	sprite.Quad.V[0].TX, sprite.Quad.V[0].TY = float32(tx1), float32(ty1)
 	sprite.Quad.V[1].TX, sprite.Quad.V[1].TY = float32(tx2), float32(ty1)
@@ -212,7 +208,7 @@ func (sprite *Sprite) SetTextureRect(x, y, w, h float64, a ...interface{}) {
 	sprite.SetFlip(bX, bY, bHS)
 }
 
-func (sprite *Sprite) SetColor(col Dword, arg ...interface{}) {
+func (sprite *Sprite) SetColor(col hge.Dword, arg ...interface{}) {
 	i := -1
 
 	if len(arg) == 1 {
@@ -262,19 +258,19 @@ func (sprite *Sprite) SetFlip(x, y, hotSpot bool) {
 	var tx, ty float64
 
 	if sprite.HSFlip && sprite.XFlip {
-		sprite.HotX = sprite.Width - sprite.HotX
+		sprite.HotX = sprite.W - sprite.HotX
 	}
 	if sprite.HSFlip && sprite.YFlip {
-		sprite.HotY = sprite.Height - sprite.HotY
+		sprite.HotY = sprite.H - sprite.HotY
 	}
 
 	sprite.HSFlip = hotSpot
 
 	if sprite.HSFlip && sprite.XFlip {
-		sprite.HotX = sprite.Width - sprite.HotX
+		sprite.HotX = sprite.W - sprite.HotX
 	}
 	if sprite.HSFlip && sprite.YFlip {
-		sprite.HotY = sprite.Height - sprite.HotY
+		sprite.HotY = sprite.H - sprite.HotY
 	}
 
 	if x != sprite.XFlip {
@@ -312,15 +308,15 @@ func (sprite *Sprite) SetFlip(x, y, hotSpot bool) {
 	}
 }
 
-func (sprite *Sprite) GetTexture() Texture {
+func (sprite *Sprite) Texture() hge.Texture {
 	return sprite.Quad.Tex
 }
 
-func (sprite *Sprite) GetTextureRect() (x, y, w, h float64) {
-	return sprite.TX, sprite.TY, sprite.Width, sprite.Height
+func (sprite *Sprite) TextureRect() (x, y, w, h float64) {
+	return sprite.TX, sprite.TY, sprite.W, sprite.H
 }
 
-func (sprite *Sprite) GetColor(arg ...interface{}) Dword {
+func (sprite *Sprite) Color(arg ...interface{}) hge.Dword {
 	i := 0
 	if len(arg) == 1 {
 		if ni, ok := arg[0].(int); ok {
@@ -331,7 +327,7 @@ func (sprite *Sprite) GetColor(arg ...interface{}) Dword {
 	return sprite.Quad.V[i].Col
 }
 
-func (sprite *Sprite) GetZ(arg ...interface{}) float64 {
+func (sprite *Sprite) Z(arg ...interface{}) float64 {
 	i := 0
 	if len(arg) == 1 {
 		if ni, ok := arg[0].(int); ok {
@@ -342,34 +338,34 @@ func (sprite *Sprite) GetZ(arg ...interface{}) float64 {
 	return float64(sprite.Quad.V[i].Z)
 }
 
-func (sprite *Sprite) GetBlendMode() int {
+func (sprite *Sprite) BlendMode() int {
 	return sprite.Quad.Blend
 }
 
-func (sprite *Sprite) GetHotSpot() (x, y float64) {
+func (sprite *Sprite) HotSpot() (x, y float64) {
 	x, y = sprite.HotX, sprite.HotY
 	return
 }
 
-func (sprite *Sprite) GetFlip() (x, y bool) {
+func (sprite *Sprite) Flip() (x, y bool) {
 	x, y = sprite.XFlip, sprite.YFlip
 	return
 }
 
-func (sprite *Sprite) GetWidth() float64 {
-	return sprite.Width
+func (sprite *Sprite) Width() float64 {
+	return sprite.W
 }
 
-func (sprite *Sprite) GetHeight() float64 {
-	return sprite.Height
+func (sprite *Sprite) Height() float64 {
+	return sprite.H
 }
 
-func (sprite *Sprite) GetBoundingBox(x, y float64, rect *Rect) *Rect {
-	rect.Set(x-sprite.HotX, y-sprite.HotY, x-sprite.HotX+sprite.Width, y-sprite.HotY+sprite.Height)
+func (sprite *Sprite) BoundingBox(x, y float64, rect *Rect) *Rect {
+	rect.Set(x-sprite.HotX, y-sprite.HotY, x-sprite.HotX+sprite.W, y-sprite.HotY+sprite.H)
 	return rect
 }
 
-func (sprite *Sprite) GetBoundingBoxEx(x, y, rot, hscale, vscale float64, rect *Rect) *Rect {
+func (sprite *Sprite) BoundingBoxEx(x, y, rot, hscale, vscale float64, rect *Rect) *Rect {
 	var tx1, ty1, tx2, ty2 float64
 	var sint, cost float64
 
@@ -377,8 +373,8 @@ func (sprite *Sprite) GetBoundingBoxEx(x, y, rot, hscale, vscale float64, rect *
 
 	tx1 = -sprite.HotX * hscale
 	ty1 = -sprite.HotY * vscale
-	tx2 = (sprite.Width - sprite.HotX) * hscale
-	ty2 = (sprite.Height - sprite.HotY) * vscale
+	tx2 = (sprite.W - sprite.HotX) * hscale
+	ty2 = (sprite.H - sprite.HotY) * vscale
 
 	if rot != 0.0 {
 		cost = math.Cos(rot)

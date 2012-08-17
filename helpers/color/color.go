@@ -40,7 +40,7 @@ func NewColorRGBCol(col Dword) ColorRGB {
 	return c
 }
 
-func (c ColorRGB) Subtract(c2 ColorRGB) ColorRGB {
+func (c ColorRGB) Sub(c2 ColorRGB) ColorRGB {
 	return NewColorRGB(c.R-c2.R, c.G-c2.G, c.B-c2.B, c.A-c2.A)
 }
 
@@ -48,7 +48,7 @@ func (c ColorRGB) Add(c2 ColorRGB) ColorRGB {
 	return NewColorRGB(c.R+c2.R, c.G+c2.G, c.B+c2.B, c.A+c2.A)
 }
 
-func (c ColorRGB) Multiply(c2 ColorRGB) ColorRGB {
+func (c ColorRGB) Mul(c2 ColorRGB) ColorRGB {
 	return NewColorRGB(c.R*c2.R, c.G*c2.G, c.B*c2.B, c.A*c2.A)
 }
 
@@ -70,12 +70,8 @@ func (c *ColorRGB) AddEqual(c2 ColorRGB) *ColorRGB {
 	return c
 }
 
-func (c ColorRGB) Equal(c2 ColorRGB) bool {
+func (c ColorRGB) Eq(c2 ColorRGB) bool {
 	return c.R == c2.R && c.G == c2.G && c.B == c2.B && c.A == c2.A
-}
-
-func (c ColorRGB) NotEqual(c2 ColorRGB) bool {
-	return c.R != c2.R && c.G != c2.G && c.B != c2.B && c.A != c2.A
 }
 
 func (c ColorRGB) DivScalar(scalar float64) ColorRGB {
@@ -109,7 +105,7 @@ func (c *ColorRGB) SetHWColor(col Dword) {
 	c.B = float64(col&0xFF) / 255.0
 }
 
-func (c ColorRGB) GetHWColor() Dword {
+func (c ColorRGB) HWColor() Dword {
 	return (Dword(c.A*255.0) << 24) + (Dword(c.R*255.0) << 16) + (Dword(c.G*255.0) << 8) + Dword(c.B*255.0)
 }
 
@@ -133,7 +129,7 @@ func NewColorHSVCol(col Dword) ColorHSV {
 	return c
 }
 
-func (c ColorHSV) Subtract(c2 ColorHSV) ColorHSV {
+func (c ColorHSV) Sub(c2 ColorHSV) ColorHSV {
 	return NewColorHSV(c.H-c2.H, c.S-c2.S, c.V-c2.V, c.A-c2.A)
 }
 
@@ -141,7 +137,7 @@ func (c ColorHSV) Add(c2 ColorHSV) ColorHSV {
 	return NewColorHSV(c.H+c2.H, c.S+c2.S, c.V+c2.V, c.A+c2.A)
 }
 
-func (c ColorHSV) Multiply(c2 ColorHSV) ColorHSV {
+func (c ColorHSV) Mul(c2 ColorHSV) ColorHSV {
 	return NewColorHSV(c.H*c2.H, c.S*c2.S, c.V*c2.V, c.A*c2.A)
 }
 
@@ -163,12 +159,8 @@ func (c *ColorHSV) AddEqual(c2 ColorHSV) *ColorHSV {
 	return c
 }
 
-func (c ColorHSV) Equal(c2 ColorHSV) bool {
+func (c ColorHSV) Eq(c2 ColorHSV) bool {
 	return c.H == c2.H && c.S == c2.S && c.V == c2.V && c.A == c2.A
-}
-
-func (c ColorHSV) NotEqual(c2 ColorHSV) bool {
-	return c.H != c2.H && c.S != c2.S && c.V != c2.V && c.A != c2.A
 }
 
 func (c ColorHSV) DivScalar(scalar float64) ColorHSV {
@@ -232,7 +224,7 @@ func (c *ColorHSV) SetHWColor(col Dword) {
 	}
 }
 
-func (c ColorHSV) GetHWColor() Dword {
+func (c ColorHSV) HWColor() Dword {
 	var r, g, b float64
 	if c.S == 0 {
 		r = c.V

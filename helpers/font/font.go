@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge"
 	"strconv"
 	"strings"
 )
@@ -29,12 +29,10 @@ const (
 )
 
 /*
- * * HGE Font class
+ * Font struct
  */
 type Font struct {
-	hge *HGE
-
-	texture    Texture
+	texture    hge.Texture
 	letters    [256]*Sprite
 	pre        [256]float64
 	post       [256]float64
@@ -45,7 +43,7 @@ type Font struct {
 	tracking   float64
 	spacing    float64
 
-	color Dword
+	color hge.Dword
 	z     float64
 	blend int
 }
@@ -112,39 +110,42 @@ func NewFont(filename string, arg ...interface{}) *Font {
 
 	f := new(Font)
 
-	f.hge = Create(VERSION)
-
 	f.scale, f.proportion = 1.0, 1.0
 	f.spacing = 1.0
 
 	f.z = 0.5
-	f.blend = BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE
+	f.blend = hge.BLEND_COLORMUL | hge.BLEND_ALPHABLEND | hge.BLEND_NOZWRITE
 	f.color = 0xFFFFFFFF
 
-	desc := f.hge.ResourceLoadString(filename)
+	desc := hge.LoadString(filename)
 
 	if desc == nil {
+		hge.Log("Font %s seems to be empty.", filename)
 		return nil
 	}
 
-	lines := getLines(string(*desc))
+	lines := getLines(*desc)
 
 	if len(lines) == 0 || lines[0] != fntHEADERTAG {
-		f.hge.System_Log("Font %s has incorrect format.", filename)
+		hge.Log("Font %s has incorrect format.", filename)
 		return nil
 	}
 
 	// parse the font description
 	for _, line := range lines {
+		if line == fntHEADERTAG {
+			continue
+		}
+
 		option, value, err := tokenizeLine(line)
 
 		if err != nil || len(line) == 0 || len(option) == 0 || len(value) == 0 {
-			f.hge.System_Log("Unreadable line in font file:", filename)
+			hge.Log("Unreadable line (%s) in font file: %s", line, filename)
 			continue
 		}
 
 		if option == fntBITMAPTAG {
-			f.texture = f.hge.Texture_Load(value, 0, mipmap)
+			f.texture = hge.LoadTexture(value, 0, mipmap)
 		} else if option == fntCHARTAG {
 			chr, x, y, w, h, a, c := tokenizeChar(value)
 
@@ -190,7 +191,7 @@ func (f *Font) Render(x, y float64, align int, str string) {
 			if f.letters[j] != nil {
 				fx += f.pre[j] * f.scale * f.proportion
 				f.letters[j].RenderEx(fx, y, f.rot, f.scale*f.proportion, f.scale)
-				fx += (f.letters[j].GetWidth() + f.post[j] + f.tracking) * f.scale * f.proportion
+				fx += (f.letters[j].Width() + f.post[j] + f.tracking) * f.scale * f.proportion
 			}
 		}
 	}
@@ -203,7 +204,7 @@ func (f *Font) Printf(x, y float64, align int, format string, arg ...interface{}
 func (f *Font) Printfb(x, y, w, h float64, align int, format string, arg ...interface{}) {
 }
 
-func (f *Font) SetColor(color Dword) {
+func (f *Font) SetColor(color hge.Dword) {
 	f.color = color
 
 	for i := 0; i < 256; i++ {
@@ -253,7 +254,7 @@ func (f *Font) SetSpacing(spacing float64) {
 	f.spacing = spacing
 }
 
-func (f Font) GetColor() Dword {
+func (f Font) GetColor() hge.Dword {
 	return f.color
 }
 
@@ -321,7 +322,7 @@ func (f Font) GetStringWidth(str string, arg ...interface{}) float64 {
 				i = '?'
 			}
 			if f.letters[i] != nil {
-				linew += f.letters[i].GetWidth() + f.pre[i] + f.post[i] + f.tracking
+				linew += f.letters[i].Width() + f.pre[i] + f.post[i] + f.tracking
 			}
 		}
 

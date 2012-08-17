@@ -4,7 +4,7 @@ import (
 	"container/list"
 	. "github.com/losinggeneration/hge-go/helpers/rect"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge"
 )
 
 const (
@@ -18,9 +18,8 @@ type GUIObject struct {
 	Id                       int
 	Static, Visible, Enabled bool
 	Rect                     Rect
-	Color                    Dword
+	Color                    hge.Dword
 	*GUI
-	*HGE
 
 	Render func()
 	Update func(dt float64)
@@ -36,14 +35,12 @@ type GUIObject struct {
 	MouseLButton func(down bool) bool
 	MouseRButton func(down bool) bool
 	MouseWheel   func(notches int) bool
-	KeyClick     func(key, chr int) bool
+	KeyClick     func(key hge.Key, chr int) bool
 
-	SetColor func(color Dword)
+	SetColor func(color hge.Dword)
 }
 
 func (gobj *GUIObject) Initialize() {
-	gobj.HGE = Create(VERSION)
-
 	gobj.Render = nil
 	gobj.Update = func(dt float64) {}
 
@@ -58,13 +55,12 @@ func (gobj *GUIObject) Initialize() {
 	gobj.MouseLButton = func(down bool) bool { return false }
 	gobj.MouseRButton = func(down bool) bool { return false }
 	gobj.MouseWheel = func(notches int) bool { return false }
-	gobj.KeyClick = func(key, chr int) bool { return false }
+	gobj.KeyClick = func(key hge.Key, chr int) bool { return false }
 
-	gobj.SetColor = func(color Dword) { gobj.Color = color }
+	gobj.SetColor = func(color hge.Dword) { gobj.Color = color }
 }
 
 type GUI struct {
-	hge                                      *HGE
 	ctrls                                    *list.List
 	ctrlLock, ctrlFocus, ctrlOver            *GUIObject
 	navMode, enterLeave                      int
@@ -77,8 +73,6 @@ type GUI struct {
 func NewGUI() GUI {
 	var g GUI
 
-	g.hge = Create(VERSION)
-
 	g.ctrls = list.New()
 
 	g.navMode = GUI_NONAVKEYS
@@ -86,7 +80,7 @@ func NewGUI() GUI {
 	return g
 }
 
-func getElementById(id int, list *list.List) *list.Element {
+func elementById(id int, list *list.List) *list.Element {
 	for e := list.Front(); e != nil; e = e.Next() {
 		ctrl := e.Value.(*GUIObject)
 		if ctrl.Id == id {
@@ -98,7 +92,7 @@ func getElementById(id int, list *list.List) *list.Element {
 }
 
 func (g *GUI) AddCtrl(ctrl *GUIObject) {
-	e := getElementById(ctrl.Id, g.ctrls)
+	e := elementById(ctrl.Id, g.ctrls)
 
 	if e != nil {
 		g.DelCtrl(ctrl.Id)
@@ -109,7 +103,7 @@ func (g *GUI) AddCtrl(ctrl *GUIObject) {
 }
 
 func (g *GUI) DelCtrl(id int) {
-	e := getElementById(id, g.ctrls)
+	e := elementById(id, g.ctrls)
 
 	if e != nil {
 		g.ctrls.Remove(e)
@@ -117,10 +111,10 @@ func (g *GUI) DelCtrl(id int) {
 }
 
 func (g GUI) GetCtrl(id int) *GUIObject {
-	e := getElementById(id, g.ctrls)
+	e := elementById(id, g.ctrls)
 
 	if e == nil {
-		g.hge.System_Log("No such GUI ctrl id (%d)", id)
+		hge.Log("No such GUI ctrl id (%d)", id)
 		return nil
 	}
 
@@ -163,7 +157,7 @@ func (g *GUI) SetCursor(spr *Sprite) {
 	g.cursor = spr
 }
 
-func (g *GUI) SetColor(color Dword) {
+func (g *GUI) SetColor(color hge.Dword) {
 	for e := g.ctrls.Front(); e != nil; e = e.Next() {
 		e.Value.(*GUIObject).SetColor(color)
 	}
@@ -235,12 +229,12 @@ func (g *GUI) Move(dx, dy float64) {
 
 func (g *GUI) Update(dt float64) int {
 	// Update the mouse variables
-	g.mx, g.my = g.hge.Input_GetMousePos()
-	g.lPressed = g.hge.Input_KeyDown(K_LBUTTON)
-	g.lReleased = g.hge.Input_KeyUp(K_LBUTTON)
-	g.rPressed = g.hge.Input_KeyDown(K_RBUTTON)
-	g.rReleased = g.hge.Input_KeyUp(K_RBUTTON)
-	g.wheel = g.hge.Input_GetMouseWheel()
+	g.mx, g.my = hge.MousePos()
+	g.lPressed = hge.NewKey(hge.K_LBUTTON).Down()
+	g.lReleased = hge.NewKey(hge.K_LBUTTON).Up()
+	g.rPressed = hge.NewKey(hge.K_RBUTTON).Down()
+	g.rReleased = hge.NewKey(hge.K_RBUTTON).Up()
+	g.wheel = hge.MouseWheel()
 
 	// Update all controls
 	for e := g.ctrls.Front(); e != nil; e = e.Next() {
@@ -268,9 +262,9 @@ func (g *GUI) Update(dt float64) int {
 	}
 
 	// Handle keys
-	key := g.hge.Input_GetKey()
-	if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == K_LEFT) ||
-		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == K_UP) {
+	key := hge.GetKey()
+	if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == hge.K_LEFT) ||
+		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == hge.K_UP) {
 		ctrl := g.ctrlFocus
 		if ctrl == nil {
 			e := g.ctrls.Front()
@@ -284,7 +278,7 @@ func (g *GUI) Update(dt float64) int {
 			}
 		}
 
-		for e := getElementById(ctrl.Id, g.ctrls).Prev(); ; e = e.Prev() {
+		for e := elementById(ctrl.Id, g.ctrls).Prev(); ; e = e.Prev() {
 			if e == nil && (g.navMode&GUI_CYCLED) == GUI_CYCLED || g.ctrlFocus == nil {
 				ctrl = g.ctrls.Back().Value.(*GUIObject)
 			} else {
@@ -309,8 +303,8 @@ func (g *GUI) Update(dt float64) int {
 			}
 			g.ctrlFocus = ctrl
 		}
-	} else if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == K_RIGHT) ||
-		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == K_DOWN) {
+	} else if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == hge.K_RIGHT) ||
+		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == hge.K_DOWN) {
 		ctrl := g.ctrlFocus
 		if ctrl == nil {
 			e := g.ctrls.Back()
@@ -324,7 +318,7 @@ func (g *GUI) Update(dt float64) int {
 			}
 		}
 
-		for e := getElementById(ctrl.Id, g.ctrls).Next(); ; e = e.Next() {
+		for e := elementById(ctrl.Id, g.ctrls).Next(); ; e = e.Next() {
 			if e == nil && (g.navMode&GUI_CYCLED) == GUI_CYCLED || g.ctrlFocus == nil {
 				ctrl = g.ctrls.Front().Value.(*GUIObject)
 			} else {
@@ -349,22 +343,22 @@ func (g *GUI) Update(dt float64) int {
 			}
 			g.ctrlFocus = ctrl
 		}
-	} else if g.ctrlFocus != nil && key > 0 && key != K_LBUTTON && key != K_RBUTTON {
-		if g.ctrlFocus.KeyClick(key, g.hge.Input_GetChar()) {
+	} else if g.ctrlFocus != nil && key > 0 && key != hge.K_LBUTTON && key != hge.K_RBUTTON {
+		if g.ctrlFocus.KeyClick(key, hge.GetChar()) {
 			return g.ctrlFocus.Id
 		}
 	}
 
 	// Handle mouse
-	lDown := g.hge.Input_GetKeyState(K_LBUTTON)
-	rDown := g.hge.Input_GetKeyState(K_RBUTTON)
+	lDown := hge.NewKey(hge.K_LBUTTON).State()
+	rDown := hge.NewKey(hge.K_RBUTTON).State()
 
 	if g.ctrlLock != nil {
 		ctrl := g.ctrlLock
 		if !lDown && !rDown {
 			g.ctrlLock = nil
 		}
-		if g.processCtrl(ctrl) {
+		if g.process(ctrl) {
 			return ctrl.Id
 		}
 	} else {
@@ -380,7 +374,7 @@ func (g *GUI) Update(dt float64) int {
 					g.ctrlOver = ctrl
 				}
 
-				if g.processCtrl(ctrl) {
+				if g.process(ctrl) {
 					return ctrl.Id
 				} else {
 					return 0
@@ -406,12 +400,12 @@ func (g *GUI) Render() {
 		}
 	}
 
-	if g.hge.Input_IsMouseOver() && g.cursor != nil {
+	if hge.IsMouseOver() && g.cursor != nil {
 		g.cursor.Render(g.mx, g.my)
 	}
 }
 
-func (g *GUI) processCtrl(ctrl *GUIObject) bool {
+func (g *GUI) process(ctrl *GUIObject) bool {
 	result := false
 
 	if g.lPressed {

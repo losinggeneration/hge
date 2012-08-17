@@ -44,9 +44,9 @@ func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64
 	mi.GUIObject.Rect.Set(x-w/2, y, x+w/2, y+mi.font.GetHeight())
 
 	mi.GUIObject.Render = func() {
-		mi.font.SetColor(mi.shadow.GetHWColor())
+		mi.font.SetColor(mi.shadow.HWColor())
 		mi.font.Render(mi.GUIObject.Rect.X1+mi.offset+3, mi.GUIObject.Rect.Y1+3, Font.TEXT_LEFT, mi.title)
-		mi.font.SetColor(mi.color.GetHWColor())
+		mi.font.SetColor(mi.color.HWColor())
 		mi.font.Render(mi.GUIObject.Rect.X1-mi.offset, mi.GUIObject.Rect.Y1-mi.offset, Font.TEXT_LEFT, mi.title)
 	}
 
@@ -85,11 +85,11 @@ func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64
 
 		mi.scolor2.SetHWColor(0x00FFE060)
 		tcolor2.SetHWColor(0xFFFFE060)
-		mi.dcolor2 = tcolor2.Subtract(mi.scolor2)
+		mi.dcolor2 = tcolor2.Sub(mi.scolor2)
 
 		mi.sshadow.SetHWColor(0x00000000)
 		tcolor2.SetHWColor(0x30000000)
-		mi.dshadow = tcolor2.Subtract(mi.sshadow)
+		mi.dshadow = tcolor2.Sub(mi.sshadow)
 
 		mi.timer2 = 0.0
 	}
@@ -99,11 +99,11 @@ func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64
 
 		mi.scolor2.SetHWColor(0xFFFFE060)
 		tcolor2.SetHWColor(0x00FFE060)
-		mi.dcolor2 = tcolor2.Subtract(mi.scolor2)
+		mi.dcolor2 = tcolor2.Sub(mi.scolor2)
 
 		mi.sshadow.SetHWColor(0x30000000)
 		tcolor2.SetHWColor(0x00000000)
-		mi.dshadow = tcolor2.Subtract(mi.sshadow)
+		mi.dshadow = tcolor2.Sub(mi.sshadow)
 
 		mi.timer2 = 0.0
 	}
@@ -120,7 +120,7 @@ func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64
 		var tcolor Color.ColorRGB
 
 		if focused {
-			mi.GUIObject.HGE.Effect_Play(snd)
+			snd.Play()
 			mi.scolor.SetHWColor(0xFFFFE060)
 			tcolor.SetHWColor(0xFFFFFFFF)
 			mi.soffset = 0
@@ -132,7 +132,7 @@ func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64
 			mi.doffset = -4
 		}
 
-		mi.dcolor = tcolor.Subtract(mi.scolor)
+		mi.dcolor = tcolor.Sub(mi.scolor)
 		mi.timer = 0.0
 	}
 
@@ -148,12 +148,12 @@ func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64
 			return true
 		}
 
-		mi.GUIObject.HGE.Effect_Play(snd)
+		snd.Play()
 		mi.offset = 0
 		return false
 	}
 
-	mi.GUIObject.KeyClick = func(key, chr int) bool {
+	mi.GUIObject.KeyClick = func(key HGE.Key, chr int) bool {
 		if key == HGE.K_ENTER || key == HGE.K_SPACE {
 			mi.GUIObject.MouseLButton(true)
 			return mi.GUIObject.MouseLButton(false)

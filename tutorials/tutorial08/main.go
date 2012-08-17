@@ -16,7 +16,6 @@ import (
 
 // Pointer to the HGE interface (helper classes require this to work)
 var (
-	hge *HGE.HGE
 	fnt *font.Font
 )
 
@@ -74,7 +73,7 @@ var (
 ///////////////////////// Implementation ///////////////////////////
 func frame() int {
 	// Process keys
-	switch hge.Input_GetKey() {
+	switch HGE.GetKey() {
 	case HGE.K_0:
 		speed = 0.0
 	case HGE.K_1:
@@ -116,47 +115,45 @@ func render() int {
 	secs := int(math.Floor((tmp - float64(mins)) * 60.0))
 
 	// Render scene
-	hge.Gfx_BeginScene()
+	HGE.GfxBeginScene()
 	RenderSimulation()
-	fnt.Printf(7, 7, font.TEXT_LEFT, "Keys 1-9 to adjust simulation speed, 0 - real time\nFPS: %d", hge.Timer_GetFPS())
+	fnt.Printf(7, 7, font.TEXT_LEFT, "Keys 1-9 to adjust simulation speed, 0 - real time\nFPS: %d", HGE.GetFPS())
 	fnt.Printf(SCREEN_WIDTH-50, 7, font.TEXT_LEFT, "%02d:%02d:%02d", hrs, mins, secs)
-	hge.Gfx_EndScene()
+	HGE.GfxEndScene()
 
 	return 0
 }
 
 func main() {
-	hge = HGE.Create(HGE.VERSION)
+	defer HGE.Free()
 
 	// Set desired system states and initialize HGE
-	hge.System_SetState(HGE.LOGFILE, "tutorial08.log")
-	hge.System_SetState(HGE.FRAMEFUNC, frame)
-	hge.System_SetState(HGE.RENDERFUNC, render)
-	hge.System_SetState(HGE.TITLE, "HGE Tutorial 08 - The Big Calm")
-	hge.System_SetState(HGE.USESOUND, false)
-	hge.System_SetState(HGE.WINDOWED, true)
-	hge.System_SetState(HGE.SCREENWIDTH, SCREEN_WIDTH)
-	hge.System_SetState(HGE.SCREENHEIGHT, SCREEN_HEIGHT)
-	hge.System_SetState(HGE.SCREENBPP, 32)
+	HGE.SetState(HGE.LOGFILE, "tutorial08.log")
+	HGE.SetState(HGE.FRAMEFUNC, frame)
+	HGE.SetState(HGE.RENDERFUNC, render)
+	HGE.SetState(HGE.TITLE, "HGE Tutorial 08 - The Big Calm")
+	HGE.SetState(HGE.USESOUND, false)
+	HGE.SetState(HGE.WINDOWED, true)
+	HGE.SetState(HGE.SCREENWIDTH, SCREEN_WIDTH)
+	HGE.SetState(HGE.SCREENHEIGHT, SCREEN_HEIGHT)
+	HGE.SetState(HGE.SCREENBPP, 32)
 
-	if hge.System_Initiate() {
+	if err := HGE.Initiate(); err == nil {
+		defer HGE.Shutdown()
+
 		fnt = font.NewFont("font1.fnt")
 
 		if !InitSimulation() {
 			// If one of the data files is not found, display an error message and shutdown
 			fmt.Println("Error: Can't load resources. See log for details.\n")
-			hge.System_Shutdown()
-			hge.Release()
 			return
 		}
 
-		hge.System_Start()
+		HGE.Start()
 
 		DoneSimulation()
 	}
 
-	hge.System_Shutdown()
-	hge.Release()
 	return
 }
 
@@ -171,7 +168,7 @@ func GetTime() float64 {
 
 func InitSimulation() bool {
 	// Load texture
-	texObjects = hge.Texture_Load("objects.png")
+	texObjects = HGE.LoadTexture("objects.png")
 	if texObjects == 0 {
 		return false
 	}
@@ -201,13 +198,13 @@ func InitSimulation() bool {
 	speed = 0.0
 
 	for i := 0; i < NUM_STARS; i++ { // star positions
-		starX[i] = hge.Random_Float(0, SCREEN_WIDTH)
-		starY[i] = hge.Random_Float(0, STARS_HEIGHT)
-		starS[i] = hge.Random_Float(0.1, 0.7)
+		starX[i] = HGE.RandomFloat(0, SCREEN_WIDTH)
+		starY[i] = HGE.RandomFloat(0, STARS_HEIGHT)
+		starS[i] = HGE.RandomFloat(0.1, 0.7)
 	}
 
 	for i := 0; i < SEA_SUBDIVISION; i++ { // sea waves phase shifts
-		seaP[i] = float64(i) + hge.Random_Float(-15.0, 15.0)
+		seaP[i] = float64(i) + HGE.RandomFloat(-15.0, 15.0)
 	}
 
 	// Systems are ready now!
@@ -216,7 +213,7 @@ func InitSimulation() bool {
 
 func DoneSimulation() {
 	// Free texture
-	hge.Texture_Free(texObjects)
+	texObjects.Free()
 }
 
 func UpdateSimulation() {
@@ -228,7 +225,7 @@ func UpdateSimulation() {
 	if speed == 0.0 {
 		timet = GetTime()
 	} else {
-		timet += hge.Timer_GetDelta() * speed
+		timet += HGE.NewTimer().Delta() * speed
 		if timet >= 24.0 {
 			timet -= 24.0
 		}
@@ -260,7 +257,7 @@ func UpdateSimulation() {
 	if seq_id >= 6 || seq_id < 2 {
 		for i := 0; i < NUM_STARS; i++ {
 			a = 1.0 - starY[i]/STARS_HEIGHT
-			a *= hge.Random_Float(0.6, 1.0)
+			a *= HGE.RandomFloat(0.6, 1.0)
 			if seq_id >= 6 {
 				a *= math.Sin((timet - 18.0) / 6.0 * HGE.Pi_2)
 			} else {
@@ -350,8 +347,8 @@ func UpdateSimulation() {
 	for i := 1; i < SEA_SUBDIVISION-1; i++ {
 		a = float64(i) / (SEA_SUBDIVISION - 1)
 		col1 = colSeaTop.MulScalar(1 - a).Add(colSeaBtm.MulScalar(a))
-		dwCol1 = col1.GetHWColor()
-		fTime := 2.0 * hge.Timer_GetTime()
+		dwCol1 = col1.HWColor()
+		fTime := 2.0 * HGE.NewTimer().Time()
 		a *= 20
 
 		for j := 0; j < SEA_SUBDIVISION; j++ {
@@ -362,8 +359,8 @@ func UpdateSimulation() {
 		}
 	}
 
-	dwCol1 = colSeaTop.GetHWColor()
-	dwCol2 := colSeaBtm.GetHWColor()
+	dwCol1 = colSeaTop.HWColor()
+	dwCol2 := colSeaBtm.HWColor()
 
 	for j := 0; j < SEA_SUBDIVISION; j++ {
 		sea.SetColor(j, 0, dwCol1)
@@ -410,25 +407,25 @@ func UpdateSimulation() {
 		for i := 0; i < SEA_SUBDIVISION; i += 2 {
 			a = math.Sin(float64(i) / (SEA_SUBDIVISION - 1) * HGE.Pi_2)
 
-			col1.SetHWColor(sea.GetColor(k, i))
+			col1.SetHWColor(sea.Color(k, i))
 			col1.AddEqual(colSun.MulScalar(s1 * (1 - a)))
 			col1.Clamp()
-			sea.SetColor(k, i, col1.GetHWColor())
+			sea.SetColor(k, i, col1.HWColor())
 
-			col1.SetHWColor(sea.GetColor(k+1, i))
+			col1.SetHWColor(sea.Color(k+1, i))
 			col1.AddEqual(colSun.MulScalar(s2 * (1 - a)))
 			col1.Clamp()
-			sea.SetColor(k+1, i, col1.GetHWColor())
+			sea.SetColor(k+1, i, col1.HWColor())
 		}
 	}
 }
 
 func RenderSimulation() {
 	// Render sky
-	sky.SetColor(colSkyTop.GetHWColor(), 0)
-	sky.SetColor(colSkyTop.GetHWColor(), 1)
-	sky.SetColor(colSkyBtm.GetHWColor(), 2)
-	sky.SetColor(colSkyBtm.GetHWColor(), 3)
+	sky.SetColor(colSkyTop.HWColor(), 0)
+	sky.SetColor(colSkyTop.HWColor(), 1)
+	sky.SetColor(colSkyBtm.HWColor(), 2)
+	sky.SetColor(colSkyBtm.HWColor(), 3)
 	sky.Render(0, 0)
 
 	// Render stars
@@ -440,19 +437,19 @@ func RenderSimulation() {
 	}
 
 	// Render sun
-	glow.SetColor(colSunGlow.GetHWColor())
+	glow.SetColor(colSunGlow.HWColor())
 	glow.RenderEx(sunX, sunY, 0.0, sunGlowS)
-	sun.SetColor(colSun.GetHWColor())
+	sun.SetColor(colSun.HWColor())
 	sun.RenderEx(sunX, sunY, 0.0, sunS)
 
 	// Render moon
-	glow.SetColor(colMoonGlow.GetHWColor())
+	glow.SetColor(colMoonGlow.HWColor())
 	glow.RenderEx(moonX, moonY, 0.0, moonGlowS)
-	moon.SetColor(colMoon.GetHWColor())
+	moon.SetColor(colMoon.HWColor())
 	moon.RenderEx(moonX, moonY, 0.0, moonS)
 
 	// Render sea
 	sea.Render(0, SKY_HEIGHT)
-	seaglow.SetColor(colSeaGlow.GetHWColor())
+	seaglow.SetColor(colSeaGlow.HWColor())
 	seaglow.RenderEx(seaGlowX, SKY_HEIGHT, 0.0, seaGlowSX, seaGlowSY)
 }
