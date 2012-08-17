@@ -27,7 +27,7 @@ func NewAnimation(tex Texture, frames int, fps, x, y, w, h float64) Animation {
 
 	a.sprite = NewSprite(tex, x, y, w, h)
 
-	a.origWidth = a.sprite.HGE.Texture_GetWidth(tex, true)
+	a.origWidth = tex.Width(true)
 
 	a.sinceLastFrame = -1.0
 	a.speed = 1.0 / fps
@@ -110,7 +110,7 @@ func (a Animation) IsPlaying() bool {
 
 func (a *Animation) SetTexture(tex Texture) {
 	a.sprite.SetTexture(tex)
-	a.origWidth = a.sprite.HGE.Texture_GetWidth(tex, true)
+	a.origWidth = tex.Width(true)
 }
 
 func (a *Animation) SetTextureRect(x1, y1, x2, y2 float64) {
