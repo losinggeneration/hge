@@ -1,4 +1,4 @@
-DIRS=hge helpers/animation helpers/color helpers/distortionmesh helpers/font helpers/gui helpers/guictrls helpers/particle helpers/rect helpers/sprite helpers/strings helpers/vector
+DIRS=hge legacy helpers/animation helpers/color helpers/distortionmesh helpers/font helpers/gui helpers/guictrls helpers/particle helpers/rect helpers/sprite helpers/strings helpers/vector
 
 all:
 	for i in $(DIRS); do (cd $$i; go build); done
