@@ -44,7 +44,7 @@ const (
 // #define SETB(col,b)		(((col) & 0xFFFFFF00) + Dword(b))
 
 // HGE System state constants
-var (
+const (
 	WINDOWED      BoolState = C.HGE_C_WINDOWED      // bool run in window? (default: false)
 	ZBUFFER       BoolState = C.HGE_C_ZBUFFER       // bool use z-buffer? (default: false)
 	TEXTUREFILTER BoolState = C.HGE_C_TEXTUREFILTER // bool texture filtering? (default: true)
