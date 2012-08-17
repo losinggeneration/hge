@@ -120,7 +120,7 @@ func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64
 		var tcolor Color.ColorRGB
 
 		if focused {
-			mi.GUIObject.HGE.Effect_Play(snd)
+			snd.Play()
 			mi.scolor.SetHWColor(0xFFFFE060)
 			tcolor.SetHWColor(0xFFFFFFFF)
 			mi.soffset = 0
@@ -148,12 +148,12 @@ func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64
 			return true
 		}
 
-		mi.GUIObject.HGE.Effect_Play(snd)
+		snd.Play()
 		mi.offset = 0
 		return false
 	}
 
-	mi.GUIObject.KeyClick = func(key, chr int) bool {
+	mi.GUIObject.KeyClick = func(key HGE.Key, chr int) bool {
 		if key == HGE.K_ENTER || key == HGE.K_SPACE {
 			mi.GUIObject.MouseLButton(true)
 			return mi.GUIObject.MouseLButton(false)
