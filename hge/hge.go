@@ -638,6 +638,7 @@ func RandomSeed(a ...interface{}) {
 	if len(a) == 1 {
 		if seed, ok := a[0].(int); ok {
 			C.HGE_Random_Seed(h, C.int(seed))
+			return
 		}
 	}
 
