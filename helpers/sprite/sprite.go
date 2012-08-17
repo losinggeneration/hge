@@ -2,14 +2,11 @@ package sprite
 
 import (
 	. "github.com/losinggeneration/hge-go/helpers/rect"
-	hge "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/legacy"
+	"github.com/losinggeneration/hge-go/hge"
 	"math"
 )
 
 type Sprite struct {
-	*HGE
-
 	hge.Quad
 	TX, TY, W, H         float64
 	TexW, TexH           float64
@@ -20,14 +17,12 @@ type Sprite struct {
 func NewSprite(texture hge.Texture, texx, texy, w, h float64) Sprite {
 	var sprite Sprite
 
-	sprite.HGE = Create(hge.VERSION)
-
 	sprite.TX, sprite.TY = texx, texy
 	sprite.W, sprite.H = w, h
 
 	if texture != 0 {
-		sprite.TexW = float64(sprite.HGE.Texture_GetWidth(texture))
-		sprite.TexH = float64(sprite.HGE.Texture_GetHeight(texture))
+		sprite.TexW = float64(texture.Width())
+		sprite.TexH = float64(texture.Height())
 	} else {
 		sprite.TexW = 1.0
 		sprite.TexH = 1.0
@@ -71,7 +66,7 @@ func (sprite *Sprite) Render(x, y float64) {
 	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(tempx2), float32(tempy2)
 	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(tempx1), float32(tempy2)
 
-	sprite.HGE.Gfx_RenderQuad(&sprite.Quad)
+	sprite.Quad.Render()
 }
 
 func (sprite *Sprite) RenderEx(x, y float64, rot float64, arg ...interface{}) {
@@ -128,7 +123,7 @@ func (sprite *Sprite) RenderEx(x, y float64, rot float64, arg ...interface{}) {
 		sprite.Quad.V[3].Y = float32(ty2 + y)
 	}
 
-	sprite.HGE.Gfx_RenderQuad(&sprite.Quad)
+	sprite.Quad.Render()
 }
 
 func (sprite *Sprite) RenderStretch(x1, y1, x2, y2 float64) {
@@ -137,7 +132,7 @@ func (sprite *Sprite) RenderStretch(x1, y1, x2, y2 float64) {
 	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(x2), float32(y2)
 	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(x1), float32(y2)
 
-	sprite.HGE.Gfx_RenderQuad(&sprite.Quad)
+	sprite.Quad.Render()
 }
 
 func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64) {
@@ -146,7 +141,7 @@ func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64) {
 	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(x2), float32(y2)
 	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(x3), float32(y3)
 
-	sprite.HGE.Gfx_RenderQuad(&sprite.Quad)
+	sprite.Quad.Render()
 }
 
 func (sprite *Sprite) SetTexture(tex hge.Texture) {
@@ -156,8 +151,8 @@ func (sprite *Sprite) SetTexture(tex hge.Texture) {
 	sprite.Quad.Tex = tex
 
 	if tex != 0 {
-		tw = float64(sprite.HGE.Texture_GetWidth(tex))
-		th = float64(sprite.HGE.Texture_GetHeight(tex))
+		tw = float64(tex.Width())
+		th = float64(tex.Height())
 	} else {
 		tw, th = 1.0, 1.0
 	}
