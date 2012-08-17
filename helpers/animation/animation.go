@@ -2,7 +2,7 @@ package animation
 
 import (
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/gfx"
 )
 
 const (

@@ -7,6 +7,8 @@ import (
 	. "github.com/losinggeneration/hge-go/helpers/gui"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
 	. "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/gfx"
+	. "github.com/losinggeneration/hge-go/hge/input"
 )
 
 type GUIText struct {

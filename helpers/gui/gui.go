@@ -4,7 +4,8 @@ import (
 	"container/list"
 	. "github.com/losinggeneration/hge-go/helpers/rect"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/input"
 )
 
 const (
@@ -18,7 +19,7 @@ type GUIObject struct {
 	Id                       int
 	Static, Visible, Enabled bool
 	Rect                     Rect
-	Color                    hge.Dword
+	Color                    Dword
 	*GUI
 
 	Render func()
@@ -35,9 +36,9 @@ type GUIObject struct {
 	MouseLButton func(down bool) bool
 	MouseRButton func(down bool) bool
 	MouseWheel   func(notches int) bool
-	KeyClick     func(key hge.Key, chr int) bool
+	KeyClick     func(key Key, chr int) bool
 
-	SetColor func(color hge.Dword)
+	SetColor func(color Dword)
 }
 
 func (gobj *GUIObject) Initialize() {
@@ -55,9 +56,9 @@ func (gobj *GUIObject) Initialize() {
 	gobj.MouseLButton = func(down bool) bool { return false }
 	gobj.MouseRButton = func(down bool) bool { return false }
 	gobj.MouseWheel = func(notches int) bool { return false }
-	gobj.KeyClick = func(key hge.Key, chr int) bool { return false }
+	gobj.KeyClick = func(key Key, chr int) bool { return false }
 
-	gobj.SetColor = func(color hge.Dword) { gobj.Color = color }
+	gobj.SetColor = func(color Dword) { gobj.Color = color }
 }
 
 type GUI struct {
@@ -114,7 +115,7 @@ func (g GUI) GetCtrl(id int) *GUIObject {
 	e := elementById(id, g.ctrls)
 
 	if e == nil {
-		hge.Log("No such GUI ctrl id (%d)", id)
+		Log("No such GUI ctrl id (%d)", id)
 		return nil
 	}
 
@@ -157,7 +158,7 @@ func (g *GUI) SetCursor(spr *Sprite) {
 	g.cursor = spr
 }
 
-func (g *GUI) SetColor(color hge.Dword) {
+func (g *GUI) SetColor(color Dword) {
 	for e := g.ctrls.Front(); e != nil; e = e.Next() {
 		e.Value.(*GUIObject).SetColor(color)
 	}
@@ -229,12 +230,12 @@ func (g *GUI) Move(dx, dy float64) {
 
 func (g *GUI) Update(dt float64) int {
 	// Update the mouse variables
-	g.mx, g.my = hge.MousePos()
-	g.lPressed = hge.NewKey(hge.K_LBUTTON).Down()
-	g.lReleased = hge.NewKey(hge.K_LBUTTON).Up()
-	g.rPressed = hge.NewKey(hge.K_RBUTTON).Down()
-	g.rReleased = hge.NewKey(hge.K_RBUTTON).Up()
-	g.wheel = hge.MouseWheel()
+	g.mx, g.my = MousePos()
+	g.lPressed = NewKey(K_LBUTTON).Down()
+	g.lReleased = NewKey(K_LBUTTON).Up()
+	g.rPressed = NewKey(K_RBUTTON).Down()
+	g.rReleased = NewKey(K_RBUTTON).Up()
+	g.wheel = MouseWheel()
 
 	// Update all controls
 	for e := g.ctrls.Front(); e != nil; e = e.Next() {
@@ -262,9 +263,9 @@ func (g *GUI) Update(dt float64) int {
 	}
 
 	// Handle keys
-	key := hge.GetKey()
-	if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == hge.K_LEFT) ||
-		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == hge.K_UP) {
+	key := GetKey()
+	if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == K_LEFT) ||
+		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == K_UP) {
 		ctrl := g.ctrlFocus
 		if ctrl == nil {
 			e := g.ctrls.Front()
@@ -303,8 +304,8 @@ func (g *GUI) Update(dt float64) int {
 			}
 			g.ctrlFocus = ctrl
 		}
-	} else if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == hge.K_RIGHT) ||
-		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == hge.K_DOWN) {
+	} else if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == K_RIGHT) ||
+		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == K_DOWN) {
 		ctrl := g.ctrlFocus
 		if ctrl == nil {
 			e := g.ctrls.Back()
@@ -343,15 +344,15 @@ func (g *GUI) Update(dt float64) int {
 			}
 			g.ctrlFocus = ctrl
 		}
-	} else if g.ctrlFocus != nil && key > 0 && key != hge.K_LBUTTON && key != hge.K_RBUTTON {
-		if g.ctrlFocus.KeyClick(key, hge.GetChar()) {
+	} else if g.ctrlFocus != nil && key > 0 && key != K_LBUTTON && key != K_RBUTTON {
+		if g.ctrlFocus.KeyClick(key, GetChar()) {
 			return g.ctrlFocus.Id
 		}
 	}
 
 	// Handle mouse
-	lDown := hge.NewKey(hge.K_LBUTTON).State()
-	rDown := hge.NewKey(hge.K_RBUTTON).State()
+	lDown := NewKey(K_LBUTTON).State()
+	rDown := NewKey(K_RBUTTON).State()
 
 	if g.ctrlLock != nil {
 		ctrl := g.ctrlLock
@@ -400,7 +401,7 @@ func (g *GUI) Render() {
 		}
 	}
 
-	if hge.IsMouseOver() && g.cursor != nil {
+	if IsMouseOver() && g.cursor != nil {
 		g.cursor.Render(g.mx, g.my)
 	}
 }

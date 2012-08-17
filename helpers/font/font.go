@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/gfx"
+	. "github.com/losinggeneration/hge-go/hge/resource"
 	"strconv"
 	"strings"
 )
@@ -32,7 +34,7 @@ const (
  * Font struct
  */
 type Font struct {
-	texture    hge.Texture
+	texture    Texture
 	letters    [256]*Sprite
 	pre        [256]float64
 	post       [256]float64
@@ -43,7 +45,7 @@ type Font struct {
 	tracking   float64
 	spacing    float64
 
-	color hge.Dword
+	color Dword
 	z     float64
 	blend int
 }
@@ -114,20 +116,20 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	f.spacing = 1.0
 
 	f.z = 0.5
-	f.blend = hge.BLEND_COLORMUL | hge.BLEND_ALPHABLEND | hge.BLEND_NOZWRITE
+	f.blend = BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE
 	f.color = 0xFFFFFFFF
 
-	desc := hge.LoadString(filename)
+	desc := LoadString(filename)
 
 	if desc == nil {
-		hge.Log("Font %s seems to be empty.", filename)
+		Log("Font %s seems to be empty.", filename)
 		return nil
 	}
 
 	lines := getLines(*desc)
 
 	if len(lines) == 0 || lines[0] != fntHEADERTAG {
-		hge.Log("Font %s has incorrect format.", filename)
+		Log("Font %s has incorrect format.", filename)
 		return nil
 	}
 
@@ -140,12 +142,12 @@ func NewFont(filename string, arg ...interface{}) *Font {
 		option, value, err := tokenizeLine(line)
 
 		if err != nil || len(line) == 0 || len(option) == 0 || len(value) == 0 {
-			hge.Log("Unreadable line (%s) in font file: %s", line, filename)
+			Log("Unreadable line (%s) in font file: %s", line, filename)
 			continue
 		}
 
 		if option == fntBITMAPTAG {
-			f.texture = hge.LoadTexture(value, 0, mipmap)
+			f.texture = LoadTexture(value, 0, mipmap)
 		} else if option == fntCHARTAG {
 			chr, x, y, w, h, a, c := tokenizeChar(value)
 
@@ -204,7 +206,7 @@ func (f *Font) Printf(x, y float64, align int, format string, arg ...interface{}
 func (f *Font) Printfb(x, y, w, h float64, align int, format string, arg ...interface{}) {
 }
 
-func (f *Font) SetColor(color hge.Dword) {
+func (f *Font) SetColor(color Dword) {
 	f.color = color
 
 	for i := 0; i < 256; i++ {
@@ -254,7 +256,7 @@ func (f *Font) SetSpacing(spacing float64) {
 	f.spacing = spacing
 }
 
-func (f Font) GetColor() hge.Dword {
+func (f Font) GetColor() Dword {
 	return f.color
 }
 
