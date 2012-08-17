@@ -10,14 +10,12 @@ import (
 	"github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
 	HGE "github.com/losinggeneration/hge-go/hge"
-	hge "github.com/losinggeneration/hge-go/legacy"
 	"math"
 	"time"
 )
 
 // Pointer to the HGE interface (helper classes require this to work)
 var (
-	h   *hge.HGE
 	fnt *font.Font
 )
 
@@ -75,7 +73,7 @@ var (
 ///////////////////////// Implementation ///////////////////////////
 func frame() int {
 	// Process keys
-	switch h.Input_GetKey() {
+	switch HGE.GetKey() {
 	case HGE.K_0:
 		speed = 0.0
 	case HGE.K_1:
@@ -117,47 +115,45 @@ func render() int {
 	secs := int(math.Floor((tmp - float64(mins)) * 60.0))
 
 	// Render scene
-	h.Gfx_BeginScene()
+	HGE.GfxBeginScene()
 	RenderSimulation()
-	fnt.Printf(7, 7, font.TEXT_LEFT, "Keys 1-9 to adjust simulation speed, 0 - real time\nFPS: %d", h.Timer_GetFPS())
+	fnt.Printf(7, 7, font.TEXT_LEFT, "Keys 1-9 to adjust simulation speed, 0 - real time\nFPS: %d", HGE.GetFPS())
 	fnt.Printf(SCREEN_WIDTH-50, 7, font.TEXT_LEFT, "%02d:%02d:%02d", hrs, mins, secs)
-	h.Gfx_EndScene()
+	HGE.GfxEndScene()
 
 	return 0
 }
 
 func main() {
-	h = hge.Create(HGE.VERSION)
+	defer HGE.Free()
 
 	// Set desired system states and initialize HGE
-	h.System_SetState(HGE.LOGFILE, "tutorial08.log")
-	h.System_SetState(HGE.FRAMEFUNC, frame)
-	h.System_SetState(HGE.RENDERFUNC, render)
-	h.System_SetState(HGE.TITLE, "HGE Tutorial 08 - The Big Calm")
-	h.System_SetState(HGE.USESOUND, false)
-	h.System_SetState(HGE.WINDOWED, true)
-	h.System_SetState(HGE.SCREENWIDTH, SCREEN_WIDTH)
-	h.System_SetState(HGE.SCREENHEIGHT, SCREEN_HEIGHT)
-	h.System_SetState(HGE.SCREENBPP, 32)
+	HGE.SetState(HGE.LOGFILE, "tutorial08.log")
+	HGE.SetState(HGE.FRAMEFUNC, frame)
+	HGE.SetState(HGE.RENDERFUNC, render)
+	HGE.SetState(HGE.TITLE, "HGE Tutorial 08 - The Big Calm")
+	HGE.SetState(HGE.USESOUND, false)
+	HGE.SetState(HGE.WINDOWED, true)
+	HGE.SetState(HGE.SCREENWIDTH, SCREEN_WIDTH)
+	HGE.SetState(HGE.SCREENHEIGHT, SCREEN_HEIGHT)
+	HGE.SetState(HGE.SCREENBPP, 32)
 
-	if h.System_Initiate() {
+	if err := HGE.Initiate(); err == nil {
+		defer HGE.Shutdown()
+
 		fnt = font.NewFont("font1.fnt")
 
 		if !InitSimulation() {
 			// If one of the data files is not found, display an error message and shutdown
 			fmt.Println("Error: Can't load resources. See log for details.\n")
-			h.System_Shutdown()
-			h.Release()
 			return
 		}
 
-		h.System_Start()
+		HGE.Start()
 
 		DoneSimulation()
 	}
 
-	h.System_Shutdown()
-	h.Release()
 	return
 }
 
@@ -172,7 +168,7 @@ func GetTime() float64 {
 
 func InitSimulation() bool {
 	// Load texture
-	texObjects = h.Texture_Load("objects.png")
+	texObjects = HGE.LoadTexture("objects.png")
 	if texObjects == 0 {
 		return false
 	}
@@ -202,13 +198,13 @@ func InitSimulation() bool {
 	speed = 0.0
 
 	for i := 0; i < NUM_STARS; i++ { // star positions
-		starX[i] = h.Random_Float(0, SCREEN_WIDTH)
-		starY[i] = h.Random_Float(0, STARS_HEIGHT)
-		starS[i] = h.Random_Float(0.1, 0.7)
+		starX[i] = HGE.RandomFloat(0, SCREEN_WIDTH)
+		starY[i] = HGE.RandomFloat(0, STARS_HEIGHT)
+		starS[i] = HGE.RandomFloat(0.1, 0.7)
 	}
 
 	for i := 0; i < SEA_SUBDIVISION; i++ { // sea waves phase shifts
-		seaP[i] = float64(i) + h.Random_Float(-15.0, 15.0)
+		seaP[i] = float64(i) + HGE.RandomFloat(-15.0, 15.0)
 	}
 
 	// Systems are ready now!
@@ -217,7 +213,7 @@ func InitSimulation() bool {
 
 func DoneSimulation() {
 	// Free texture
-	h.Texture_Free(texObjects)
+	texObjects.Free()
 }
 
 func UpdateSimulation() {
@@ -229,7 +225,7 @@ func UpdateSimulation() {
 	if speed == 0.0 {
 		timet = GetTime()
 	} else {
-		timet += h.Timer_GetDelta() * speed
+		timet += HGE.NewTimer().Delta() * speed
 		if timet >= 24.0 {
 			timet -= 24.0
 		}
@@ -261,7 +257,7 @@ func UpdateSimulation() {
 	if seq_id >= 6 || seq_id < 2 {
 		for i := 0; i < NUM_STARS; i++ {
 			a = 1.0 - starY[i]/STARS_HEIGHT
-			a *= h.Random_Float(0.6, 1.0)
+			a *= HGE.RandomFloat(0.6, 1.0)
 			if seq_id >= 6 {
 				a *= math.Sin((timet - 18.0) / 6.0 * HGE.Pi_2)
 			} else {
@@ -352,7 +348,7 @@ func UpdateSimulation() {
 		a = float64(i) / (SEA_SUBDIVISION - 1)
 		col1 = colSeaTop.MulScalar(1 - a).Add(colSeaBtm.MulScalar(a))
 		dwCol1 = col1.HWColor()
-		fTime := 2.0 * h.Timer_GetTime()
+		fTime := 2.0 * HGE.NewTimer().Time()
 		a *= 20
 
 		for j := 0; j < SEA_SUBDIVISION; j++ {
