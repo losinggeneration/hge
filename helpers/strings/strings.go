@@ -2,7 +2,6 @@ package strings
 
 import (
 	"github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/legacy"
 	"strings"
 )
 
@@ -17,14 +16,13 @@ type StringTable struct {
 
 func NewStringTable(filename string) *StringTable {
 	st := new(StringTable)
-	hge := Create(hge.VERSION)
 
 	st.stringsMap = make(map[string]string)
 
-	f := hge.ResourceLoadString(filename)
+	f := hge.LoadString(filename)
 
 	if f == nil || !strings.HasPrefix(*f, strHEADERTAG) {
-		hge.System_Log(strFORMATERROR, filename)
+		hge.Log(strFORMATERROR, filename)
 		return nil
 	}
 
@@ -37,7 +35,7 @@ func NewStringTable(filename string) *StringTable {
 	_, e := reader.Seek(int64(len(strHEADERTAG)), 0)
 
 	if e != nil {
-		hge.System_Log("Unable to seek past header tag")
+		hge.Log("Unable to seek past header tag")
 		return nil
 	}
 
