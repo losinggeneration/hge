@@ -3,7 +3,7 @@
  * Copyright (C) 2003-2007, Relish Games
  * hge.relishgames.com
  *
- * hge_tut02 - Using input, sound and rendering
+ * hge_tut02 - Using input, sound and rendering using the legacy API
  */
 
 package main
