@@ -339,7 +339,7 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 		return true
 	}
 
-	l.GUIObject.KeyClick = func(key, chr int) bool {
+	l.GUIObject.KeyClick = func(key Key, chr int) bool {
 		switch key {
 		case K_DOWN:
 			if l.selectedItem < l.Len()-1 {
