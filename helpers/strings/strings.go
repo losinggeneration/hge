@@ -138,6 +138,6 @@ func NewStringTable(filename string) *StringTable {
 	return st
 }
 
-func (st StringTable) GetString(name string) string {
+func (st StringTable) String(name string) string {
 	return st.stringsMap[name]
 }

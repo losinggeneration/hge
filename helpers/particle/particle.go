@@ -33,8 +33,8 @@ type particle struct {
 }
 
 type ParticleSystemInfo struct {
-	Sprite                     Sprite // texture + blend mode
-	Emission                   int    // particles per sec
+	Sprite                         // texture + blend mode
+	Emission                   int // particles per sec
 	Lifetime, LifeMin, LifeMax float64
 	Direction, Spread          float64
 
@@ -160,11 +160,11 @@ func NewParticleSystemWithInfo(psi ParticleSystemInfo, a ...interface{}) *Partic
 }
 
 func (ps *ParticleSystem) Render() {
-	col := ps.Info.Sprite.GetColor()
+	col := ps.Info.Sprite.Color()
 
 	for i := 0; i < ps.particlesAlive; i++ {
 		par := ps.particles[i]
-		ps.Info.Sprite.SetColor(par.color.GetHWColor())
+		ps.Info.Sprite.SetColor(par.color.HWColor())
 		ps.Info.Sprite.RenderEx(par.location.X+ps.tx, par.location.Y+ps.ty, par.spin*par.age, par.size)
 	}
 
@@ -255,23 +255,23 @@ func (ps *ParticleSystem) TrackBoundingBox(track bool) {
 	ps.updateBoundingBox = track
 }
 
-func (ps ParticleSystem) GetParticlesAlive() int {
+func (ps ParticleSystem) ParticlesAlive() int {
 	return ps.particlesAlive
 }
 
-func (ps ParticleSystem) GetAge() float64 {
+func (ps ParticleSystem) Age() float64 {
 	return ps.age
 }
 
-func (ps ParticleSystem) GetPosition() (x, y float64) {
+func (ps ParticleSystem) Position() (x, y float64) {
 	return ps.location.X, ps.location.Y
 }
 
-func (ps ParticleSystem) GetTransposition() (x, y float64) {
+func (ps ParticleSystem) Transposition() (x, y float64) {
 	return ps.tx, ps.ty
 }
 
-func (ps ParticleSystem) GetBoundingBox(rect *Rect) *Rect {
+func (ps ParticleSystem) BoundingBox(rect *Rect) *Rect {
 	rect.SetRect(ps.boundingBox)
 	return rect
 }
@@ -300,10 +300,10 @@ func (ps *ParticleSystem) update(deltaTime float64) {
 			continue
 		}
 
-		accel := par.location.Subtract(ps.location)
+		accel := par.location.Sub(ps.location)
 		accel.Normalize()
 		accel2 := accel
-		accel.MultiplyEqual(par.radialAccel)
+		accel.MulEqual(par.radialAccel)
 
 		// accel2.Rotate(Pi_2);
 		// the following is faster
@@ -311,8 +311,8 @@ func (ps *ParticleSystem) update(deltaTime float64) {
 		accel2.X = -accel2.Y
 		accel2.Y = ang
 
-		accel2.MultiplyEqual(par.tangentialAccel)
-		par.velocity.AddEqual((accel.Add(accel2)).Multiply(deltaTime))
+		accel2.MulEqual(par.tangentialAccel)
+		par.velocity.AddEqual((accel.Add(accel2)).Mul(deltaTime))
 		par.velocity.Y += par.gravity * deltaTime
 
 		par.location.AddEqual(par.velocity)
@@ -342,17 +342,17 @@ func (ps *ParticleSystem) update(deltaTime float64) {
 			par.age = 0.0
 			par.terminalAge = ps.hge.Random_Float(ps.Info.LifeMin, ps.Info.LifeMax)
 
-			par.location = ps.prevLocation.Add(ps.location.Subtract(ps.prevLocation).Multiply(ps.hge.Random_Float(0.0, 1.0)))
+			par.location = ps.prevLocation.Add(ps.location.Sub(ps.prevLocation).Mul(ps.hge.Random_Float(0.0, 1.0)))
 			par.location.X += ps.hge.Random_Float(-2.0, 2.0)
 			par.location.Y += ps.hge.Random_Float(-2.0, 2.0)
 
 			ang := ps.Info.Direction - hge.Pi_2 + ps.hge.Random_Float(0, ps.Info.Spread) - ps.Info.Spread/2.0
 			if ps.Info.Relative {
-				ang += ps.prevLocation.Subtract(ps.location).Angle() + hge.Pi_2
+				ang += ps.prevLocation.Sub(ps.location).Angle() + hge.Pi_2
 			}
 			par.velocity.X = math.Cos(ang)
 			par.velocity.Y = math.Sin(ang)
-			par.velocity.MultiplyEqual(ps.hge.Random_Float(ps.Info.SpeedMin, ps.Info.SpeedMax))
+			par.velocity.MulEqual(ps.hge.Random_Float(ps.Info.SpeedMin, ps.Info.SpeedMax))
 
 			par.gravity = ps.hge.Random_Float(ps.Info.GravityMin, ps.Info.GravityMax)
 			par.radialAccel = ps.hge.Random_Float(ps.Info.RadialAccelMin, ps.Info.RadialAccelMax)
@@ -417,7 +417,7 @@ func NewParticleManager(a ...interface{}) ParticleManager {
 func (pm *ParticleManager) Update(dt float64) {
 	for i := 0; i < pm.ps; i++ {
 		pm.list[i].Update(dt)
-		if pm.list[i].GetAge() == -2.0 && pm.list[i].GetParticlesAlive() == 0 {
+		if pm.list[i].Age() == -2.0 && pm.list[i].ParticlesAlive() == 0 {
 			pm.list[i] = nil
 			pm.list[i] = pm.list[pm.ps-1]
 			pm.ps--
@@ -464,7 +464,7 @@ func (pm *ParticleManager) Transpose(x, y float64) {
 	pm.x, pm.y = x, y
 }
 
-func (pm ParticleManager) GetTransposition() (dx, dy float64) {
+func (pm ParticleManager) Transposition() (dx, dy float64) {
 	return pm.x, pm.y
 }
 

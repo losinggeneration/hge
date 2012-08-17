@@ -18,11 +18,11 @@ func NewVector(x, y float64) Vector {
 	return v
 }
 
-func (v Vector) Negate() Vector {
+func (v Vector) Neg() Vector {
 	return NewVector(-v.X, -v.Y)
 }
 
-func (v Vector) Subtract(v2 Vector) Vector {
+func (v Vector) Sub(v2 Vector) Vector {
 	return NewVector(v.X-v2.X, v.Y-v2.Y)
 }
 
@@ -30,7 +30,7 @@ func (v Vector) Add(v2 Vector) Vector {
 	return NewVector(v.X+v2.X, v.Y+v2.Y)
 }
 
-func (v *Vector) SubtractEqual(v2 Vector) *Vector {
+func (v *Vector) SubEqual(v2 Vector) *Vector {
 	v.X -= v2.X
 	v.Y -= v2.Y
 	return v
@@ -42,23 +42,19 @@ func (v *Vector) AddEqual(v2 Vector) *Vector {
 	return v
 }
 
-func (v Vector) EQ(v2 Vector) bool {
+func (v Vector) Eq(v2 Vector) bool {
 	return v.X == v2.X && v.Y == v2.Y
 }
 
-func (v Vector) NEQ(v2 Vector) bool {
-	return v.X != v2.X && v.Y != v2.Y
-}
-
-func (v Vector) Divide(scalar float64) Vector {
+func (v Vector) Div(scalar float64) Vector {
 	return NewVector(v.X/scalar, v.Y/scalar)
 }
 
-func (v Vector) Multiply(scalar float64) Vector {
+func (v Vector) Mul(scalar float64) Vector {
 	return NewVector(v.X*scalar, v.Y*scalar)
 }
 
-func (v *Vector) MultiplyEqual(scalar float64) *Vector {
+func (v *Vector) MulEqual(scalar float64) *Vector {
 	v.X *= scalar
 	v.Y *= scalar
 	return v
@@ -68,7 +64,7 @@ func (v Vector) Dot(v2 Vector) float64 {
 	return v.X*v2.X + v.Y*v2.Y
 }
 
-func (v Vector) Length() float64 {
+func (v Vector) Len() float64 {
 	return math.Sqrt(v.Dot(v))
 }
 
@@ -89,7 +85,7 @@ func (v Vector) Angle(arg ...interface{}) float64 {
 }
 
 func (v *Vector) Clamp(max float64) {
-	if v.Length() > max {
+	if v.Len() > max {
 		v.Normalize()
 		v.X *= max
 		v.Y *= max

@@ -351,7 +351,7 @@ func UpdateSimulation() {
 	for i := 1; i < SEA_SUBDIVISION-1; i++ {
 		a = float64(i) / (SEA_SUBDIVISION - 1)
 		col1 = colSeaTop.MulScalar(1 - a).Add(colSeaBtm.MulScalar(a))
-		dwCol1 = col1.GetHWColor()
+		dwCol1 = col1.HWColor()
 		fTime := 2.0 * h.Timer_GetTime()
 		a *= 20
 
@@ -363,8 +363,8 @@ func UpdateSimulation() {
 		}
 	}
 
-	dwCol1 = colSeaTop.GetHWColor()
-	dwCol2 := colSeaBtm.GetHWColor()
+	dwCol1 = colSeaTop.HWColor()
+	dwCol2 := colSeaBtm.HWColor()
 
 	for j := 0; j < SEA_SUBDIVISION; j++ {
 		sea.SetColor(j, 0, dwCol1)
@@ -411,25 +411,25 @@ func UpdateSimulation() {
 		for i := 0; i < SEA_SUBDIVISION; i += 2 {
 			a = math.Sin(float64(i) / (SEA_SUBDIVISION - 1) * HGE.Pi_2)
 
-			col1.SetHWColor(sea.GetColor(k, i))
+			col1.SetHWColor(sea.Color(k, i))
 			col1.AddEqual(colSun.MulScalar(s1 * (1 - a)))
 			col1.Clamp()
-			sea.SetColor(k, i, col1.GetHWColor())
+			sea.SetColor(k, i, col1.HWColor())
 
-			col1.SetHWColor(sea.GetColor(k+1, i))
+			col1.SetHWColor(sea.Color(k+1, i))
 			col1.AddEqual(colSun.MulScalar(s2 * (1 - a)))
 			col1.Clamp()
-			sea.SetColor(k+1, i, col1.GetHWColor())
+			sea.SetColor(k+1, i, col1.HWColor())
 		}
 	}
 }
 
 func RenderSimulation() {
 	// Render sky
-	sky.SetColor(colSkyTop.GetHWColor(), 0)
-	sky.SetColor(colSkyTop.GetHWColor(), 1)
-	sky.SetColor(colSkyBtm.GetHWColor(), 2)
-	sky.SetColor(colSkyBtm.GetHWColor(), 3)
+	sky.SetColor(colSkyTop.HWColor(), 0)
+	sky.SetColor(colSkyTop.HWColor(), 1)
+	sky.SetColor(colSkyBtm.HWColor(), 2)
+	sky.SetColor(colSkyBtm.HWColor(), 3)
 	sky.Render(0, 0)
 
 	// Render stars
@@ -441,19 +441,19 @@ func RenderSimulation() {
 	}
 
 	// Render sun
-	glow.SetColor(colSunGlow.GetHWColor())
+	glow.SetColor(colSunGlow.HWColor())
 	glow.RenderEx(sunX, sunY, 0.0, sunGlowS)
-	sun.SetColor(colSun.GetHWColor())
+	sun.SetColor(colSun.HWColor())
 	sun.RenderEx(sunX, sunY, 0.0, sunS)
 
 	// Render moon
-	glow.SetColor(colMoonGlow.GetHWColor())
+	glow.SetColor(colMoonGlow.HWColor())
 	glow.RenderEx(moonX, moonY, 0.0, moonGlowS)
-	moon.SetColor(colMoon.GetHWColor())
+	moon.SetColor(colMoon.HWColor())
 	moon.RenderEx(moonX, moonY, 0.0, moonS)
 
 	// Render sea
 	sea.Render(0, SKY_HEIGHT)
-	seaglow.SetColor(colSeaGlow.GetHWColor())
+	seaglow.SetColor(colSeaGlow.HWColor())
 	seaglow.RenderEx(seaGlowX, SKY_HEIGHT, 0.0, seaGlowSX, seaGlowSY)
 }

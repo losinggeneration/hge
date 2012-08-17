@@ -176,26 +176,26 @@ func (dm *DistortionMesh) SetDisplacement(col, row int, dx, dy float64, ref int)
 	}
 }
 
-func (dm DistortionMesh) GetTexture() hge.Texture {
+func (dm DistortionMesh) Texture() hge.Texture {
 	return dm.quad.Tex
 }
 
-func (dm DistortionMesh) GetTextureRect() (x, y, w, h float64) {
+func (dm DistortionMesh) TextureRect() (x, y, w, h float64) {
 	return dm.tx, dm.ty, dm.width, dm.height
 }
 
-func (dm DistortionMesh) GetBlendMode() int {
+func (dm DistortionMesh) BlendMode() int {
 	return dm.quad.Blend
 }
 
-func (dm DistortionMesh) GetZ(col, row int) float64 {
+func (dm DistortionMesh) Z(col, row int) float64 {
 	if row < dm.rows && col < dm.cols {
 		return float64(dm.dispArray[row*dm.cols+col].Z)
 	}
 	return 0.0
 }
 
-func (dm DistortionMesh) GetColor(col, row int) hge.Dword {
+func (dm DistortionMesh) Color(col, row int) hge.Dword {
 	if row < dm.rows && col < dm.cols {
 		return dm.dispArray[row*dm.cols+col].Col
 	}
@@ -203,7 +203,7 @@ func (dm DistortionMesh) GetColor(col, row int) hge.Dword {
 	return 0
 }
 
-func (dm DistortionMesh) GetDisplacement(col, row, ref int) (dx, dy float64) {
+func (dm DistortionMesh) Displacement(col, row, ref int) (dx, dy float64) {
 	if row < dm.rows && col < dm.cols {
 		switch ref {
 		case DISP_NODE:
@@ -223,10 +223,10 @@ func (dm DistortionMesh) GetDisplacement(col, row, ref int) (dx, dy float64) {
 	return dx, dy
 }
 
-func (dm DistortionMesh) GetRows() int {
+func (dm DistortionMesh) Rows() int {
 	return dm.rows
 }
 
-func (dm DistortionMesh) GetCols() int {
+func (dm DistortionMesh) Cols() int {
 	return dm.cols
 }

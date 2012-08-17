@@ -196,7 +196,7 @@ func (f *Font) Render(x, y float64, align int, str string) {
 			if f.letters[j] != nil {
 				fx += f.pre[j] * f.scale * f.proportion
 				f.letters[j].RenderEx(fx, y, f.rot, f.scale*f.proportion, f.scale)
-				fx += (f.letters[j].GetWidth() + f.post[j] + f.tracking) * f.scale * f.proportion
+				fx += (f.letters[j].Width() + f.post[j] + f.tracking) * f.scale * f.proportion
 			}
 		}
 	}
@@ -327,7 +327,7 @@ func (f Font) GetStringWidth(str string, arg ...interface{}) float64 {
 				i = '?'
 			}
 			if f.letters[i] != nil {
-				linew += f.letters[i].GetWidth() + f.pre[i] + f.post[i] + f.tracking
+				linew += f.letters[i].Width() + f.pre[i] + f.post[i] + f.tracking
 			}
 		}
 

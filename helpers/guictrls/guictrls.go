@@ -108,7 +108,7 @@ func (b *GUIButton) SetState(pressed bool) {
 	b.pressed = pressed
 }
 
-func (b GUIButton) GetState() bool {
+func (b GUIButton) State() bool {
 	return b.pressed
 }
 
@@ -248,7 +248,7 @@ func (s *GUISlider) SetValue(val float64) {
 	}
 }
 
-func (s *GUISlider) GetValue() float64 {
+func (s *GUISlider) Value() float64 {
 	return s.val
 }
 
@@ -294,7 +294,7 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 			item = item.Next()
 		}
 
-		for i := 0; i < l.GetNumRows(); i++ {
+		for i := 0; i < l.NumRows(); i++ {
 			if i >= l.items {
 				return
 			}
@@ -332,8 +332,8 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 		if l.topItem < 0 {
 			l.topItem = 0
 		}
-		if l.topItem > l.Len()-l.GetNumRows() {
-			l.topItem = l.Len() - l.GetNumRows()
+		if l.topItem > l.Len()-l.NumRows() {
+			l.topItem = l.Len() - l.NumRows()
 		}
 
 		return true
@@ -344,8 +344,8 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 		case K_DOWN:
 			if l.selectedItem < l.Len()-1 {
 				l.selectedItem++
-				if l.selectedItem > l.topItem+l.GetNumRows()-1 {
-					l.topItem = l.selectedItem - l.GetNumRows() + 1
+				if l.selectedItem > l.topItem+l.NumRows()-1 {
+					l.topItem = l.selectedItem - l.NumRows() + 1
 				}
 				return true
 			}
@@ -406,7 +406,7 @@ func (l *GUIListBox) Top() int {
 }
 
 func (l *GUIListBox) SetTop(n int) {
-	if n >= 0 && n <= l.Len()-l.GetNumRows() {
+	if n >= 0 && n <= l.Len()-l.NumRows() {
 		l.topItem = n
 	}
 }
@@ -425,11 +425,11 @@ func (l *GUIListBox) Text(n int) string {
 	return item.Value.(*guiListboxItem).text
 }
 
-func (l *GUIListBox) GetNumItems() int {
+func (l *GUIListBox) NumItems() int {
 	return l.items
 }
 
-func (l *GUIListBox) GetNumRows() int {
+func (l *GUIListBox) NumRows() int {
 	rect := l.GUIObject.Rect
 	return int((rect.Y2 - rect.Y1) / l.Font.GetHeight())
 }

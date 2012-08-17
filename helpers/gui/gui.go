@@ -87,7 +87,7 @@ func NewGUI() GUI {
 	return g
 }
 
-func getElementById(id int, list *list.List) *list.Element {
+func elementById(id int, list *list.List) *list.Element {
 	for e := list.Front(); e != nil; e = e.Next() {
 		ctrl := e.Value.(*GUIObject)
 		if ctrl.Id == id {
@@ -99,7 +99,7 @@ func getElementById(id int, list *list.List) *list.Element {
 }
 
 func (g *GUI) AddCtrl(ctrl *GUIObject) {
-	e := getElementById(ctrl.Id, g.ctrls)
+	e := elementById(ctrl.Id, g.ctrls)
 
 	if e != nil {
 		g.DelCtrl(ctrl.Id)
@@ -110,7 +110,7 @@ func (g *GUI) AddCtrl(ctrl *GUIObject) {
 }
 
 func (g *GUI) DelCtrl(id int) {
-	e := getElementById(id, g.ctrls)
+	e := elementById(id, g.ctrls)
 
 	if e != nil {
 		g.ctrls.Remove(e)
@@ -118,7 +118,7 @@ func (g *GUI) DelCtrl(id int) {
 }
 
 func (g GUI) GetCtrl(id int) *GUIObject {
-	e := getElementById(id, g.ctrls)
+	e := elementById(id, g.ctrls)
 
 	if e == nil {
 		g.hge.System_Log("No such GUI ctrl id (%d)", id)
@@ -285,7 +285,7 @@ func (g *GUI) Update(dt float64) int {
 			}
 		}
 
-		for e := getElementById(ctrl.Id, g.ctrls).Prev(); ; e = e.Prev() {
+		for e := elementById(ctrl.Id, g.ctrls).Prev(); ; e = e.Prev() {
 			if e == nil && (g.navMode&GUI_CYCLED) == GUI_CYCLED || g.ctrlFocus == nil {
 				ctrl = g.ctrls.Back().Value.(*GUIObject)
 			} else {
@@ -325,7 +325,7 @@ func (g *GUI) Update(dt float64) int {
 			}
 		}
 
-		for e := getElementById(ctrl.Id, g.ctrls).Next(); ; e = e.Next() {
+		for e := elementById(ctrl.Id, g.ctrls).Next(); ; e = e.Next() {
 			if e == nil && (g.navMode&GUI_CYCLED) == GUI_CYCLED || g.ctrlFocus == nil {
 				ctrl = g.ctrls.Front().Value.(*GUIObject)
 			} else {
@@ -365,7 +365,7 @@ func (g *GUI) Update(dt float64) int {
 		if !lDown && !rDown {
 			g.ctrlLock = nil
 		}
-		if g.processCtrl(ctrl) {
+		if g.process(ctrl) {
 			return ctrl.Id
 		}
 	} else {
@@ -381,7 +381,7 @@ func (g *GUI) Update(dt float64) int {
 					g.ctrlOver = ctrl
 				}
 
-				if g.processCtrl(ctrl) {
+				if g.process(ctrl) {
 					return ctrl.Id
 				} else {
 					return 0
@@ -412,7 +412,7 @@ func (g *GUI) Render() {
 	}
 }
 
-func (g *GUI) processCtrl(ctrl *GUIObject) bool {
+func (g *GUI) process(ctrl *GUIObject) bool {
 	result := false
 
 	if g.lPressed {

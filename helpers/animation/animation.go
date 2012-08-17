@@ -139,7 +139,7 @@ func (a *Animation) SetFrame(n int) {
 	// 	bool bX, bY, bHS;
 	// 	int ncols = int(orig_width) / int(width);
 
-	cols := int(a.origWidth / int(a.sprite.Width))
+	cols := int(a.origWidth / int(a.sprite.W))
 
 	n = n % a.frames
 	if n < 0 {
@@ -149,21 +149,21 @@ func (a *Animation) SetFrame(n int) {
 
 	// calculate texture coords for frame n
 	ty1 := a.sprite.TY
-	tx1 := a.sprite.TX + float64(n)*a.sprite.Width
+	tx1 := a.sprite.TX + float64(n)*a.sprite.W
 
-	if tx1 > float64(a.origWidth)-a.sprite.Width {
-		n -= int(float64(a.origWidth) - a.sprite.TX/a.sprite.Width)
-		tx1 = a.sprite.Width * float64(n%cols)
-		ty1 += a.sprite.Height * float64(1+n/cols)
+	if tx1 > float64(a.origWidth)-a.sprite.W {
+		n -= int(float64(a.origWidth) - a.sprite.TX/a.sprite.W)
+		tx1 = a.sprite.W * float64(n%cols)
+		ty1 += a.sprite.H * float64(1+n/cols)
 	}
 
-	tx2 := tx1 + a.sprite.Width
-	ty2 := ty1 + a.sprite.Height
+	tx2 := tx1 + a.sprite.W
+	ty2 := ty1 + a.sprite.H
 
-	tx1 /= a.sprite.TexWidth
-	ty1 /= a.sprite.TexHeight
-	tx2 /= a.sprite.TexWidth
-	ty2 /= a.sprite.TexHeight
+	tx1 /= a.sprite.TexW
+	ty1 /= a.sprite.TexH
+	tx2 /= a.sprite.TexW
+	ty2 /= a.sprite.TexH
 
 	a.sprite.Quad.V[0].TX, a.sprite.Quad.V[0].TY = float32(tx1), float32(ty1)
 	a.sprite.Quad.V[1].TX, a.sprite.Quad.V[1].TY = float32(tx2), float32(ty1)
@@ -182,18 +182,18 @@ func (a *Animation) SetFrames(n int) {
 	a.frames = n
 }
 
-func (a Animation) GetMode() int {
+func (a Animation) Mode() int {
 	return a.mode
 }
 
-func (a Animation) GetSpeed() float64 {
+func (a Animation) Speed() float64 {
 	return 1.0 / a.speed
 }
 
-func (a Animation) GetFrame() int {
+func (a Animation) Frame() int {
 	return a.curFrame
 }
 
-func (a Animation) GetFrames() int {
+func (a Animation) Frames() int {
 	return a.frames
 }
