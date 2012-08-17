@@ -58,7 +58,7 @@ func LoadString(filename string) *string {
 }
 
 // Attaches a resource pack.
-func (_ Resource) AttachPack(filename string, a ...interface{}) bool {
+func AttachPack(filename string, a ...interface{}) bool {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
@@ -78,7 +78,7 @@ func (_ Resource) AttachPack(filename string, a ...interface{}) bool {
 }
 
 // Removes a resource pack.
-func (_ Resource) RemovePack(filename string) {
+func RemovePack(filename string) {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
@@ -86,12 +86,12 @@ func (_ Resource) RemovePack(filename string) {
 }
 
 // Removes all resource packs previously attached.
-func (_ Resource) RemoveAllPacks() {
+func RemoveAllPacks() {
 	C.HGE_Resource_RemoveAllPacks(HGE)
 }
 
 // Builds absolute file path.
-func (_ Resource) MakePath(a ...interface{}) string {
+func MakePath(a ...interface{}) string {
 	if len(a) == 1 {
 		if filename, ok := a[0].(string); ok {
 			fname := C.CString(filename)
@@ -105,7 +105,7 @@ func (_ Resource) MakePath(a ...interface{}) string {
 }
 
 // Enumerates files by given wildcard.
-func (_ Resource) EnumFiles(a ...interface{}) string {
+func EnumFiles(a ...interface{}) string {
 	if len(a) == 1 {
 		if wildcard, ok := a[0].(string); ok {
 			wcard := C.CString(wildcard)
@@ -119,7 +119,7 @@ func (_ Resource) EnumFiles(a ...interface{}) string {
 }
 
 // Enumerates folders by given wildcard.
-func (_ Resource) EnumFolders(a ...interface{}) string {
+func EnumFolders(a ...interface{}) string {
 	if len(a) == 1 {
 		if wildcard, ok := a[0].(string); ok {
 			wcard := C.CString(wildcard)

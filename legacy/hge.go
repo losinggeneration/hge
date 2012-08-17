@@ -1,7 +1,7 @@
 package legacy
 
 import (
-	hge "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge"
 	. "github.com/losinggeneration/hge-go/hge/gfx"
 	. "github.com/losinggeneration/hge-go/hge/ini"
 	. "github.com/losinggeneration/hge-go/hge/input"
@@ -95,32 +95,32 @@ func (h *HGE) ResourceLoadString(filename string) *string {
 
 // Attaches a resource pack.
 func (h *HGE) Resource_AttachPack(filename string, a ...interface{}) bool {
-	return Resource(0).AttachPack(filename, a...)
+	return AttachPack(filename, a...)
 }
 
 // Removes a resource pack.
 func (h *HGE) Resource_RemovePack(filename string) {
-	Resource(0).RemovePack(filename)
+	RemovePack(filename)
 }
 
 // Removes all resource packs previously attached.
 func (h *HGE) Resource_RemoveAllPacks() {
-	Resource(0).RemoveAllPacks()
+	RemoveAllPacks()
 }
 
 // Builds absolute file path.
 func (h *HGE) Resource_MakePath(a ...interface{}) string {
-	return Resource(0).MakePath(a...)
+	return MakePath(a...)
 }
 
 // Enumerates files by given wildcard.
 func (h *HGE) Resource_EnumFiles(a ...interface{}) string {
-	return Resource(0).EnumFiles(a...)
+	return EnumFiles(a...)
 }
 
 // Enumerates folders by given wildcard.
 func (h *HGE) Resource_EnumFolders(a ...interface{}) string {
-	return Resource(0).EnumFolders(a...)
+	return EnumFolders(a...)
 }
 
 func (h *HGE) Ini_SetInt(section, name string, value int) {
