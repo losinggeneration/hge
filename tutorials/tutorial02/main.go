@@ -11,15 +11,18 @@ package main
 import (
 	"fmt"
 	HGE "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge/gfx"
+	"github.com/losinggeneration/hge-go/hge/input"
+	"github.com/losinggeneration/hge-go/hge/sound"
 	hge "github.com/losinggeneration/hge-go/legacy"
 )
 
 var (
 	h *hge.HGE
 
-	quad HGE.Quad
+	quad gfx.Quad
 
-	snd HGE.Effect
+	snd sound.Effect
 
 	x  = 100.0
 	y  = 100.0
@@ -42,19 +45,19 @@ func FrameFunc() int {
 	dt := float64(h.Timer_GetDelta())
 
 	// Process keys
-	if h.Input_GetKeyState(HGE.K_ESCAPE) {
+	if h.Input_GetKeyState(input.K_ESCAPE) {
 		return 1
 	}
-	if h.Input_GetKeyState(HGE.K_LEFT) {
+	if h.Input_GetKeyState(input.K_LEFT) {
 		dx -= speed * dt
 	}
-	if h.Input_GetKeyState(HGE.K_RIGHT) {
+	if h.Input_GetKeyState(input.K_RIGHT) {
 		dx += speed * dt
 	}
-	if h.Input_GetKeyState(HGE.K_UP) {
+	if h.Input_GetKeyState(input.K_UP) {
 		dy -= speed * dt
 	}
-	if h.Input_GetKeyState(HGE.K_DOWN) {
+	if h.Input_GetKeyState(input.K_DOWN) {
 		dy += speed * dt
 	}
 
@@ -153,7 +156,7 @@ func main() {
 		defer h.Texture_Free(quad.Tex)
 
 		// Set up quad which we will use for rendering sprite
-		quad.Blend = HGE.BLEND_ALPHAADD | HGE.BLEND_COLORMUL | HGE.BLEND_ZWRITE
+		quad.Blend = gfx.BLEND_ALPHAADD | gfx.BLEND_COLORMUL | gfx.BLEND_ZWRITE
 
 		for i := 0; i < 4; i++ {
 			// Set up z-coordinate of vertices

@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge/input"
 	"os"
 )
 
 func FrameFunc() int {
-	if hge.NewKey(hge.K_ESCAPE).State() {
+	if input.NewKey(input.K_ESCAPE).State() {
 		return 1
 	}
 

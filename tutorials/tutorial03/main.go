@@ -5,7 +5,11 @@ import (
 	"github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/particle"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
-	HGE "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/gfx"
+	. "github.com/losinggeneration/hge-go/hge/input"
+	. "github.com/losinggeneration/hge-go/hge/sound"
+	. "github.com/losinggeneration/hge-go/hge/timer"
 )
 
 var (
@@ -13,8 +17,8 @@ var (
 	fnt      *font.Font
 	par      *particle.ParticleSystem
 
-	tex HGE.Texture
-	snd HGE.Effect
+	tex Texture
+	snd Effect
 
 	x  = 100.0
 	y  = 100.0
@@ -34,22 +38,22 @@ func boom() {
 }
 
 func FrameFunc() int {
-	dt := float64(HGE.NewTimer().Delta())
+	dt := float64(Delta())
 
 	// Process keys
-	if HGE.NewKey(HGE.K_ESCAPE).State() {
+	if NewKey(K_ESCAPE).State() {
 		return 1
 	}
-	if HGE.NewKey(HGE.K_LEFT).State() {
+	if NewKey(K_LEFT).State() {
 		dx -= speed * dt
 	}
-	if HGE.NewKey(HGE.K_RIGHT).State() {
+	if NewKey(K_RIGHT).State() {
 		dx += speed * dt
 	}
-	if HGE.NewKey(HGE.K_UP).State() {
+	if NewKey(K_UP).State() {
 		dy -= speed * dt
 	}
-	if HGE.NewKey(HGE.K_DOWN).State() {
+	if NewKey(K_DOWN).State() {
 		dy += speed * dt
 	}
 
@@ -88,34 +92,34 @@ func FrameFunc() int {
 }
 
 func RenderFunc() int {
-	HGE.GfxBeginScene()
-	HGE.GfxClear(0)
+	BeginScene()
+	Clear(0)
 	// currently broken
 	par.Render()
 	spr.Render(x, y)
-	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", HGE.NewTimer().Delta(), HGE.GetFPS())
-	HGE.GfxEndScene()
+	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", Delta(), GetFPS())
+	EndScene()
 
 	return 0
 }
 
 func main() {
-	defer HGE.Free()
+	defer Free()
 
-	HGE.SetState(HGE.LOGFILE, "tutorial03.log")
-	HGE.SetState(HGE.FRAMEFUNC, FrameFunc)
-	HGE.SetState(HGE.RENDERFUNC, RenderFunc)
-	HGE.SetState(HGE.TITLE, "HGE Tutorial 03 - Using helper classes")
-	HGE.SetState(HGE.FPS, 100)
-	HGE.SetState(HGE.WINDOWED, true)
-	HGE.SetState(HGE.SCREENWIDTH, 800)
-	HGE.SetState(HGE.SCREENHEIGHT, 600)
-	HGE.SetState(HGE.SCREENBPP, 32)
+	SetState(LOGFILE, "tutorial03.log")
+	SetState(FRAMEFUNC, FrameFunc)
+	SetState(RENDERFUNC, RenderFunc)
+	SetState(TITLE, "HGE Tutorial 03 - Using helper classes")
+	SetState(FPS, 100)
+	SetState(WINDOWED, true)
+	SetState(SCREENWIDTH, 800)
+	SetState(SCREENHEIGHT, 600)
+	SetState(SCREENBPP, 32)
 
-	if err := HGE.Initiate(); err == nil {
-		defer HGE.Shutdown()
-		snd = HGE.NewEffect("menu.ogg")
-		tex = HGE.LoadTexture("particles.png")
+	if err := Initiate(); err == nil {
+		defer Shutdown()
+		snd = NewEffect("menu.ogg")
+		tex = LoadTexture("particles.png")
 		if snd == 0 || tex == 0 {
 			fmt.Printf("Error: Can't load one of the following files:\nmenu.ogg, particles.png, font1.fnt, font1.png, trail.psi\n")
 			return
@@ -134,7 +138,7 @@ func main() {
 		}
 
 		spt = sprite.NewSprite(tex, 32, 32, 32, 32)
-		spt.SetBlendMode(HGE.BLEND_COLORMUL | HGE.BLEND_ALPHAADD | HGE.BLEND_NOZWRITE)
+		spt.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
 		spt.SetHotSpot(16, 16)
 
 		par = particle.NewParticleSystem("trail.psi", spt)
@@ -144,6 +148,6 @@ func main() {
 		}
 		par.Fire()
 
-		HGE.Start()
+		Start()
 	}
 }

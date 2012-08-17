@@ -6,6 +6,10 @@ import (
 	. "github.com/losinggeneration/hge-go/helpers/particle"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
 	. "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/gfx"
+	. "github.com/losinggeneration/hge-go/hge/input"
+	. "github.com/losinggeneration/hge-go/hge/sound"
+	. "github.com/losinggeneration/hge-go/hge/timer"
 )
 
 var (
@@ -40,7 +44,7 @@ func boom() {
 // render targets were lost and have been just created
 // again. We use it here to update the render
 // target's texture handle that changes during recreation.
-func GfxRestoreFunc() int {
+func RestoreFunc() int {
 	if target != 0 {
 		tar.SetTexture(target.Texture())
 	}
@@ -49,7 +53,7 @@ func GfxRestoreFunc() int {
 }
 
 func FrameFunc() int {
-	dt := NewTimer().Delta()
+	dt := Delta()
 
 	// Process keys
 	if NewKey(K_ESCAPE).State() {
@@ -104,21 +108,21 @@ func FrameFunc() int {
 
 func RenderFunc() int {
 	// Render graphics to the texture
-	GfxBeginScene(target)
-	GfxClear(0)
+	BeginScene(target)
+	Clear(0)
 	par.Render()
 	spr.Render(x, y)
-	GfxEndScene()
+	EndScene()
 
 	// Now put several instances of the rendered texture to the screen
-	GfxBeginScene()
-	GfxClear(0)
+	BeginScene()
+	Clear(0)
 	for i := 0.0; i < 6.0; i++ {
 		tar.SetColor(Dword(0xFFFFFF | ((int)((5-i)*40+55) << 24)))
 		tar.RenderEx(i*100.0, i*50.0, i*Pi/8, 1.0-i*0.1)
 	}
-	fnt.Printf(5, 5, TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", NewTimer().Delta(), GetFPS())
-	GfxEndScene()
+	fnt.Printf(5, 5, TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", Delta(), GetFPS())
+	EndScene()
 
 	return 0
 }
@@ -129,7 +133,7 @@ func main() {
 	SetState(LOGFILE, "tutorial04.log")
 	SetState(FRAMEFUNC, FrameFunc)
 	SetState(RENDERFUNC, RenderFunc)
-	SetState(GFXRESTOREFUNC, GfxRestoreFunc)
+	SetState(GFXRESTOREFUNC, RestoreFunc)
 	SetState(TITLE, "HGE Tutorial 04 - Using render targets")
 	SetState(FPS, 100)
 	SetState(WINDOWED, true)

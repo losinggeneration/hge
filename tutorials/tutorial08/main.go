@@ -9,7 +9,11 @@ import (
 	dist "github.com/losinggeneration/hge-go/helpers/distortionmesh"
 	"github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
-	HGE "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/gfx"
+	. "github.com/losinggeneration/hge-go/hge/input"
+	. "github.com/losinggeneration/hge-go/hge/rand"
+	. "github.com/losinggeneration/hge-go/hge/timer"
 	"math"
 	"time"
 )
@@ -32,16 +36,16 @@ const (
 )
 
 var (
-	skyTopColors = []HGE.Dword{0xFF15092A, 0xFF6C6480, 0xFF89B9D0}
-	skyBtmColors = []HGE.Dword{0xFF303E57, 0xFFAC7963, 0xFFCAD7DB}
-	seaTopColors = []HGE.Dword{0xFF3D546B, 0xFF927E76, 0xFF86A2AD}
-	seaBtmColors = []HGE.Dword{0xFF1E394C, 0xFF2F4E64, 0xFF2F4E64}
+	skyTopColors = []Dword{0xFF15092A, 0xFF6C6480, 0xFF89B9D0}
+	skyBtmColors = []Dword{0xFF303E57, 0xFFAC7963, 0xFFCAD7DB}
+	seaTopColors = []Dword{0xFF3D546B, 0xFF927E76, 0xFF86A2AD}
+	seaBtmColors = []Dword{0xFF1E394C, 0xFF2F4E64, 0xFF2F4E64}
 	seq          = []int{0, 0, 1, 2, 2, 2, 1, 0, 0}
 )
 
 // Simulation resource handles
 var (
-	texObjects                          HGE.Texture
+	texObjects                          Texture
 	sky, sun, moon, glow, seaglow, star sprite.Sprite
 	sea                                 dist.DistortionMesh
 	colWhite                            color.ColorRGB
@@ -73,28 +77,28 @@ var (
 ///////////////////////// Implementation ///////////////////////////
 func frame() int {
 	// Process keys
-	switch HGE.GetKey() {
-	case HGE.K_0:
+	switch GetKey() {
+	case K_0:
 		speed = 0.0
-	case HGE.K_1:
+	case K_1:
 		speed = 0.1
-	case HGE.K_2:
+	case K_2:
 		speed = 0.2
-	case HGE.K_3:
+	case K_3:
 		speed = 0.4
-	case HGE.K_4:
+	case K_4:
 		speed = 0.8
-	case HGE.K_5:
+	case K_5:
 		speed = 1.6
-	case HGE.K_6:
+	case K_6:
 		speed = 3.2
-	case HGE.K_7:
+	case K_7:
 		speed = 6.4
-	case HGE.K_8:
+	case K_8:
 		speed = 12.8
-	case HGE.K_9:
+	case K_9:
 		speed = 25.6
-	case HGE.K_ESCAPE:
+	case K_ESCAPE:
 		return 1
 	}
 
@@ -115,31 +119,31 @@ func render() int {
 	secs := int(math.Floor((tmp - float64(mins)) * 60.0))
 
 	// Render scene
-	HGE.GfxBeginScene()
+	BeginScene()
 	RenderSimulation()
-	fnt.Printf(7, 7, font.TEXT_LEFT, "Keys 1-9 to adjust simulation speed, 0 - real time\nFPS: %d", HGE.GetFPS())
+	fnt.Printf(7, 7, font.TEXT_LEFT, "Keys 1-9 to adjust simulation speed, 0 - real time\nFPS: %d", GetFPS())
 	fnt.Printf(SCREEN_WIDTH-50, 7, font.TEXT_LEFT, "%02d:%02d:%02d", hrs, mins, secs)
-	HGE.GfxEndScene()
+	EndScene()
 
 	return 0
 }
 
 func main() {
-	defer HGE.Free()
+	defer Free()
 
 	// Set desired system states and initialize HGE
-	HGE.SetState(HGE.LOGFILE, "tutorial08.log")
-	HGE.SetState(HGE.FRAMEFUNC, frame)
-	HGE.SetState(HGE.RENDERFUNC, render)
-	HGE.SetState(HGE.TITLE, "HGE Tutorial 08 - The Big Calm")
-	HGE.SetState(HGE.USESOUND, false)
-	HGE.SetState(HGE.WINDOWED, true)
-	HGE.SetState(HGE.SCREENWIDTH, SCREEN_WIDTH)
-	HGE.SetState(HGE.SCREENHEIGHT, SCREEN_HEIGHT)
-	HGE.SetState(HGE.SCREENBPP, 32)
+	SetState(LOGFILE, "tutorial08.log")
+	SetState(FRAMEFUNC, frame)
+	SetState(RENDERFUNC, render)
+	SetState(TITLE, "HGE Tutorial 08 - The Big Calm")
+	SetState(USESOUND, false)
+	SetState(WINDOWED, true)
+	SetState(SCREENWIDTH, SCREEN_WIDTH)
+	SetState(SCREENHEIGHT, SCREEN_HEIGHT)
+	SetState(SCREENBPP, 32)
 
-	if err := HGE.Initiate(); err == nil {
-		defer HGE.Shutdown()
+	if err := Initiate(); err == nil {
+		defer Shutdown()
 
 		fnt = font.NewFont("font1.fnt")
 
@@ -149,7 +153,7 @@ func main() {
 			return
 		}
 
-		HGE.Start()
+		Start()
 
 		DoneSimulation()
 	}
@@ -168,7 +172,7 @@ func GetTime() float64 {
 
 func InitSimulation() bool {
 	// Load texture
-	texObjects = HGE.LoadTexture("objects.png")
+	texObjects = LoadTexture("objects.png")
 	if texObjects == 0 {
 		return false
 	}
@@ -187,10 +191,10 @@ func InitSimulation() bool {
 
 	glow = sprite.NewSprite(texObjects, 128, 128, 128, 128)
 	glow.SetHotSpot(64, 64)
-	glow.SetBlendMode(HGE.BLEND_COLORADD | HGE.BLEND_ALPHABLEND | HGE.BLEND_NOZWRITE)
+	glow.SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_NOZWRITE)
 	seaglow = sprite.NewSprite(texObjects, 128, 224, 128, 32)
 	seaglow.SetHotSpot(64, 0)
-	seaglow.SetBlendMode(HGE.BLEND_COLORADD | HGE.BLEND_ALPHAADD | HGE.BLEND_NOZWRITE)
+	seaglow.SetBlendMode(BLEND_COLORADD | BLEND_ALPHAADD | BLEND_NOZWRITE)
 
 	// Initialize simulation state
 	colWhite.SetHWColor(0xFFFFFFFF)
@@ -198,13 +202,13 @@ func InitSimulation() bool {
 	speed = 0.0
 
 	for i := 0; i < NUM_STARS; i++ { // star positions
-		starX[i] = HGE.RandomFloat(0, SCREEN_WIDTH)
-		starY[i] = HGE.RandomFloat(0, STARS_HEIGHT)
-		starS[i] = HGE.RandomFloat(0.1, 0.7)
+		starX[i] = Float64(0, SCREEN_WIDTH)
+		starY[i] = Float64(0, STARS_HEIGHT)
+		starS[i] = Float64(0.1, 0.7)
 	}
 
 	for i := 0; i < SEA_SUBDIVISION; i++ { // sea waves phase shifts
-		seaP[i] = float64(i) + HGE.RandomFloat(-15.0, 15.0)
+		seaP[i] = float64(i) + Float64(-15.0, 15.0)
 	}
 
 	// Systems are ready now!
@@ -225,7 +229,7 @@ func UpdateSimulation() {
 	if speed == 0.0 {
 		timet = GetTime()
 	} else {
-		timet += HGE.NewTimer().Delta() * speed
+		timet += Delta() * speed
 		if timet >= 24.0 {
 			timet -= 24.0
 		}
@@ -233,7 +237,7 @@ func UpdateSimulation() {
 
 	seq_id = int(timet / 3)
 	seq_residue = timet/3 - float64(seq_id)
-	zenith := -(timet/12.0*HGE.Pi - HGE.Pi_2)
+	zenith := -(timet/12.0*Pi - Pi_2)
 
 	// Interpolate sea and sky colors
 	col1.SetHWColor(skyTopColors[seq[seq_id]])
@@ -257,11 +261,11 @@ func UpdateSimulation() {
 	if seq_id >= 6 || seq_id < 2 {
 		for i := 0; i < NUM_STARS; i++ {
 			a = 1.0 - starY[i]/STARS_HEIGHT
-			a *= HGE.RandomFloat(0.6, 1.0)
+			a *= Float64(0.6, 1.0)
 			if seq_id >= 6 {
-				a *= math.Sin((timet - 18.0) / 6.0 * HGE.Pi_2)
+				a *= math.Sin((timet - 18.0) / 6.0 * Pi_2)
 			} else {
-				a *= math.Sin((1.0 - timet/6.0) * HGE.Pi_2)
+				a *= math.Sin((1.0 - timet/6.0) * Pi_2)
 			}
 			starA[i] = a
 		}
@@ -269,9 +273,9 @@ func UpdateSimulation() {
 
 	// Calculate sun position, scale and colors
 	if seq_id == 2 {
-		a = math.Sin(seq_residue * HGE.Pi_2)
+		a = math.Sin(seq_residue * Pi_2)
 	} else if seq_id == 5 {
-		a = math.Cos(seq_residue * HGE.Pi_2)
+		a = math.Cos(seq_residue * Pi_2)
 	} else if seq_id > 2 && seq_id < 5 {
 		a = 1.0
 	} else {
@@ -281,7 +285,7 @@ func UpdateSimulation() {
 	colSun.SetHWColor(0xFFEAE1BE)
 	colSun = colSun.MulScalar(1 - a).Add(colWhite.MulScalar(a))
 
-	a = (math.Cos(timet/6.0*HGE.Pi) + 1.0) / 2.0
+	a = (math.Cos(timet/6.0*Pi) + 1.0) / 2.0
 	if seq_id >= 2 && seq_id <= 6 {
 		colSunGlow = colWhite.MulScalar(a)
 		colSunGlow.A = 1.0
@@ -291,14 +295,14 @@ func UpdateSimulation() {
 
 	sunX = SCREEN_WIDTH*0.5 + math.Cos(zenith)*ORBITS_RADIUS
 	sunY = SKY_HEIGHT*1.2 + math.Sin(zenith)*ORBITS_RADIUS
-	sunS = 1.0 - 0.3*math.Sin((timet-6.0)/12.0*HGE.Pi)
+	sunS = 1.0 - 0.3*math.Sin((timet-6.0)/12.0*Pi)
 	sunGlowS = 3.0*(1.0-a) + 3.0
 
 	// Calculate moon position, scale and colors
 	if seq_id >= 6 {
-		a = math.Sin((timet - 18.0) / 6.0 * HGE.Pi_2)
+		a = math.Sin((timet - 18.0) / 6.0 * Pi_2)
 	} else {
-		a = math.Sin((1.0 - timet/6.0) * HGE.Pi_2)
+		a = math.Sin((1.0 - timet/6.0) * Pi_2)
 	}
 	colMoon.SetHWColor(0x20FFFFFF)
 	colMoon = colMoon.MulScalar(1 - a).Add(colWhite.MulScalar(a))
@@ -306,9 +310,9 @@ func UpdateSimulation() {
 	colMoonGlow = colWhite
 	colMoonGlow.A = 0.5 * a
 
-	moonX = SCREEN_WIDTH*0.5 + math.Cos(zenith-HGE.Pi)*ORBITS_RADIUS
-	moonY = SKY_HEIGHT*1.2 + math.Sin(zenith-HGE.Pi)*ORBITS_RADIUS
-	moonS = 1.0 - 0.3*math.Sin((timet+6.0)/12.0*HGE.Pi)
+	moonX = SCREEN_WIDTH*0.5 + math.Cos(zenith-Pi)*ORBITS_RADIUS
+	moonY = SKY_HEIGHT*1.2 + math.Sin(zenith-Pi)*ORBITS_RADIUS
+	moonS = 1.0 - 0.3*math.Sin((timet+6.0)/12.0*Pi)
 	moonGlowS = a*0.4 + 0.5
 
 	// Calculate sea glow
@@ -342,19 +346,19 @@ func UpdateSimulation() {
 		colSeaGlow.A = 0.0
 	}
 
-	var dwCol1 HGE.Dword
+	var dwCol1 Dword
 	// Move waves and update sea color
 	for i := 1; i < SEA_SUBDIVISION-1; i++ {
 		a = float64(i) / (SEA_SUBDIVISION - 1)
 		col1 = colSeaTop.MulScalar(1 - a).Add(colSeaBtm.MulScalar(a))
 		dwCol1 = col1.HWColor()
-		fTime := 2.0 * HGE.NewTimer().Time()
+		fTime := 2.0 * Time()
 		a *= 20
 
 		for j := 0; j < SEA_SUBDIVISION; j++ {
 			sea.SetColor(j, i, dwCol1)
 
-			dy := a * math.Sin(seaP[i]+(float64(j)/(SEA_SUBDIVISION-1)-0.5)*HGE.Pi*16.0-fTime)
+			dy := a * math.Sin(seaP[i]+(float64(j)/(SEA_SUBDIVISION-1)-0.5)*Pi*16.0-fTime)
 			sea.SetDisplacement(j, i, 0.0, dy, dist.DISP_NODE)
 		}
 	}
@@ -405,7 +409,7 @@ func UpdateSimulation() {
 		s2 *= a
 
 		for i := 0; i < SEA_SUBDIVISION; i += 2 {
-			a = math.Sin(float64(i) / (SEA_SUBDIVISION - 1) * HGE.Pi_2)
+			a = math.Sin(float64(i) / (SEA_SUBDIVISION - 1) * Pi_2)
 
 			col1.SetHWColor(sea.Color(k, i))
 			col1.AddEqual(colSun.MulScalar(s1 * (1 - a)))
@@ -431,7 +435,7 @@ func RenderSimulation() {
 	// Render stars
 	if seq_id >= 6 || seq_id < 2 {
 		for i := 0; i < NUM_STARS; i++ {
-			star.SetColor((HGE.Dword(starA[i]*255.0) << 24) | 0xFFFFFF)
+			star.SetColor((Dword(starA[i]*255.0) << 24) | 0xFFFFFF)
 			star.RenderEx(starX[i], starY[i], 0.0, starS[i])
 		}
 	}

@@ -4,12 +4,15 @@ import (
 	"fmt"
 	dist "github.com/losinggeneration/hge-go/helpers/distortionmesh"
 	"github.com/losinggeneration/hge-go/helpers/font"
-	HGE "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/gfx"
+	. "github.com/losinggeneration/hge-go/hge/input"
+	. "github.com/losinggeneration/hge-go/hge/timer"
 	"math"
 )
 
 var (
-	tex HGE.Texture
+	tex Texture
 	dis dist.DistortionMesh
 	fnt *font.Font
 )
@@ -28,21 +31,21 @@ var trans = 0
 var t = 0.0
 
 func FrameFunc() int {
-	t += HGE.NewTimer().Delta()
+	t += Delta()
 
 	// Process keys
-	switch HGE.GetKey() {
-	case HGE.K_ESCAPE:
+	switch GetKey() {
+	case K_ESCAPE:
 		return 1
 
-	case HGE.K_SPACE:
+	case K_SPACE:
 		trans++
 
 		if trans > 2 {
 			trans = 0
 		}
 
-		dis.Clear(HGE.Dword(0xFF000000))
+		dis.Clear(Dword(0xFF000000))
 	}
 
 	// Calculate new displacements and coloring for one of the three effects
@@ -58,7 +61,7 @@ func FrameFunc() int {
 		for i := 0; i < rows; i++ {
 			for j := 1; j < cols-1; j++ {
 				dis.SetDisplacement(j, i, math.Cos(t*float64(5+j)/2)*15, 0, dist.DISP_NODE)
-				col := HGE.Dword((math.Cos(t*float64(5+(i+j))/2) + 1) * 35)
+				col := Dword((math.Cos(t*float64(5+(i+j))/2) + 1) * 35)
 				dis.SetColor(j, i, 0xFF<<24|col<<16|col<<8|col)
 			}
 		}
@@ -71,7 +74,7 @@ func FrameFunc() int {
 				dx := math.Sin(a)*(i*cellh-256) + math.Cos(a)*(j*cellw-256)
 				dy := math.Cos(a)*(i*cellh-256) - math.Sin(a)*(j*cellw-256)
 				dis.SetDisplacement(int(j), int(i), dx, dy, dist.DISP_CENTER)
-				col := HGE.Dword((math.Cos(r+t*4) + 1) * 40)
+				col := Dword((math.Cos(r+t*4) + 1) * 40)
 				dis.SetColor(int(j), int(i), 0xFF<<24|col<<16|(col/2)<<8)
 			}
 		}
@@ -82,31 +85,31 @@ func FrameFunc() int {
 
 func RenderFunc() int {
 	// Render graphics
-	HGE.GfxBeginScene()
-	HGE.GfxClear(0)
+	BeginScene()
+	Clear(0)
 	dis.Render(meshx, meshy)
-	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d\n\nUse your\nSPACE!", HGE.NewTimer().Delta(), HGE.GetFPS())
-	HGE.GfxEndScene()
+	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d\n\nUse your\nSPACE!", Delta(), GetFPS())
+	EndScene()
 
 	return 0
 }
 
 func main() {
-	defer HGE.Free()
+	defer Free()
 
-	HGE.SetState(HGE.LOGFILE, "tutorial05.log")
-	HGE.SetState(HGE.FRAMEFUNC, FrameFunc)
-	HGE.SetState(HGE.RENDERFUNC, RenderFunc)
-	HGE.SetState(HGE.TITLE, "HGE Tutorial 05 - Using distortion mesh")
-	HGE.SetState(HGE.WINDOWED, true)
-	HGE.SetState(HGE.SCREENWIDTH, 800)
-	HGE.SetState(HGE.SCREENHEIGHT, 600)
-	HGE.SetState(HGE.SCREENBPP, 32)
-	HGE.SetState(HGE.USESOUND, false)
+	SetState(LOGFILE, "tutorial05.log")
+	SetState(FRAMEFUNC, FrameFunc)
+	SetState(RENDERFUNC, RenderFunc)
+	SetState(TITLE, "HGE Tutorial 05 - Using distortion mesh")
+	SetState(WINDOWED, true)
+	SetState(SCREENWIDTH, 800)
+	SetState(SCREENHEIGHT, 600)
+	SetState(SCREENBPP, 32)
+	SetState(USESOUND, false)
 
-	if err := HGE.Initiate(); err == nil {
-		defer HGE.Shutdown()
-		tex = HGE.LoadTexture("texture.jpg")
+	if err := Initiate(); err == nil {
+		defer Shutdown()
+		tex = LoadTexture("texture.jpg")
 		if tex == 0 {
 			fmt.Println("Error: Can't load texture.jpg")
 			return
@@ -116,8 +119,8 @@ func main() {
 		dis = dist.NewDistortionMesh(cols, rows)
 		dis.SetTexture(tex)
 		dis.SetTextureRect(0, 0, 512, 512)
-		dis.SetBlendMode(HGE.BLEND_COLORADD | HGE.BLEND_ALPHABLEND | HGE.BLEND_ZWRITE)
-		dis.Clear(HGE.Dword(0xFF000000))
+		dis.SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_ZWRITE)
+		dis.Clear(Dword(0xFF000000))
 
 		// Load a font
 		fnt = font.NewFont("font1.fnt")
@@ -128,6 +131,6 @@ func main() {
 		}
 
 		// Let's rock now!
-		HGE.Start()
+		Start()
 	}
 }

@@ -4,14 +4,15 @@ import (
 	Color "github.com/losinggeneration/hge-go/helpers/color"
 	Font "github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/gui"
-	HGE "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/input"
+	. "github.com/losinggeneration/hge-go/hge/sound"
 )
 
 type GUIMenuItem struct {
 	gui.GUIObject
 
 	font                                                              *Font.Font
-	snd                                                               HGE.Effect
+	snd                                                               Effect
 	delay                                                             float64
 	title                                                             string
 	scolor, dcolor, scolor2, dcolor2, sshadow, dshadow, color, shadow Color.ColorRGB
@@ -19,7 +20,7 @@ type GUIMenuItem struct {
 	timer, timer2                                                     float64
 }
 
-func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64, title string) *gui.GUIObject {
+func NewGUIMenuItem(id int, font *Font.Font, snd Effect, x, y, delay float64, title string) *gui.GUIObject {
 	mi := new(GUIMenuItem)
 
 	mi.GUIObject.Initialize()
@@ -153,8 +154,8 @@ func NewGUIMenuItem(id int, font *Font.Font, snd HGE.Effect, x, y, delay float64
 		return false
 	}
 
-	mi.GUIObject.KeyClick = func(key HGE.Key, chr int) bool {
-		if key == HGE.K_ENTER || key == HGE.K_SPACE {
+	mi.GUIObject.KeyClick = func(key Key, chr int) bool {
+		if key == K_ENTER || key == K_SPACE {
 			mi.GUIObject.MouseLButton(true)
 			return mi.GUIObject.MouseLButton(false)
 		}

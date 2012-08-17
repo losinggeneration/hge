@@ -5,24 +5,28 @@ import (
 	"github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/gui"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
-	HGE "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge"
+	. "github.com/losinggeneration/hge-go/hge/gfx"
+	. "github.com/losinggeneration/hge-go/hge/input"
+	. "github.com/losinggeneration/hge-go/hge/sound"
+	. "github.com/losinggeneration/hge-go/hge/timer"
 	"math"
 )
 
 var (
 	GUI  gui.GUI
 	fnt  *font.Font
-	quad HGE.Quad
+	quad Quad
 )
 
 var lastId int = 0
 var t float64 = 0.0
 
 func frame() int {
-	dt := HGE.NewTimer().Delta()
+	dt := Delta()
 
 	// If ESCAPE was pressed, tell the GUI to finish
-	if HGE.NewKey(HGE.K_ESCAPE).State() {
+	if NewKey(K_ESCAPE).State() {
 		lastId = 5
 		GUI.Leave()
 	}
@@ -59,34 +63,34 @@ func frame() int {
 
 func render() int {
 	// Render graphics
-	HGE.GfxBeginScene()
+	BeginScene()
 	quad.Render()
 	GUI.Render()
 	fnt.SetColor(0xFFFFFFFF)
-	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d", HGE.NewTimer().Delta(), HGE.GetFPS())
-	HGE.GfxEndScene()
+	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d", Delta(), GetFPS())
+	EndScene()
 
 	return 0
 }
 
 func main() {
-	defer HGE.Free()
+	defer Free()
 
-	HGE.SetState(HGE.LOGFILE, "tutorial06.log")
-	HGE.SetState(HGE.FRAMEFUNC, frame)
-	HGE.SetState(HGE.RENDERFUNC, render)
-	HGE.SetState(HGE.TITLE, "HGE Tutorial 06 - Creating menus")
-	HGE.SetState(HGE.WINDOWED, true)
-	HGE.SetState(HGE.SCREENWIDTH, 800)
-	HGE.SetState(HGE.SCREENHEIGHT, 600)
-	HGE.SetState(HGE.SCREENBPP, 32)
+	SetState(LOGFILE, "tutorial06.log")
+	SetState(FRAMEFUNC, frame)
+	SetState(RENDERFUNC, render)
+	SetState(TITLE, "HGE Tutorial 06 - Creating menus")
+	SetState(WINDOWED, true)
+	SetState(SCREENWIDTH, 800)
+	SetState(SCREENHEIGHT, 600)
+	SetState(SCREENBPP, 32)
 
-	if err := HGE.Initiate(); err != nil {
-		fmt.Println("Error: ", HGE.GetErrorMessage())
+	if err := Initiate(); err != nil {
+		fmt.Println("Error: ", GetErrorMessage())
 	} else {
-		defer HGE.Shutdown()
+		defer Shutdown()
 
-		quad.Tex = HGE.LoadTexture("bg.png")
+		quad.Tex = LoadTexture("bg.png")
 
 		if quad.Tex == 0 {
 			fmt.Println("Error loading bg.png")
@@ -94,7 +98,7 @@ func main() {
 		}
 		defer quad.Tex.Free()
 
-		snd := HGE.NewEffect("menu.ogg")
+		snd := NewEffect("menu.ogg")
 
 		if snd == 0 {
 			fmt.Println("Error loading menu.ogg")
@@ -102,7 +106,7 @@ func main() {
 		}
 		defer snd.Free()
 
-		cursorTex := HGE.LoadTexture("cursor.png")
+		cursorTex := LoadTexture("cursor.png")
 
 		if cursorTex == 0 {
 			fmt.Println("Error loading cursor.png")
@@ -111,7 +115,7 @@ func main() {
 		defer cursorTex.Free()
 
 		// Set up the quad we will use for background animation
-		quad.Blend = HGE.BLEND_ALPHABLEND | HGE.BLEND_COLORMUL | HGE.BLEND_NOZWRITE
+		quad.Blend = BLEND_ALPHABLEND | BLEND_COLORMUL | BLEND_NOZWRITE
 
 		for i := 0; i < 4; i++ {
 			// Set up z-coordinate of vertices
@@ -146,7 +150,7 @@ func main() {
 		GUI.SetFocus(1)
 		GUI.Enter()
 
-		HGE.Start()
+		Start()
 	}
 
 }
