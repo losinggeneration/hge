@@ -1,8 +1,7 @@
 package distortionmesh
 
 import (
-	hge "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/legacy"
+	"github.com/losinggeneration/hge-go/hge"
 )
 
 const (
@@ -12,22 +11,19 @@ const (
 )
 
 type DistortionMesh struct {
-	hge                   *HGE
 	dispArray             []hge.Vertex
 	rows, cols            int
 	cellw, cellh          float64
 	tx, ty, width, height float64
-	quad                  hge.Quad
+	hge.Quad
 }
 
 func NewDistortionMesh(cols, rows int) DistortionMesh {
 	var dm DistortionMesh
 
-	dm.hge = Create(hge.VERSION)
-
 	dm.rows = rows
 	dm.cols = cols
-	dm.quad.Blend = hge.BLEND_COLORMUL | hge.BLEND_ALPHABLEND | hge.BLEND_ZWRITE
+	dm.Quad.Blend = hge.BLEND_COLORMUL | hge.BLEND_ALPHABLEND | hge.BLEND_ZWRITE
 	dm.dispArray = make([]hge.Vertex, rows*cols)
 
 	for i := 0; i < rows*cols; i++ {
@@ -45,35 +41,35 @@ func (dm *DistortionMesh) Render(x, y float64) {
 		for i := 0; i < dm.cols-1; i++ {
 			idx := j*dm.cols + i
 
-			dm.quad.V[0].TX = dm.dispArray[idx].TX
-			dm.quad.V[0].TY = dm.dispArray[idx].TY
-			dm.quad.V[0].X = x32 + dm.dispArray[idx].X
-			dm.quad.V[0].Y = y32 + dm.dispArray[idx].Y
-			dm.quad.V[0].Z = dm.dispArray[idx].Z
-			dm.quad.V[0].Col = dm.dispArray[idx].Col
+			dm.Quad.V[0].TX = dm.dispArray[idx].TX
+			dm.Quad.V[0].TY = dm.dispArray[idx].TY
+			dm.Quad.V[0].X = x32 + dm.dispArray[idx].X
+			dm.Quad.V[0].Y = y32 + dm.dispArray[idx].Y
+			dm.Quad.V[0].Z = dm.dispArray[idx].Z
+			dm.Quad.V[0].Col = dm.dispArray[idx].Col
 
-			dm.quad.V[1].TX = dm.dispArray[idx+1].TX
-			dm.quad.V[1].TY = dm.dispArray[idx+1].TY
-			dm.quad.V[1].X = x32 + dm.dispArray[idx+1].X
-			dm.quad.V[1].Y = y32 + dm.dispArray[idx+1].Y
-			dm.quad.V[1].Z = dm.dispArray[idx+1].Z
-			dm.quad.V[1].Col = dm.dispArray[idx+1].Col
+			dm.Quad.V[1].TX = dm.dispArray[idx+1].TX
+			dm.Quad.V[1].TY = dm.dispArray[idx+1].TY
+			dm.Quad.V[1].X = x32 + dm.dispArray[idx+1].X
+			dm.Quad.V[1].Y = y32 + dm.dispArray[idx+1].Y
+			dm.Quad.V[1].Z = dm.dispArray[idx+1].Z
+			dm.Quad.V[1].Col = dm.dispArray[idx+1].Col
 
-			dm.quad.V[2].TX = dm.dispArray[idx+dm.cols+1].TX
-			dm.quad.V[2].TY = dm.dispArray[idx+dm.cols+1].TY
-			dm.quad.V[2].X = x32 + dm.dispArray[idx+dm.cols+1].X
-			dm.quad.V[2].Y = y32 + dm.dispArray[idx+dm.cols+1].Y
-			dm.quad.V[2].Z = dm.dispArray[idx+dm.cols+1].Z
-			dm.quad.V[2].Col = dm.dispArray[idx+dm.cols+1].Col
+			dm.Quad.V[2].TX = dm.dispArray[idx+dm.cols+1].TX
+			dm.Quad.V[2].TY = dm.dispArray[idx+dm.cols+1].TY
+			dm.Quad.V[2].X = x32 + dm.dispArray[idx+dm.cols+1].X
+			dm.Quad.V[2].Y = y32 + dm.dispArray[idx+dm.cols+1].Y
+			dm.Quad.V[2].Z = dm.dispArray[idx+dm.cols+1].Z
+			dm.Quad.V[2].Col = dm.dispArray[idx+dm.cols+1].Col
 
-			dm.quad.V[3].TX = dm.dispArray[idx+dm.cols].TX
-			dm.quad.V[3].TY = dm.dispArray[idx+dm.cols].TY
-			dm.quad.V[3].X = x32 + dm.dispArray[idx+dm.cols].X
-			dm.quad.V[3].Y = y32 + dm.dispArray[idx+dm.cols].Y
-			dm.quad.V[3].Z = dm.dispArray[idx+dm.cols].Z
-			dm.quad.V[3].Col = dm.dispArray[idx+dm.cols].Col
+			dm.Quad.V[3].TX = dm.dispArray[idx+dm.cols].TX
+			dm.Quad.V[3].TY = dm.dispArray[idx+dm.cols].TY
+			dm.Quad.V[3].X = x32 + dm.dispArray[idx+dm.cols].X
+			dm.Quad.V[3].Y = y32 + dm.dispArray[idx+dm.cols].Y
+			dm.Quad.V[3].Z = dm.dispArray[idx+dm.cols].Z
+			dm.Quad.V[3].Col = dm.dispArray[idx+dm.cols].Col
 
-			dm.hge.Gfx_RenderQuad(&dm.quad)
+			dm.Quad.Render()
 		}
 	}
 }
@@ -110,7 +106,7 @@ func (dm *DistortionMesh) Clear(a ...interface{}) {
 }
 
 func (dm *DistortionMesh) SetTexture(tex hge.Texture) {
-	dm.quad.Tex = tex
+	dm.Quad.Tex = tex
 }
 
 func (dm *DistortionMesh) SetTextureRect(x, y, w, h float64) {
@@ -119,9 +115,9 @@ func (dm *DistortionMesh) SetTextureRect(x, y, w, h float64) {
 	dm.tx, dm.ty = x, y
 	dm.width, dm.height = w, h
 
-	if dm.quad.Tex != 0 {
-		tw = float64(dm.hge.Texture_GetWidth(dm.quad.Tex))
-		th = float64(dm.hge.Texture_GetHeight(dm.quad.Tex))
+	if dm.Quad.Tex != 0 {
+		tw = float64(dm.Quad.Tex.Width())
+		th = float64(dm.Quad.Tex.Height())
 	} else {
 		tw = w
 		th = h
@@ -144,7 +140,7 @@ func (dm *DistortionMesh) SetTextureRect(x, y, w, h float64) {
 }
 
 func (dm *DistortionMesh) SetBlendMode(blend int) {
-	dm.quad.Blend = blend
+	dm.Quad.Blend = blend
 }
 
 func (dm *DistortionMesh) SetZ(col, row int, z float64) {
@@ -177,7 +173,7 @@ func (dm *DistortionMesh) SetDisplacement(col, row int, dx, dy float64, ref int)
 }
 
 func (dm DistortionMesh) Texture() hge.Texture {
-	return dm.quad.Tex
+	return dm.Quad.Tex
 }
 
 func (dm DistortionMesh) TextureRect() (x, y, w, h float64) {
@@ -185,7 +181,7 @@ func (dm DistortionMesh) TextureRect() (x, y, w, h float64) {
 }
 
 func (dm DistortionMesh) BlendMode() int {
-	return dm.quad.Blend
+	return dm.Quad.Blend
 }
 
 func (dm DistortionMesh) Z(col, row int) float64 {
