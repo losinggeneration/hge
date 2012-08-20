@@ -14,6 +14,7 @@ import "C"
 import (
 	"fmt"
 	"math"
+	"runtime"
 	"unsafe"
 )
 
@@ -134,22 +135,20 @@ func BoolToCInt(b bool) C.BOOL {
 }
 
 // HGE struct from C
-type hge *C.HGE_t
-
-type Error struct{}
-
-func (e *Error) Error() string {
-	return GetErrorMessage()
+type HGE struct {
+	HGE *C.HGE_t
 }
 
-var HGE hge
+type Error struct {
+	*HGE
+}
 
-func init() {
-	HGE = newHGE(VERSION)
+func (e *Error) Error() string {
+	return e.HGE.GetErrorMessage()
 }
 
 // Creates a new instance of an hge structure
-func newHGE(a ...interface{}) hge {
+func New(a ...interface{}) *HGE {
 	ver := VERSION
 
 	if len(a) == 1 {
@@ -158,46 +157,51 @@ func newHGE(a ...interface{}) hge {
 		}
 	}
 
-	h := C.HGE_Create(C.int(ver))
+	h := new(HGE)
+	h.HGE = C.HGE_Create(C.int(ver))
+	runtime.SetFinalizer(h, func(hge *HGE) {
+		hge.free()
+	})
 
 	return h
 }
 
 // Releases the memory the C++ library allocated for the HGE struct
-func Free() {
-	C.HGE_Release(HGE)
+func (h *HGE) free() {
+	fmt.Println("Freeing HGE")
+	C.HGE_Release(h.HGE)
 }
 
 // Initializes hardware and software needed to run engine.
-func Initiate() error {
-	if C.HGE_System_Initiate(HGE) == 0 {
-		return &Error{}
+func (h *HGE) Initiate() error {
+	if C.HGE_System_Initiate(h.HGE) == 0 {
+		return &Error{h}
 	}
 
 	return nil
 }
 
 //  Restores video mode and frees allocated resources.
-func Shutdown() {
-	C.HGE_System_Shutdown(HGE)
+func (h *HGE) Shutdown() {
+	C.HGE_System_Shutdown(h.HGE)
 }
 
-// Starts running user defined frame function.
-func Start() error {
-	if C.HGE_System_Start(HGE) == 0 {
-		return &Error{}
+// Starts running user defined frame func (h *HGE)tion.
+func (h *HGE) Start() error {
+	if C.HGE_System_Start(h.HGE) == 0 {
+		return &Error{h}
 	}
 
 	return nil
 }
 
 //  Returns last occured HGE error description.
-func GetErrorMessage() string {
-	return C.GoString(C.HGE_System_GetErrorMessage(HGE))
+func (h *HGE) GetErrorMessage() string {
+	return C.GoString(C.HGE_System_GetErrorMessage(h.HGE))
 }
 
 // Writes a formatted message to the log file.
-func Log(format string, v ...interface{}) {
+func (h *HGE) Log(format string, v ...interface{}) {
 	var str string
 
 	if v != nil {
@@ -209,156 +213,156 @@ func Log(format string, v ...interface{}) {
 	fstr := C.CString(str)
 	defer C.free(unsafe.Pointer(fstr))
 
-	C.goHGE_System_Log(HGE, fstr)
+	C.goHGE_System_Log(h.HGE, fstr)
 }
 
 // Launches an URL or external executable/data file.
-func Launch(url string) bool {
+func (h *HGE) Launch(url string) bool {
 	urlstr := C.CString(url)
 	defer C.free(unsafe.Pointer(urlstr))
 
-	return C.HGE_System_Launch(HGE, urlstr) == 1
+	return C.HGE_System_Launch(h.HGE, urlstr) == 1
 }
 
 //  Saves current screen snapshot into a file.
-func Snapshot(a ...interface{}) {
+func (h *HGE) Snapshot(a ...interface{}) {
 	if len(a) == 1 {
 		if filename, ok := a[0].(string); ok {
 			fname := C.CString(filename)
 			defer C.free(unsafe.Pointer(fname))
 
-			C.HGE_System_Snapshot(HGE, fname)
+			C.HGE_System_Snapshot(h.HGE, fname)
 			return
 		}
 	}
 
-	C.HGE_System_Snapshot(HGE, nil)
+	C.HGE_System_Snapshot(h.HGE, nil)
 }
 
 // Sets internal system states.
 // First param should be one of: BoolState, IntState, StringState, FuncState, HwndState
-// Second parameter must be of the matching type, bool, int, string, StateFunc/func() int, *Hwnd
-func SetState(a ...interface{}) {
+// Second parameter must be of the matching type, bool, int, string, StateFunc/func (h *HGE)() int, *Hwnd
+func (h *HGE) SetState(a ...interface{}) {
 	if len(a) == 2 {
 		switch a[0].(type) {
 		case BoolState:
 			if bs, ok := a[1].(bool); ok {
-				setStateBool(a[0].(BoolState), bs)
+				h.setStateBool(a[0].(BoolState), bs)
 				return
 			}
 
 		case IntState:
 			if is, ok := a[1].(int); ok {
-				setStateInt(a[0].(IntState), is)
+				h.setStateInt(a[0].(IntState), is)
 				return
 			}
 
 		case StringState:
 			if ss, ok := a[1].(string); ok {
-				setStateString(a[0].(StringState), ss)
+				h.setStateString(a[0].(StringState), ss)
 				return
 			}
 
 		case FuncState:
 			switch a[1].(type) {
 			case StateFunc:
-				setStateFunc(a[0].(FuncState), a[1].(StateFunc))
+				h.setStateFunc(a[0].(FuncState), a[1].(StateFunc))
 				return
 			case func() int:
-				setStateFunc(a[0].(FuncState), a[1].(func() int))
+				h.setStateFunc(a[0].(FuncState), a[1].(func() int))
 				return
 			}
 
 		case HwndState:
 			if hs, ok := a[1].(*Hwnd); ok {
-				setStateHwnd(a[0].(HwndState), hs)
+				h.setStateHwnd(a[0].(HwndState), hs)
 				return
 			}
 		}
 	}
 }
 
-func setStateBool(state BoolState, value bool) {
-	C.HGE_System_SetStateBool(HGE, C.HGE_BoolState_t(state), BoolToCInt(value))
+func (h *HGE) setStateBool(state BoolState, value bool) {
+	C.HGE_System_SetStateBool(h.HGE, C.HGE_BoolState_t(state), BoolToCInt(value))
 }
 
-func setStateFunc(state FuncState, value StateFunc) {
+func (h *HGE) setStateFunc(state FuncState, value StateFunc) {
 	funcCBs[state] = value
 	switch state {
 	case FRAMEFUNC:
-		C.setFrameFunc(HGE, C.HGE_FuncState_t(state))
+		C.setFrameFunc(h.HGE, C.HGE_FuncState_t(state))
 	case RENDERFUNC:
-		C.setRenderFunc(HGE, C.HGE_FuncState_t(state))
+		C.setRenderFunc(h.HGE, C.HGE_FuncState_t(state))
 	case FOCUSLOSTFUNC:
-		C.setFocusLostFunc(HGE, C.HGE_FuncState_t(state))
+		C.setFocusLostFunc(h.HGE, C.HGE_FuncState_t(state))
 	case FOCUSGAINFUNC:
-		C.setFocusGainFunc(HGE, C.HGE_FuncState_t(state))
+		C.setFocusGainFunc(h.HGE, C.HGE_FuncState_t(state))
 	case GFXRESTOREFUNC:
-		C.setGfxRestoreFunc(HGE, C.HGE_FuncState_t(state))
+		C.setGfxRestoreFunc(h.HGE, C.HGE_FuncState_t(state))
 	case EXITFUNC:
-		C.setExitFunc(HGE, C.HGE_FuncState_t(state))
+		C.setExitFunc(h.HGE, C.HGE_FuncState_t(state))
 	}
 }
 
-func setStateHwnd(state HwndState, value *Hwnd) {
-	C.HGE_System_SetStateHwnd(HGE, C.HGE_HwndState_t(state), value.hwnd)
+func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) {
+	C.HGE_System_SetStateHwnd(h.HGE, C.HGE_HwndState_t(state), value.hwnd)
 }
 
-func setStateInt(state IntState, value int) {
-	C.HGE_System_SetStateInt(HGE, C.HGE_IntState_t(state), C.int(value))
+func (h *HGE) setStateInt(state IntState, value int) {
+	C.HGE_System_SetStateInt(h.HGE, C.HGE_IntState_t(state), C.int(value))
 }
 
-func setStateString(state StringState, value string) {
+func (h *HGE) setStateString(state StringState, value string) {
 	val := C.CString(value)
 	defer C.free(unsafe.Pointer(val))
 
-	C.HGE_System_SetStateString(HGE, C.HGE_StringState_t(state), val)
+	C.HGE_System_SetStateString(h.HGE, C.HGE_StringState_t(state), val)
 }
 
 // Returns internal system state values.
-func GetState(a ...interface{}) interface{} {
+func (h *HGE) GetState(a ...interface{}) interface{} {
 	if len(a) == 1 {
 		switch a[0].(type) {
 		case BoolState:
-			return getStateBool(a[0].(BoolState))
+			return h.getStateBool(a[0].(BoolState))
 
 		case IntState:
-			return getStateInt(a[0].(IntState))
+			return h.getStateInt(a[0].(IntState))
 
 		case StringState:
-			return getStateString(a[0].(StringState))
+			return h.getStateString(a[0].(StringState))
 
 		case FuncState:
-			return getStateFunc(a[0].(FuncState))
+			return h.getStateFunc(a[0].(FuncState))
 
 		case HwndState:
-			return getStateHwnd(a[0].(HwndState))
+			return h.getStateHwnd(a[0].(HwndState))
 		}
 	}
 
 	return nil
 }
 
-func getStateBool(state BoolState) bool {
-	return C.HGE_System_GetStateBool(HGE, C.HGE_BoolState_t(state)) == 1
+func (h *HGE) getStateBool(state BoolState) bool {
+	return C.HGE_System_GetStateBool(h.HGE, C.HGE_BoolState_t(state)) == 1
 }
 
-func getStateFunc(state FuncState) StateFunc {
-	// I don't know how to convert the HGE_Callback C function type to a Go
-	// function, so we just pass back the Go function
+func (h *HGE) getStateFunc(state FuncState) StateFunc {
+	// I don't know how to convert the HGE_Callback C func (h *HGE)tion type to a Go
+	// func (h *HGE)tion, so we just pass back the Go func (h *HGE)tion
 	return funcCBs[state]
 }
 
-func getStateHwnd(state HwndState) Hwnd {
+func (h *HGE) getStateHwnd(state HwndState) Hwnd {
 	var hwnd Hwnd
-	hwnd.hwnd = C.HGE_System_GetStateHwnd(HGE, C.HGE_HwndState_t(state))
+	hwnd.hwnd = C.HGE_System_GetStateHwnd(h.HGE, C.HGE_HwndState_t(state))
 	return hwnd
 }
 
-func getStateInt(state IntState) int {
-	return int(C.HGE_System_GetStateInt(HGE, C.HGE_IntState_t(state)))
+func (h *HGE) getStateInt(state IntState) int {
+	return int(C.HGE_System_GetStateInt(h.HGE, C.HGE_IntState_t(state)))
 }
 
-func getStateString(state StringState) string {
-	return C.GoString(C.HGE_System_GetStateString(HGE, C.HGE_StringState_t(state)))
+func (h *HGE) getStateString(state StringState) string {
+	return C.GoString(C.HGE_System_GetStateString(h.HGE, C.HGE_StringState_t(state)))
 }
