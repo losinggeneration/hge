@@ -145,15 +145,15 @@ func main() {
 		defer h.System_Shutdown()
 		// Load sound and texture
 		snd = h.Effect_Load("menu.ogg")
-		quad.Tex = h.Texture_Load("particles.png")
-		if snd == 0 || quad.Tex == 0 {
+		quad.Texture = h.Texture_Load("particles.png")
+		if snd == 0 || quad.Texture == nil {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
 			fmt.Println("Error: Can't load menu.ogg or particles.png")
 			return
 		}
 		defer h.Effect_Free(snd)
-		defer h.Texture_Free(quad.Tex)
+		defer h.Texture_Free(quad.Texture)
 
 		// Set up quad which we will use for rendering sprite
 		quad.Blend = gfx.BLEND_ALPHAADD | gfx.BLEND_COLORMUL | gfx.BLEND_ZWRITE
@@ -162,7 +162,7 @@ func main() {
 			// Set up z-coordinate of vertices
 			quad.V[i].Z = 0.5
 			// Set up color. The format of DWORD col is 0xAARRGGBB
-			quad.V[i].Col = 0xFFFFA000
+			quad.V[i].Color = 0xFFFFA000
 		}
 
 		// Set up quad's texture coordinates.

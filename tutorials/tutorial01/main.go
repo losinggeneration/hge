@@ -16,25 +16,24 @@ func FrameFunc() int {
 }
 
 func main() {
-	defer hge.Free()
+	h := hge.New()
+	h.SetState(hge.LOGFILE, "tutorial01.log")
+	h.SetState(hge.FRAMEFUNC, FrameFunc)
+	h.SetState(hge.TITLE, "HGE Tutorial 01 - Minimal HGE application")
+	h.SetState(hge.WINDOWED, true)
+	h.SetState(hge.USESOUND, false)
 
-	hge.SetState(hge.LOGFILE, "tutorial01.log")
-	hge.SetState(hge.FRAMEFUNC, FrameFunc)
-	hge.SetState(hge.TITLE, "HGE Tutorial 01 - Minimal HGE application")
-	hge.SetState(hge.WINDOWED, true)
-	hge.SetState(hge.USESOUND, false)
+	h.Log("Test")
+	h.Log("Test vararg: %s %d", "test", 15)
 
-	hge.Log("Test")
-	hge.Log("Test vararg: %s %d", "test", 15)
-
-	if err := hge.Initiate(); err != nil {
+	if err := h.Initiate(); err != nil {
 		fmt.Fprintln(os.Stderr, "Error: ", err)
 	} else {
-		defer hge.Shutdown()
-		hge.Log("Test")
-		hge.Log("Test vararg: %s %d", "test", 15)
-		hge.Start()
+		defer h.Shutdown()
+		h.Log("Test")
+		h.Log("Test vararg: %s %d", "test", 15)
+		h.Start()
 	}
 
-	hge.Log("Test")
+	h.Log("Test")
 }
