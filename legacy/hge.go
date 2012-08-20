@@ -12,65 +12,64 @@ import (
 )
 
 // HGE struct
-type HGE struct{}
+type HGE struct {
+	h *hge.HGE
+}
 
 // Creates a new instance of an HGE structure
 func Create(ver int) *HGE {
-	h := new(HGE)
-
-	return h
+	return &HGE{hge.New()}
 }
 
 // Releases the memory the C++ library allocated for the HGE struct
 func (h *HGE) Release() {
-	hge.Free()
 }
 
 // Initializes hardware and software needed to run engine.
 func (h *HGE) System_Initiate() bool {
-	return hge.Initiate() == nil
+	return h.h.Initiate() == nil
 }
 
 //  Restores video mode and frees allocated resources.
 func (h *HGE) System_Shutdown() {
-	hge.Shutdown()
+	h.h.Shutdown()
 }
 
 // Starts running user defined frame function.
 func (h *HGE) System_Start() bool {
-	return hge.Start() == nil
+	return h.h.Start() == nil
 }
 
 //  Returns last occured HGE error description.
 func (h *HGE) System_GetErrorMessage() string {
-	return hge.GetErrorMessage()
+	return h.h.GetErrorMessage()
 }
 
 // Writes a formatted message to the log file.
 func (h *HGE) System_Log(format string, v ...interface{}) {
-	hge.Log(format, v...)
+	h.h.Log(format, v...)
 }
 
 // Launches an URL or external executable/data file.
 func (h *HGE) System_Launch(url string) bool {
-	return hge.Launch(url)
+	return h.h.Launch(url)
 }
 
 //  Saves current screen snapshot into a file.
 func (h *HGE) System_Snapshot(a ...interface{}) {
-	hge.Snapshot(a...)
+	h.h.Snapshot(a...)
 }
 
 // Sets internal system states.
 // First param should be one of: BoolState, IntState, StringState, FuncState, HwndState
 // Second parameter must be of the matching type, bool, int, string, StateFunc/func() int, *Hwnd
 func (h *HGE) System_SetState(a ...interface{}) {
-	hge.SetState(a...)
+	h.h.SetState(a...)
 }
 
 // Returns internal system state values.
 func (h *HGE) System_GetState(a ...interface{}) interface{} {
-	return hge.GetState(a...)
+	return h.h.GetState(a...)
 }
 
 // Loads a resource into memory from disk.
@@ -308,19 +307,19 @@ func (h *HGE) Channel_IsSliding(chn Channel) bool {
 }
 
 func (h *HGE) Input_GetMousePos() (x, y float64) {
-	return MousePos()
+	return NewMouse(0, 0).Pos()
 }
 
 func (h *HGE) Input_SetMousePos(x, y float64) {
-	SetMousePos(x, y)
+	Mouse{}.SetPos(x, y)
 }
 
 func (h *HGE) Input_GetMouseWheel() int {
-	return MouseWheel()
+	return NewMouse(0, 0).WheelMovement()
 }
 
 func (h *HGE) Input_IsMouseOver() bool {
-	return IsMouseOver()
+	return NewMouse(0, 0).IsOver()
 }
 
 func (h *HGE) Input_KeyDown(key int) bool {
@@ -365,7 +364,7 @@ func (h *HGE) Gfx_Clear(color hge.Dword) {
 }
 
 func (h *HGE) Gfx_RenderLine(x1, y1, x2, y2 float64, a ...interface{}) {
-	RenderLine(x1, y1, x2, y2, a...)
+	NewLine(x1, y1, x2, y2, a...).Render()
 }
 
 func (h *HGE) Gfx_RenderTriple(triple *Triple) {
@@ -408,11 +407,11 @@ func (h *HGE) Texture_Create(width, height int) Texture {
 	return NewTexture(width, height)
 }
 
-func (h *HGE) Texture_Load(filename string, a ...interface{}) Texture {
+func (h *HGE) Texture_Load(filename string, a ...interface{}) *Texture {
 	return LoadTexture(filename, a...)
 }
 
-func (h *HGE) Texture_Free(tex Texture) {
+func (h *HGE) Texture_Free(tex *Texture) {
 	tex.Free()
 }
 
