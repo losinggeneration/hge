@@ -32,7 +32,7 @@ var (
 	h              *hge.HGE
 
 	// Resource handles
-	tex, bgtex Texture
+	tex, bgtex *Texture
 	spr, bgspr sprite.Sprite
 	fnt        *font.Font
 )
@@ -145,7 +145,7 @@ func main() {
 		// Load textures
 		bgtex = h.Texture_Load("bg2.png")
 		tex = h.Texture_Load("zazaka.png")
-		if bgtex == 0 || tex == 0 {
+		if bgtex == nil || tex == nil {
 			fmt.Println("Error: Can't load bg2.png or zazaka.png\n")
 			return
 		}
