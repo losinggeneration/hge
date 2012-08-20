@@ -391,11 +391,11 @@ func (h *HGE) Gfx_SetTransform(a ...interface{}) {
 	SetTransform(a...)
 }
 
-func (h *HGE) Target_Create(width, height int, zbuffer bool) Target {
+func (h *HGE) Target_Create(width, height int, zbuffer bool) *Target {
 	return NewTarget(width, height, zbuffer)
 }
 
-func (h *HGE) Target_Free(target Target) {
+func (h *HGE) Target_Free(target *Target) {
 	target.Free()
 }
 
@@ -403,7 +403,7 @@ func (h *HGE) Target_GetTexture(target Target) Texture {
 	return target.Texture()
 }
 
-func (h *HGE) Texture_Create(width, height int) Texture {
+func (h *HGE) Texture_Create(width, height int) *Texture {
 	return NewTexture(width, height)
 }
 

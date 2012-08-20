@@ -256,11 +256,19 @@ func SetTransform(a ...interface{}) {
 // HGE Handle type
 type Target C.HTARGET
 
-func NewTarget(width, height int, zbuffer bool) Target {
-	return Target(C.HGE_Target_Create(gfxHGE.HGE, C.int(width), C.int(height), boolToCInt(zbuffer)))
+func NewTarget(width, height int, zbuffer bool) *Target {
+	t := new(Target)
+	*t = Target(C.HGE_Target_Create(gfxHGE.HGE, C.int(width), C.int(height), boolToCInt(zbuffer)))
+
+	runtime.SetFinalizer(t, func(target *Target) {
+		target.Free()
+	})
+
+	return t
 }
 
 func (t Target) Free() {
+	fmt.Println("Freeing Target", t)
 	C.HGE_Target_Free(gfxHGE.HGE, C.HTARGET(t))
 }
 
@@ -271,8 +279,15 @@ func (t Target) Texture() Texture {
 // HGE Handle type
 type Texture C.HTEXTURE
 
-func NewTexture(width, height int) Texture {
-	return Texture(C.HGE_Texture_Create(gfxHGE.HGE, C.int(width), C.int(height)))
+func NewTexture(width, height int) *Texture {
+	t := new(Texture)
+	*t = Texture(C.HGE_Texture_Create(gfxHGE.HGE, C.int(width), C.int(height)))
+
+	runtime.SetFinalizer(t, func(texture *Texture) {
+		texture.Free()
+	})
+
+	return t
 }
 
 func LoadTexture(filename string, a ...interface{}) *Texture {
@@ -302,7 +317,6 @@ func LoadTexture(filename string, a ...interface{}) *Texture {
 	}
 
 	runtime.SetFinalizer(t, func(texture *Texture) {
-		fmt.Println("freeing texture", *texture)
 		texture.Free()
 	})
 
@@ -310,6 +324,7 @@ func LoadTexture(filename string, a ...interface{}) *Texture {
 }
 
 func (t Texture) Free() {
+	fmt.Println("freeing texture", t)
 	C.HGE_Texture_Free(gfxHGE.HGE, C.HTEXTURE(t))
 }
 
