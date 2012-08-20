@@ -15,13 +15,13 @@ type Sprite struct {
 	XFlip, YFlip, HSFlip bool
 }
 
-func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
+func NewSprite(texture *Texture, texx, texy, w, h float64) Sprite {
 	var sprite Sprite
 
 	sprite.TX, sprite.TY = texx, texy
 	sprite.W, sprite.H = w, h
 
-	if texture != 0 {
+	if texture != nil {
 		sprite.TexW = float64(texture.Width())
 		sprite.TexH = float64(texture.Height())
 	} else {
@@ -29,7 +29,7 @@ func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
 		sprite.TexH = 1.0
 	}
 
-	sprite.Quad.Tex = texture
+	sprite.Quad.Texture = texture
 
 	texx1 := texx / sprite.TexW
 	texy1 := texy / sprite.TexH
@@ -46,10 +46,10 @@ func NewSprite(texture Texture, texx, texy, w, h float64) Sprite {
 	sprite.Quad.V[2].Z = 0.5
 	sprite.Quad.V[3].Z = 0.5
 
-	sprite.Quad.V[0].Col = 0xffffffff
-	sprite.Quad.V[1].Col = 0xffffffff
-	sprite.Quad.V[2].Col = 0xffffffff
-	sprite.Quad.V[3].Col = 0xffffffff
+	sprite.Quad.V[0].Color = 0xffffffff
+	sprite.Quad.V[1].Color = 0xffffffff
+	sprite.Quad.V[2].Color = 0xffffffff
+	sprite.Quad.V[3].Color = 0xffffffff
 
 	sprite.Quad.Blend = BLEND_DEFAULT
 
@@ -145,13 +145,12 @@ func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64) {
 	sprite.Quad.Render()
 }
 
-func (sprite *Sprite) SetTexture(tex Texture) {
-	var tx1, ty1, tx2, ty2 float64
+func (sprite *Sprite) SetTexture(tex *Texture) {
 	var tw, th float64
 
-	sprite.Quad.Tex = tex
+	sprite.Quad.Texture = tex
 
-	if tex != 0 {
+	if tex != nil {
 		tw = float64(tex.Width())
 		th = float64(tex.Height())
 	} else {
@@ -159,10 +158,10 @@ func (sprite *Sprite) SetTexture(tex Texture) {
 	}
 
 	if tw != sprite.TexW || th != sprite.TexH {
-		tx1 = float64(sprite.Quad.V[0].TX) * sprite.TexW
-		ty1 = float64(sprite.Quad.V[0].TY) * sprite.TexH
-		tx2 = float64(sprite.Quad.V[2].TX) * sprite.TexW
-		ty2 = float64(sprite.Quad.V[2].TY) * sprite.TexH
+		tx1 := float64(sprite.Quad.V[0].TX) * sprite.TexW
+		ty1 := float64(sprite.Quad.V[0].TY) * sprite.TexH
+		tx2 := float64(sprite.Quad.V[2].TX) * sprite.TexW
+		ty2 := float64(sprite.Quad.V[2].TY) * sprite.TexH
 
 		sprite.TexW, sprite.TexH = tw, th
 
@@ -219,12 +218,12 @@ func (sprite *Sprite) SetColor(col Dword, arg ...interface{}) {
 	}
 
 	if i != -1 {
-		sprite.Quad.V[i].Col = col
+		sprite.Quad.V[i].Color = col
 	} else {
-		sprite.Quad.V[0].Col = col
-		sprite.Quad.V[1].Col = col
-		sprite.Quad.V[2].Col = col
-		sprite.Quad.V[3].Col = col
+		sprite.Quad.V[0].Color = col
+		sprite.Quad.V[1].Color = col
+		sprite.Quad.V[2].Color = col
+		sprite.Quad.V[3].Color = col
 	}
 }
 
@@ -309,8 +308,8 @@ func (sprite *Sprite) SetFlip(x, y, hotSpot bool) {
 	}
 }
 
-func (sprite *Sprite) Texture() Texture {
-	return sprite.Quad.Tex
+func (sprite *Sprite) Texture() *Texture {
+	return sprite.Quad.Texture
 }
 
 func (sprite *Sprite) TextureRect() (x, y, w, h float64) {
@@ -325,7 +324,7 @@ func (sprite *Sprite) Color(arg ...interface{}) Dword {
 		}
 	}
 
-	return sprite.Quad.V[i].Col
+	return sprite.Quad.V[i].Color
 }
 
 func (sprite *Sprite) Z(arg ...interface{}) float64 {

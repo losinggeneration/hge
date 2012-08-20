@@ -62,7 +62,7 @@ type GUIButton struct {
 	up, down                   Sprite
 }
 
-func NewGUIButton(id int, x, y, w, h float64, tex Texture, tx, ty float64) *GUIButton {
+func NewGUIButton(id int, x, y, w, h float64, tex *Texture, tx, ty float64) *GUIButton {
 	b := new(GUIButton)
 
 	b.GUIObject.Initialize()
@@ -129,7 +129,7 @@ type GUISlider struct {
 	Sprite
 }
 
-func NewGUISlider(id int, x, y, w, h float64, tex Texture, tx, ty, sw, sh float64, a ...interface{}) *GUISlider {
+func NewGUISlider(id int, x, y, w, h float64, tex *Texture, tx, ty, sw, sh float64, a ...interface{}) *GUISlider {
 	s := new(GUISlider)
 
 	if len(a) == 1 {
@@ -279,7 +279,7 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 	l.GUIObject.Enabled = true
 	l.GUIObject.Rect.Set(x, y, x+w, y+h)
 	l.Font = font
-	l.highlight = NewSprite(0, 0, 0, w, font.GetHeight())
+	l.highlight = NewSprite(nil, 0, 0, w, font.GetHeight())
 	l.highlight.SetColor(highlightColor)
 	l.color = color
 	l.highlightColor = highlightColor

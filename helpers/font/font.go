@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge"
 	. "github.com/losinggeneration/hge-go/hge/gfx"
 	. "github.com/losinggeneration/hge-go/hge/resource"
 	"strconv"
@@ -34,7 +34,7 @@ const (
  * Font struct
  */
 type Font struct {
-	texture    Texture
+	texture    *Texture
 	letters    [256]*Sprite
 	pre        [256]float64
 	post       [256]float64
@@ -45,7 +45,7 @@ type Font struct {
 	tracking   float64
 	spacing    float64
 
-	color Dword
+	color hge.Dword
 	z     float64
 	blend int
 }
@@ -112,6 +112,8 @@ func NewFont(filename string, arg ...interface{}) *Font {
 
 	f := new(Font)
 
+	h := hge.New()
+
 	f.scale, f.proportion = 1.0, 1.0
 	f.spacing = 1.0
 
@@ -122,14 +124,14 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	desc := LoadString(filename)
 
 	if desc == nil {
-		Log("Font %s seems to be empty.", filename)
+		h.Log("Font %s seems to be empty.", filename)
 		return nil
 	}
 
 	lines := getLines(*desc)
 
 	if len(lines) == 0 || lines[0] != fntHEADERTAG {
-		Log("Font %s has incorrect format.", filename)
+		h.Log("Font %s has incorrect format.", filename)
 		return nil
 	}
 
@@ -142,7 +144,7 @@ func NewFont(filename string, arg ...interface{}) *Font {
 		option, value, err := tokenizeLine(line)
 
 		if err != nil || len(line) == 0 || len(option) == 0 || len(value) == 0 {
-			Log("Unreadable line (%s) in font file: %s", line, filename)
+			h.Log("Unreadable line (%s) in font file: %s", line, filename)
 			continue
 		}
 
@@ -206,7 +208,7 @@ func (f *Font) Printf(x, y float64, align int, format string, arg ...interface{}
 func (f *Font) Printfb(x, y, w, h float64, align int, format string, arg ...interface{}) {
 }
 
-func (f *Font) SetColor(color Dword) {
+func (f *Font) SetColor(color hge.Dword) {
 	f.color = color
 
 	for i := 0; i < 256; i++ {
@@ -256,7 +258,7 @@ func (f *Font) SetSpacing(spacing float64) {
 	f.spacing = spacing
 }
 
-func (f Font) GetColor() Dword {
+func (f Font) GetColor() hge.Dword {
 	return f.color
 }
 

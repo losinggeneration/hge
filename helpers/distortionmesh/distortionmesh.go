@@ -29,7 +29,7 @@ func NewDistortionMesh(cols, rows int) DistortionMesh {
 
 	for i := 0; i < rows*cols; i++ {
 		dm.dispArray[i].Z = 0.5
-		dm.dispArray[i].Col = 0xFFFFFFFF
+		dm.dispArray[i].Color = 0xFFFFFFFF
 	}
 
 	return dm
@@ -47,28 +47,28 @@ func (dm *DistortionMesh) Render(x, y float64) {
 			dm.Quad.V[0].X = x32 + dm.dispArray[idx].X
 			dm.Quad.V[0].Y = y32 + dm.dispArray[idx].Y
 			dm.Quad.V[0].Z = dm.dispArray[idx].Z
-			dm.Quad.V[0].Col = dm.dispArray[idx].Col
+			dm.Quad.V[0].Color = dm.dispArray[idx].Color
 
 			dm.Quad.V[1].TX = dm.dispArray[idx+1].TX
 			dm.Quad.V[1].TY = dm.dispArray[idx+1].TY
 			dm.Quad.V[1].X = x32 + dm.dispArray[idx+1].X
 			dm.Quad.V[1].Y = y32 + dm.dispArray[idx+1].Y
 			dm.Quad.V[1].Z = dm.dispArray[idx+1].Z
-			dm.Quad.V[1].Col = dm.dispArray[idx+1].Col
+			dm.Quad.V[1].Color = dm.dispArray[idx+1].Color
 
 			dm.Quad.V[2].TX = dm.dispArray[idx+dm.cols+1].TX
 			dm.Quad.V[2].TY = dm.dispArray[idx+dm.cols+1].TY
 			dm.Quad.V[2].X = x32 + dm.dispArray[idx+dm.cols+1].X
 			dm.Quad.V[2].Y = y32 + dm.dispArray[idx+dm.cols+1].Y
 			dm.Quad.V[2].Z = dm.dispArray[idx+dm.cols+1].Z
-			dm.Quad.V[2].Col = dm.dispArray[idx+dm.cols+1].Col
+			dm.Quad.V[2].Color = dm.dispArray[idx+dm.cols+1].Color
 
 			dm.Quad.V[3].TX = dm.dispArray[idx+dm.cols].TX
 			dm.Quad.V[3].TY = dm.dispArray[idx+dm.cols].TY
 			dm.Quad.V[3].X = x32 + dm.dispArray[idx+dm.cols].X
 			dm.Quad.V[3].Y = y32 + dm.dispArray[idx+dm.cols].Y
 			dm.Quad.V[3].Z = dm.dispArray[idx+dm.cols].Z
-			dm.Quad.V[3].Col = dm.dispArray[idx+dm.cols].Col
+			dm.Quad.V[3].Color = dm.dispArray[idx+dm.cols].Color
 
 			dm.Quad.Render()
 		}
@@ -99,15 +99,15 @@ func (dm *DistortionMesh) Clear(a ...interface{}) {
 		for i := 0.0; i < cols; i++ {
 			dm.dispArray[int(j*cols+i)].X = float32(i * dm.cellw)
 			dm.dispArray[int(j*cols+i)].Y = float32(j * dm.cellh)
-			dm.dispArray[int(j*cols+i)].Col = col
+			dm.dispArray[int(j*cols+i)].Color = col
 			dm.dispArray[int(j*cols+i)].Z = float32(z)
 		}
 
 	}
 }
 
-func (dm *DistortionMesh) SetTexture(tex Texture) {
-	dm.Quad.Tex = tex
+func (dm *DistortionMesh) SetTexture(tex *Texture) {
+	dm.Quad.Texture = tex
 }
 
 func (dm *DistortionMesh) SetTextureRect(x, y, w, h float64) {
@@ -116,9 +116,9 @@ func (dm *DistortionMesh) SetTextureRect(x, y, w, h float64) {
 	dm.tx, dm.ty = x, y
 	dm.width, dm.height = w, h
 
-	if dm.Quad.Tex != 0 {
-		tw = float64(dm.Quad.Tex.Width())
-		th = float64(dm.Quad.Tex.Height())
+	if dm.Quad.Texture != nil {
+		tw = float64(dm.Quad.Texture.Width())
+		th = float64(dm.Quad.Texture.Height())
 	} else {
 		tw = w
 		th = h
@@ -152,7 +152,7 @@ func (dm *DistortionMesh) SetZ(col, row int, z float64) {
 
 func (dm *DistortionMesh) SetColor(col, row int, color Dword) {
 	if row < dm.rows && col < dm.cols {
-		dm.dispArray[row*dm.cols+col].Col = color
+		dm.dispArray[row*dm.cols+col].Color = color
 	}
 }
 
@@ -173,8 +173,8 @@ func (dm *DistortionMesh) SetDisplacement(col, row int, dx, dy float64, ref int)
 	}
 }
 
-func (dm DistortionMesh) Texture() Texture {
-	return dm.Quad.Tex
+func (dm DistortionMesh) Texture() *Texture {
+	return dm.Quad.Texture
 }
 
 func (dm DistortionMesh) TextureRect() (x, y, w, h float64) {
@@ -194,7 +194,7 @@ func (dm DistortionMesh) Z(col, row int) float64 {
 
 func (dm DistortionMesh) Color(col, row int) Dword {
 	if row < dm.rows && col < dm.cols {
-		return dm.dispArray[row*dm.cols+col].Col
+		return dm.dispArray[row*dm.cols+col].Color
 	}
 
 	return 0

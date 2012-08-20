@@ -22,7 +22,7 @@ type Animation struct {
 	mode, delta, frames, curFrame int
 }
 
-func NewAnimation(tex Texture, frames int, fps, x, y, w, h float64) Animation {
+func NewAnimation(tex *Texture, frames int, fps, x, y, w, h float64) Animation {
 	var a Animation
 
 	a.sprite = NewSprite(tex, x, y, w, h)
@@ -108,7 +108,7 @@ func (a Animation) IsPlaying() bool {
 	return a.playing
 }
 
-func (a *Animation) SetTexture(tex Texture) {
+func (a *Animation) SetTexture(tex *Texture) {
 	a.sprite.SetTexture(tex)
 	a.origWidth = tex.Width(true)
 }
