@@ -159,6 +159,7 @@ func New(a ...interface{}) *HGE {
 
 	h := new(HGE)
 	h.HGE = C.HGE_Create(C.int(ver))
+	fmt.Println("Created HGE", *h)
 	runtime.SetFinalizer(h, func(hge *HGE) {
 		hge.free()
 	})
@@ -168,7 +169,7 @@ func New(a ...interface{}) *HGE {
 
 // Releases the memory the C++ library allocated for the HGE struct
 func (h *HGE) free() {
-	fmt.Println("Freeing HGE")
+	fmt.Println("Freeing HGE", *h)
 	C.HGE_Release(h.HGE)
 }
 
