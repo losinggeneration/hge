@@ -7,26 +7,32 @@ package resource
 import "C"
 
 import (
-	. "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge"
 	"unsafe"
 )
 
 type Resource uintptr
 
+var resourceHGE *hge.HGE
+
+func init() {
+	resourceHGE = hge.New()
+}
+
 // Loads a resource into memory from disk.
-func NewResource(filename string) (*Resource, Dword) {
+func NewResource(filename string) (*Resource, hge.Dword) {
 	var s C.DWORD
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
-	r := Resource(C.HGE_Resource_Load(HGE, fname, &s))
+	r := Resource(C.HGE_Resource_Load(resourceHGE.HGE, fname, &s))
 
-	return &r, Dword(s)
+	return &r, hge.Dword(s)
 }
 
 // Deletes a previously loaded resource from memory.
 func (r Resource) Free() {
-	C.HGE_Resource_Free(HGE, unsafe.Pointer(r))
+	C.HGE_Resource_Free(resourceHGE.HGE, unsafe.Pointer(r))
 }
 
 // Loads a resource, puts the loaded data into a byte array, and frees the data.
@@ -71,10 +77,10 @@ func AttachPack(filename string, a ...interface{}) bool {
 			defer C.free(unsafe.Pointer(password))
 		}
 
-		return C.HGE_Resource_AttachPack(HGE, fname, password) == 1
+		return C.HGE_Resource_AttachPack(resourceHGE.HGE, fname, password) == 1
 	}
 
-	return C.HGE_Resource_AttachPack(HGE, fname, nil) == 1
+	return C.HGE_Resource_AttachPack(resourceHGE.HGE, fname, nil) == 1
 }
 
 // Removes a resource pack.
@@ -82,12 +88,12 @@ func RemovePack(filename string) {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
-	C.HGE_Resource_RemovePack(HGE, fname)
+	C.HGE_Resource_RemovePack(resourceHGE.HGE, fname)
 }
 
 // Removes all resource packs previously attached.
 func RemoveAllPacks() {
-	C.HGE_Resource_RemoveAllPacks(HGE)
+	C.HGE_Resource_RemoveAllPacks(resourceHGE.HGE)
 }
 
 // Builds absolute file path.
@@ -97,11 +103,11 @@ func MakePath(a ...interface{}) string {
 			fname := C.CString(filename)
 			defer C.free(unsafe.Pointer(fname))
 
-			return C.GoString(C.HGE_Resource_MakePath(HGE, fname))
+			return C.GoString(C.HGE_Resource_MakePath(resourceHGE.HGE, fname))
 		}
 	}
 
-	return C.GoString(C.HGE_Resource_MakePath(HGE, nil))
+	return C.GoString(C.HGE_Resource_MakePath(resourceHGE.HGE, nil))
 }
 
 // Enumerates files by given wildcard.
@@ -111,11 +117,11 @@ func EnumFiles(a ...interface{}) string {
 			wcard := C.CString(wildcard)
 			defer C.free(unsafe.Pointer(wcard))
 
-			return C.GoString(C.HGE_Resource_EnumFiles(HGE, wcard))
+			return C.GoString(C.HGE_Resource_EnumFiles(resourceHGE.HGE, wcard))
 		}
 	}
 
-	return C.GoString(C.HGE_Resource_EnumFiles(HGE, nil))
+	return C.GoString(C.HGE_Resource_EnumFiles(resourceHGE.HGE, nil))
 }
 
 // Enumerates folders by given wildcard.
@@ -125,9 +131,9 @@ func EnumFolders(a ...interface{}) string {
 			wcard := C.CString(wildcard)
 			defer C.free(unsafe.Pointer(wcard))
 
-			return C.GoString(C.HGE_Resource_EnumFolders(HGE, wcard))
+			return C.GoString(C.HGE_Resource_EnumFolders(resourceHGE.HGE, wcard))
 		}
 	}
 
-	return C.GoString(C.HGE_Resource_EnumFolders(HGE, nil))
+	return C.GoString(C.HGE_Resource_EnumFolders(resourceHGE.HGE, nil))
 }
