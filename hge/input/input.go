@@ -7,7 +7,7 @@ package input
 import "C"
 
 import (
-	. "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge"
 	"unsafe"
 )
 
@@ -163,24 +163,55 @@ const (
 	K_F12 = C.HGE_K_F12
 )
 
-func MousePos() (x, y float64) {
+var inputHGE *hge.HGE
+
+func init() {
+	inputHGE = hge.New()
+}
+
+type Mouse struct {
+	X, Y  float64
+	Wheel int
+	Over  bool
+}
+
+func NewMouse(x, y float64) *Mouse {
+	return &Mouse{x, y, 0, false}
+}
+
+func (m *Mouse) Pos() (x, y float64) {
 	var nx, ny C.float
 
-	C.HGE_Input_GetMousePos(HGE, &nx, &ny)
+	C.HGE_Input_GetMousePos(inputHGE.HGE, &nx, &ny)
+	m.X, m.Y = float64(nx), float64(ny)
 
 	return float64(nx), float64(ny)
 }
 
-func SetMousePos(x, y float64) {
-	C.HGE_Input_SetMousePos(HGE, C.float(x), C.float(y))
+func (m Mouse) SetPos(a ...interface{}) {
+	x, y := m.X, m.Y
+
+	if len(a) > 0 {
+		if nx, ok := a[0].(float64); ok {
+			x = nx
+		}
+		if len(a) > 1 {
+			if ny, ok := a[1].(float64); ok {
+				y = ny
+			}
+		}
+	}
+	C.HGE_Input_SetMousePos(inputHGE.HGE, C.float(x), C.float(y))
 }
 
-func MouseWheel() int {
-	return int(C.HGE_Input_GetMouseWheel(HGE))
+func (m *Mouse) WheelMovement() int {
+	m.Wheel = int(C.HGE_Input_GetMouseWheel(inputHGE.HGE))
+	return m.Wheel
 }
 
-func IsMouseOver() bool {
-	return C.HGE_Input_IsMouseOver(HGE) == 1
+func (m *Mouse) IsOver() bool {
+	m.Over = C.HGE_Input_IsMouseOver(inputHGE.HGE) == 1
+	return m.Over
 }
 
 func NewKey(i int) Key {
@@ -188,29 +219,29 @@ func NewKey(i int) Key {
 }
 
 func (k Key) Down() bool {
-	return C.HGE_Input_KeyDown(HGE, C.int(k)) == 1
+	return C.HGE_Input_KeyDown(inputHGE.HGE, C.int(k)) == 1
 }
 
 func (k Key) Up() bool {
-	return C.HGE_Input_KeyUp(HGE, C.int(k)) == 1
+	return C.HGE_Input_KeyUp(inputHGE.HGE, C.int(k)) == 1
 }
 
 func (k Key) State() bool {
-	return C.HGE_Input_GetKeyState(HGE, C.int(k)) == 1
+	return C.HGE_Input_GetKeyState(inputHGE.HGE, C.int(k)) == 1
 }
 func (k Key) Name() string {
-	return C.GoString(C.HGE_Input_GetKeyName(HGE, C.int(k)))
+	return C.GoString(C.HGE_Input_GetKeyName(inputHGE.HGE, C.int(k)))
 }
 
 func GetKey() Key {
-	return Key(C.HGE_Input_GetKey(HGE))
+	return Key(C.HGE_Input_GetKey(inputHGE.HGE))
 }
 
 func GetChar() int {
-	return int(C.HGE_Input_GetChar(HGE))
+	return int(C.HGE_Input_GetChar(inputHGE.HGE))
 }
 
 func GetEvent() (e *InputEvent, b bool) {
-	b = C.HGE_Input_GetEvent(HGE, (*C.HGE_InputEvent_t)(unsafe.Pointer(e))) == 1
+	b = C.HGE_Input_GetEvent(inputHGE.HGE, (*C.HGE_InputEvent_t)(unsafe.Pointer(e))) == 1
 	return e, b
 }
