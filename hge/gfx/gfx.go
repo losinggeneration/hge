@@ -55,8 +55,8 @@ type Line struct {
 
 // HGE Triple structure
 type Triple struct {
-	V     [3]Vertex
-	Tex   Texture
+	V [3]Vertex
+	*Texture
 	Blend int
 }
 
@@ -67,10 +67,16 @@ type Quad struct {
 	Blend int
 }
 
+type cTriple struct {
+	v     [3]Vertex
+	tex   C.HTEXTURE
+	Blend int
+}
+
 type cQuad struct {
 	V     [4]Vertex
 	tex   C.HTEXTURE
-	Bledn int
+	Blend int
 }
 
 func boolToCInt(b bool) C.BOOL {
@@ -135,7 +141,14 @@ func (l Line) Render() {
 }
 
 func (t *Triple) Render() {
-	C.HGE_Gfx_RenderTriple(gfxHGE.HGE, (*C.HGE_Triple_t)(unsafe.Pointer(t)))
+	var ct *cTriple
+
+	if t.Texture != nil {
+		ct = &cTriple{t.V, t.Texture.texture, t.Blend}
+	} else {
+		ct = &cTriple{t.V, 0, t.Blend}
+	}
+	C.HGE_Gfx_RenderTriple(gfxHGE.HGE, (*C.HGE_Triple_t)(unsafe.Pointer(ct)))
 }
 
 func (q *Quad) Render() {
