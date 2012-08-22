@@ -7,7 +7,7 @@ import (
 	. "github.com/losinggeneration/hge-go/helpers/sprite"
 	. "github.com/losinggeneration/hge-go/helpers/vector"
 	"github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/rand"
+	"github.com/losinggeneration/hge-go/hge/rand"
 	. "github.com/losinggeneration/hge-go/hge/resource"
 	"math"
 	"reflect"
@@ -66,6 +66,7 @@ type ParticleSystem struct {
 	updateBoundingBox bool
 	particles         []particle
 	h                 *hge.HGE
+	rand              *rand.Rand
 }
 
 func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *ParticleSystem {
@@ -79,6 +80,7 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 	}
 
 	ps.h = hge.New()
+	ps.rand = rand.New(0)
 
 	ptr := LoadBytes(filename)
 
@@ -332,34 +334,34 @@ func (ps *ParticleSystem) update(deltaTime float64) {
 			}
 
 			par.age = 0.0
-			par.terminalAge = Float64(ps.Info.LifeMin, ps.Info.LifeMax)
+			par.terminalAge = ps.rand.Float64(ps.Info.LifeMin, ps.Info.LifeMax)
 
-			par.location = ps.prevLocation.Add(ps.location.Sub(ps.prevLocation).Mul(Float64(0.0, 1.0)))
-			par.location.X += Float64(-2.0, 2.0)
-			par.location.Y += Float64(-2.0, 2.0)
+			par.location = ps.prevLocation.Add(ps.location.Sub(ps.prevLocation).Mul(ps.rand.Float64(0.0, 1.0)))
+			par.location.X += ps.rand.Float64(-2.0, 2.0)
+			par.location.Y += ps.rand.Float64(-2.0, 2.0)
 
-			ang := ps.Info.Direction - hge.Pi_2 + Float64(0, ps.Info.Spread) - ps.Info.Spread/2.0
+			ang := ps.Info.Direction - hge.Pi_2 + ps.rand.Float64(0, ps.Info.Spread) - ps.Info.Spread/2.0
 			if ps.Info.Relative {
 				ang += ps.prevLocation.Sub(ps.location).Angle() + hge.Pi_2
 			}
 			par.velocity.X = math.Cos(ang)
 			par.velocity.Y = math.Sin(ang)
-			par.velocity.MulEqual(Float64(ps.Info.SpeedMin, ps.Info.SpeedMax))
+			par.velocity.MulEqual(ps.rand.Float64(ps.Info.SpeedMin, ps.Info.SpeedMax))
 
-			par.gravity = Float64(ps.Info.GravityMin, ps.Info.GravityMax)
-			par.radialAccel = Float64(ps.Info.RadialAccelMin, ps.Info.RadialAccelMax)
-			par.tangentialAccel = Float64(ps.Info.TangentialAccelMin, ps.Info.TangentialAccelMax)
+			par.gravity = ps.rand.Float64(ps.Info.GravityMin, ps.Info.GravityMax)
+			par.radialAccel = ps.rand.Float64(ps.Info.RadialAccelMin, ps.Info.RadialAccelMax)
+			par.tangentialAccel = ps.rand.Float64(ps.Info.TangentialAccelMin, ps.Info.TangentialAccelMax)
 
-			par.size = Float64(ps.Info.SizeStart, ps.Info.SizeStart+(ps.Info.SizeEnd-ps.Info.SizeStart)*ps.Info.SizeVar)
+			par.size = ps.rand.Float64(ps.Info.SizeStart, ps.Info.SizeStart+(ps.Info.SizeEnd-ps.Info.SizeStart)*ps.Info.SizeVar)
 			par.sizeDelta = (ps.Info.SizeEnd - par.size) / par.terminalAge
 
-			par.spin = Float64(ps.Info.SpinStart, ps.Info.SpinStart+(ps.Info.SpinEnd-ps.Info.SpinStart)*ps.Info.SpinVar)
+			par.spin = ps.rand.Float64(ps.Info.SpinStart, ps.Info.SpinStart+(ps.Info.SpinEnd-ps.Info.SpinStart)*ps.Info.SpinVar)
 			par.spinDelta = (ps.Info.SpinEnd - par.spin) / par.terminalAge
 
-			par.color.R = Float64(ps.Info.ColorStart.R, ps.Info.ColorStart.R+(ps.Info.ColorEnd.R-ps.Info.ColorStart.R)*ps.Info.ColorVar)
-			par.color.G = Float64(ps.Info.ColorStart.G, ps.Info.ColorStart.G+(ps.Info.ColorEnd.G-ps.Info.ColorStart.G)*ps.Info.ColorVar)
-			par.color.B = Float64(ps.Info.ColorStart.B, ps.Info.ColorStart.B+(ps.Info.ColorEnd.B-ps.Info.ColorStart.B)*ps.Info.ColorVar)
-			par.color.A = Float64(ps.Info.ColorStart.A, ps.Info.ColorStart.A+(ps.Info.ColorEnd.A-ps.Info.ColorStart.A)*ps.Info.AlphaVar)
+			par.color.R = ps.rand.Float64(ps.Info.ColorStart.R, ps.Info.ColorStart.R+(ps.Info.ColorEnd.R-ps.Info.ColorStart.R)*ps.Info.ColorVar)
+			par.color.G = ps.rand.Float64(ps.Info.ColorStart.G, ps.Info.ColorStart.G+(ps.Info.ColorEnd.G-ps.Info.ColorStart.G)*ps.Info.ColorVar)
+			par.color.B = ps.rand.Float64(ps.Info.ColorStart.B, ps.Info.ColorStart.B+(ps.Info.ColorEnd.B-ps.Info.ColorStart.B)*ps.Info.ColorVar)
+			par.color.A = ps.rand.Float64(ps.Info.ColorStart.A, ps.Info.ColorStart.A+(ps.Info.ColorEnd.A-ps.Info.ColorStart.A)*ps.Info.AlphaVar)
 
 			par.colorDelta.R = (ps.Info.ColorEnd.R - par.color.R) / par.terminalAge
 			par.colorDelta.G = (ps.Info.ColorEnd.G - par.color.G) / par.terminalAge
