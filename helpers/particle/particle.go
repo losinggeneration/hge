@@ -9,6 +9,7 @@ import (
 	"github.com/losinggeneration/hge-go/hge"
 	"github.com/losinggeneration/hge-go/hge/rand"
 	. "github.com/losinggeneration/hge-go/hge/resource"
+	. "github.com/losinggeneration/hge-go/hge/timer"
 	"math"
 	"reflect"
 	"unsafe"
@@ -80,7 +81,8 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 	}
 
 	ps.h = hge.New()
-	ps.rand = rand.New(0)
+	ps.rand = rand.New(int(Time()))
+	ps.rand.Seed()
 
 	ptr := LoadBytes(filename)
 
@@ -289,7 +291,7 @@ func (ps *ParticleSystem) update(deltaTime float64) {
 		if par.age >= par.terminalAge {
 			ps.particlesAlive--
 
-			par = &ps.particles[ps.particlesAlive]
+			*par = ps.particles[ps.particlesAlive]
 			i--
 			continue
 		}
