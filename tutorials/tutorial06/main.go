@@ -5,7 +5,7 @@ import (
 	"github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/gui"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge"
 	. "github.com/losinggeneration/hge-go/hge/gfx"
 	. "github.com/losinggeneration/hge-go/hge/input"
 	. "github.com/losinggeneration/hge-go/hge/sound"
@@ -74,45 +74,41 @@ func render() int {
 }
 
 func main() {
-	defer Free()
+	h := hge.New()
+	h.SetState(hge.LOGFILE, "tutorial06.log")
+	h.SetState(hge.FRAMEFUNC, frame)
+	h.SetState(hge.RENDERFUNC, render)
+	h.SetState(hge.TITLE, "HGE Tutorial 06 - Creating menus")
+	h.SetState(hge.WINDOWED, true)
+	h.SetState(hge.SCREENWIDTH, 800)
+	h.SetState(hge.SCREENHEIGHT, 600)
+	h.SetState(hge.SCREENBPP, 32)
 
-	SetState(LOGFILE, "tutorial06.log")
-	SetState(FRAMEFUNC, frame)
-	SetState(RENDERFUNC, render)
-	SetState(TITLE, "HGE Tutorial 06 - Creating menus")
-	SetState(WINDOWED, true)
-	SetState(SCREENWIDTH, 800)
-	SetState(SCREENHEIGHT, 600)
-	SetState(SCREENBPP, 32)
-
-	if err := Initiate(); err != nil {
-		fmt.Println("Error: ", GetErrorMessage())
+	if err := h.Initiate(); err != nil {
+		fmt.Println("Error: ", h.GetErrorMessage())
 	} else {
-		defer Shutdown()
+		defer h.Shutdown()
 
-		quad.Tex = LoadTexture("bg.png")
+		quad.Texture = LoadTexture("bg.png")
 
-		if quad.Tex == 0 {
+		if quad.Texture == nil {
 			fmt.Println("Error loading bg.png")
 			return
 		}
-		defer quad.Tex.Free()
 
 		snd := NewEffect("menu.ogg")
 
-		if snd == 0 {
+		if snd == nil {
 			fmt.Println("Error loading menu.ogg")
 			return
 		}
-		defer snd.Free()
 
 		cursorTex := LoadTexture("cursor.png")
 
-		if cursorTex == 0 {
+		if cursorTex == nil {
 			fmt.Println("Error loading cursor.png")
 			return
 		}
-		defer cursorTex.Free()
 
 		// Set up the quad we will use for background animation
 		quad.Blend = BLEND_ALPHABLEND | BLEND_COLORMUL | BLEND_NOZWRITE
@@ -121,7 +117,7 @@ func main() {
 			// Set up z-coordinate of vertices
 			quad.V[i].Z = 0.5
 			// Set up color. The format of DWORD col is 0xAARRGGBB
-			quad.V[i].Col = 0xFFFFFFFF
+			quad.V[i].Color = 0xFFFFFFFF
 		}
 
 		quad.V[0].X, quad.V[0].Y = 0, 0
@@ -150,7 +146,7 @@ func main() {
 		GUI.SetFocus(1)
 		GUI.Enter()
 
-		Start()
+		h.Start()
 	}
 
 }

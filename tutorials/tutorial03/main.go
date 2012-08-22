@@ -27,7 +27,7 @@ func main() {
 			fnt *font.Font
 			par *particle.ParticleSystem
 
-			snd Effect
+			snd *Effect
 
 			x  = 100.0
 			y  = 100.0
@@ -117,15 +117,13 @@ func main() {
 
 		if err := hge.Initiate(); err == nil {
 			defer hge.Shutdown()
+
 			snd = NewEffect("menu.ogg")
 			tex := LoadTexture("particles.png")
-			if snd == 0 || tex == nil {
+			if snd == nil || tex == nil {
 				fmt.Printf("Error: Can't load one of the following files:\nmenu.ogg, particles.png, font1.fnt, font1.png, trail.psi\n")
 				return
 			}
-
-			defer snd.Free()
-			// 			defer tex.Free()
 
 			spr = sprite.NewSprite(tex, 96, 64, 32, 32)
 			spr.SetColor(0xFFFFA000)

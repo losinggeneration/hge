@@ -12,7 +12,7 @@ type GUIMenuItem struct {
 	gui.GUIObject
 
 	font                                                              *Font.Font
-	snd                                                               Effect
+	snd                                                               *Effect
 	delay                                                             float64
 	title                                                             string
 	scolor, dcolor, scolor2, dcolor2, sshadow, dshadow, color, shadow Color.ColorRGB
@@ -20,7 +20,7 @@ type GUIMenuItem struct {
 	timer, timer2                                                     float64
 }
 
-func NewGUIMenuItem(id int, font *Font.Font, snd Effect, x, y, delay float64, title string) *gui.GUIObject {
+func NewGUIMenuItem(id int, font *Font.Font, snd *Effect, x, y, delay float64, title string) *gui.GUIObject {
 	mi := new(GUIMenuItem)
 
 	mi.GUIObject.Initialize()
