@@ -316,8 +316,8 @@ func (f Font) GetStringWidth(str string, arg ...interface{}) float64 {
 		}
 	}
 
+	linew := 0.0
 	for _, chr := range str {
-		linew := 0.0
 
 		if chr != '\n' {
 			i := chr
