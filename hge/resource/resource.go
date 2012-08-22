@@ -36,15 +36,15 @@ func NewResource(filename string) (*Resource, hge.Dword) {
 	r.Pointer = Pointer(C.HGE_Resource_Load(resourceHGE.HGE, fname, &s))
 
 	runtime.SetFinalizer(r, func(runtime *Resource) {
-		r.free()
+		r.Free()
 	})
 
 	return r, hge.Dword(s)
 }
 
 // Deletes a previously loaded resource from memory.
-func (r *Resource) free() {
-	fmt.Println("Resource.free")
+func (r *Resource) Free() {
+	fmt.Println("Resource.Free")
 	C.HGE_Resource_Free(resourceHGE.HGE, unsafe.Pointer(r.Pointer))
 }
 

@@ -68,8 +68,8 @@ type Quad struct {
 }
 
 type cQuad struct {
-	V [4]Vertex
-	Texture
+	V     [4]Vertex
+	tex   C.HTEXTURE
 	Bledn int
 }
 
@@ -86,7 +86,10 @@ func init() {
 func BeginScene(a ...interface{}) bool {
 	if len(a) == 1 {
 		if target, ok := a[0].(Target); ok {
-			return C.HGE_Gfx_BeginScene(gfxHGE.HGE, C.HTARGET(target)) == 1
+			return C.HGE_Gfx_BeginScene(gfxHGE.HGE, target.target) == 1
+		}
+		if target, ok := a[0].(*Target); ok {
+			return C.HGE_Gfx_BeginScene(gfxHGE.HGE, target.target) == 1
 		}
 	}
 
@@ -136,14 +139,20 @@ func (t *Triple) Render() {
 }
 
 func (q *Quad) Render() {
-	cq := &cQuad{q.V, *q.Texture, q.Blend}
+	var cq *cQuad
+
+	if q.Texture != nil {
+		cq = &cQuad{q.V, q.Texture.texture, q.Blend}
+	} else {
+		cq = &cQuad{q.V, 0, q.Blend}
+	}
 	C.HGE_Gfx_RenderQuad(gfxHGE.HGE, (*C.HGE_Quad_t)(unsafe.Pointer(cq)))
 }
 
-func StartBatch(prim_type int, tex Texture, blend int) (ver *Vertex, max_prim int, ok bool) {
+func StartBatch(prim_type int, tex *Texture, blend int) (ver *Vertex, max_prim int, ok bool) {
 	mp := C.int(0)
 
-	v := C.HGE_Gfx_StartBatch(gfxHGE.HGE, C.int(prim_type), C.HTEXTURE(tex), C.int(blend), &mp)
+	v := C.HGE_Gfx_StartBatch(gfxHGE.HGE, C.int(prim_type), tex.texture, C.int(blend), &mp)
 
 	if v == nil {
 		return nil, 0, false
@@ -254,11 +263,17 @@ func SetTransform(a ...interface{}) {
 }
 
 // HGE Handle type
-type Target C.HTARGET
+type Target struct {
+	target C.HTARGET
+}
 
 func NewTarget(width, height int, zbuffer bool) *Target {
 	t := new(Target)
-	*t = Target(C.HGE_Target_Create(gfxHGE.HGE, C.int(width), C.int(height), boolToCInt(zbuffer)))
+	t.target = C.HGE_Target_Create(gfxHGE.HGE, C.int(width), C.int(height), boolToCInt(zbuffer))
+
+	if t.target == 0 {
+		return nil
+	}
 
 	runtime.SetFinalizer(t, func(target *Target) {
 		target.Free()
@@ -267,21 +282,27 @@ func NewTarget(width, height int, zbuffer bool) *Target {
 	return t
 }
 
-func (t Target) Free() {
+func (t *Target) Free() {
 	fmt.Println("Freeing Target", t)
-	C.HGE_Target_Free(gfxHGE.HGE, C.HTARGET(t))
+	C.HGE_Target_Free(gfxHGE.HGE, t.target)
 }
 
-func (t Target) Texture() Texture {
-	return Texture(C.HGE_Target_GetTexture(gfxHGE.HGE, C.HTARGET(t)))
+func (t *Target) Texture() *Texture {
+	return &Texture{C.HGE_Target_GetTexture(gfxHGE.HGE, t.target)}
 }
 
 // HGE Handle type
-type Texture C.HTEXTURE
+type Texture struct {
+	texture C.HTEXTURE
+}
 
 func NewTexture(width, height int) *Texture {
 	t := new(Texture)
-	*t = Texture(C.HGE_Texture_Create(gfxHGE.HGE, C.int(width), C.int(height)))
+	t.texture = C.HGE_Texture_Create(gfxHGE.HGE, C.int(width), C.int(height))
+
+	if t.texture == 0 {
+		return nil
+	}
 
 	runtime.SetFinalizer(t, func(texture *Texture) {
 		texture.Free()
@@ -311,8 +332,8 @@ func LoadTexture(filename string, a ...interface{}) *Texture {
 	}
 
 	t := new(Texture)
-	*t = Texture(C.HGE_Texture_Load(gfxHGE.HGE, fname, C.DWORD(size), boolToCInt(mipmap)))
-	if *t == 0 {
+	t.texture = C.HGE_Texture_Load(gfxHGE.HGE, fname, C.DWORD(size), boolToCInt(mipmap))
+	if t.texture == 0 {
 		return nil
 	}
 
@@ -323,34 +344,36 @@ func LoadTexture(filename string, a ...interface{}) *Texture {
 	return t
 }
 
-func (t Texture) Free() {
-	fmt.Println("freeing texture", t)
-	C.HGE_Texture_Free(gfxHGE.HGE, C.HTEXTURE(t))
+func (t *Texture) Free() {
+	fmt.Println("Freeing texture", t)
+	C.HGE_Texture_Free(gfxHGE.HGE, t.texture)
 }
 
-func (t Texture) Width(a ...interface{}) int {
+func (t *Texture) Width(a ...interface{}) int {
+	original := false
 	if len(a) == 1 {
-		if original, ok := a[0].(bool); ok {
-			return int(C.HGE_Texture_GetWidth(gfxHGE.HGE, C.HTEXTURE(t), boolToCInt(original)))
+		if o, ok := a[0].(bool); ok {
+			original = o
 		}
 	}
 
-	return int(C.HGE_Texture_GetWidth(gfxHGE.HGE, C.HTEXTURE(t), boolToCInt(false)))
+	return int(C.HGE_Texture_GetWidth(gfxHGE.HGE, t.texture, boolToCInt(original)))
 }
 
-func (t Texture) Height(a ...interface{}) int {
+func (t *Texture) Height(a ...interface{}) int {
+	original := false
 	if len(a) == 1 {
-		if original, ok := a[0].(bool); ok {
-			return int(C.HGE_Texture_GetWidth(gfxHGE.HGE, C.HTEXTURE(t), boolToCInt(original)))
+		if o, ok := a[0].(bool); ok {
+			original = o
 		}
 	}
 
-	return int(C.HGE_Texture_GetHeight(gfxHGE.HGE, C.HTEXTURE(t), boolToCInt(false)))
+	return int(C.HGE_Texture_GetHeight(gfxHGE.HGE, t.texture, boolToCInt(original)))
 }
 
-func (t Texture) Lock(a ...interface{}) *hge.Dword {
+func (t *Texture) Lock(a ...interface{}) *hge.Dword {
 	readonly := true
-	left, top, width, height := 0, 0, 0, 0
+	var left, top, width, height int
 
 	for i := 0; i < len(a); i++ {
 		if i == 0 {
@@ -380,10 +403,10 @@ func (t Texture) Lock(a ...interface{}) *hge.Dword {
 		}
 	}
 
-	d := C.HGE_Texture_Lock(gfxHGE.HGE, C.HTEXTURE(t), boolToCInt(readonly), C.int(left), C.int(top), C.int(width), C.int(height))
+	d := C.HGE_Texture_Lock(gfxHGE.HGE, t.texture, boolToCInt(readonly), C.int(left), C.int(top), C.int(width), C.int(height))
 	return (*hge.Dword)(d)
 }
 
-func (t Texture) Unlock() {
-	C.HGE_Texture_Unlock(gfxHGE.HGE, C.HTEXTURE(t))
+func (t *Texture) Unlock() {
+	C.HGE_Texture_Unlock(gfxHGE.HGE, t.texture)
 }

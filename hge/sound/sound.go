@@ -41,13 +41,13 @@ func NewEffect(filename string, a ...interface{}) *Effect {
 	e.effect = C.HGE_Effect_Load(e.soundHGE.HGE, fname, C.DWORD(size))
 
 	runtime.SetFinalizer(e, func(effect *Effect) {
-		effect.free()
+		effect.Free()
 	})
 
 	return e
 }
 
-func (e *Effect) free() {
+func (e *Effect) Free() {
 	fmt.Println("Effect.Free")
 	C.HGE_Effect_Free(e.soundHGE.HGE, (e.effect))
 }
@@ -198,13 +198,13 @@ func NewMusic(filename string, size hge.Dword) *Music {
 	m.music = C.HGE_Music_Load(m.soundHGE.HGE, fname, C.DWORD(size))
 
 	runtime.SetFinalizer(m, func(music *Music) {
-		music.free()
+		music.Free()
 	})
 
 	return m
 }
 
-func (m *Music) free() {
+func (m *Music) Free() {
 	fmt.Println("Music.Free")
 	C.HGE_Music_Free(m.soundHGE.HGE, m.music)
 }
@@ -265,12 +265,12 @@ func (m *Music) InstrVolume(instr int) int {
 	return int(C.HGE_Music_GetInstrVolume(m.soundHGE.HGE, m.music, C.int(instr)))
 }
 
-func (m *Music) SetChannelVolume(channel Channel, volume int) {
-	C.HGE_Music_SetChannelVolume(m.soundHGE.HGE, m.music, C.int(channel.channel), C.int(volume))
+func (m *Music) SetChannelVolume(channel, volume int) {
+	C.HGE_Music_SetChannelVolume(m.soundHGE.HGE, m.music, C.int(channel), C.int(volume))
 }
 
-func (m *Music) ChannelVolume(channel Channel) int {
-	return int(C.HGE_Music_GetChannelVolume(m.soundHGE.HGE, m.music, C.int(channel.channel)))
+func (m *Music) ChannelVolume(channel int) int {
+	return int(C.HGE_Music_GetChannelVolume(m.soundHGE.HGE, m.music, C.int(channel)))
 }
 
 // HGE Handle type
@@ -288,14 +288,14 @@ func NewStream(filename string, size hge.Dword) *Stream {
 	s.stream = C.HGE_Stream_Load(s.soundHGE.HGE, fname, C.DWORD(size))
 
 	runtime.SetFinalizer(s, func(stream *Stream) {
-		stream.free()
+		stream.Free()
 	})
 
 	return s
 }
 
-func (s *Stream) free() {
-	fmt.Println("Stream.free")
+func (s *Stream) Free() {
+	fmt.Println("Stream.Free")
 	C.HGE_Stream_Free(s.soundHGE.HGE, s.stream)
 }
 

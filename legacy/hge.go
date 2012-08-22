@@ -23,6 +23,7 @@ func Create(ver int) *HGE {
 
 // Releases the memory the C++ library allocated for the HGE struct
 func (h *HGE) Release() {
+	h.h.Free()
 }
 
 // Initializes hardware and software needed to run engine.
@@ -79,6 +80,7 @@ func (h *HGE) Resource_Load(filename string) (*Resource, hge.Dword) {
 
 // Deletes a previously loaded resource from memory.
 func (h *HGE) Resource_Free(res Resource) {
+	res.Free()
 }
 
 // Loads a resource, puts the loaded data into a byte array, and frees the data.
@@ -145,16 +147,29 @@ func (h *HGE) Ini_GetString(section, name, def_val string) string {
 	return NewIni(section, name).GetString(def_val)
 }
 
+var random = New(0)
+
 func (h *HGE) Random_Seed(a ...interface{}) {
-	Seed(a...)
+	seed := 1
+	if len(a) == 1 {
+		if s, ok := a[0].(int); ok {
+			seed = s
+		}
+		if s, ok := a[0].(int64); ok {
+			seed = int(s)
+		}
+	}
+
+	random = New(seed)
+	random.Seed()
 }
 
 func (h *HGE) Random_Int(min, max int) int {
-	return Int(min, max)
+	return random.Int(min, max)
 }
 
 func (h *HGE) Random_Float(min, max float64) float64 {
-	return Float64(min, max)
+	return random.Float64(min, max)
 }
 
 func (h *HGE) Timer_GetTime() float64 {
@@ -169,79 +184,79 @@ func (h *HGE) Timer_GetFPS() int {
 	return GetFPS()
 }
 
-func (h *HGE) Effect_Load(filename string, a ...interface{}) Effect {
+func (h *HGE) Effect_Load(filename string, a ...interface{}) *Effect {
 	return NewEffect(filename, a...)
 }
 
-func (h *HGE) Effect_Free(eff Effect) {
+func (h *HGE) Effect_Free(eff *Effect) {
 	eff.Free()
 }
 
-func (h *HGE) Effect_Play(eff Effect) Channel {
+func (h *HGE) Effect_Play(eff *Effect) Channel {
 	return eff.Play()
 }
 
-func (h *HGE) Effect_PlayEx(eff Effect, a ...interface{}) Channel {
+func (h *HGE) Effect_PlayEx(eff *Effect, a ...interface{}) Channel {
 	return eff.PlayEx(a...)
 }
 
-func (h *HGE) Music_Load(filename string, size hge.Dword) Music {
+func (h *HGE) Music_Load(filename string, size hge.Dword) *Music {
 	return NewMusic(filename, size)
 }
 
-func (h *HGE) Music_Free(music Music) {
+func (h *HGE) Music_Free(music *Music) {
 	music.Free()
 }
 
-func (h *HGE) Music_Play(music Music, loop bool, a ...interface{}) Channel {
+func (h *HGE) Music_Play(music *Music, loop bool, a ...interface{}) Channel {
 	return music.Play(loop, a...)
 }
 
-func (h *HGE) Music_SetAmplification(music Music, ampl int) {
+func (h *HGE) Music_SetAmplification(music *Music, ampl int) {
 	music.SetAmplification(ampl)
 }
 
-func (h *HGE) Music_GetAmplification(music Music) int {
+func (h *HGE) Music_GetAmplification(music *Music) int {
 	return music.Amplification()
 }
 
-func (h *HGE) Music_GetLength(music Music) int {
+func (h *HGE) Music_GetLength(music *Music) int {
 	return music.Len()
 }
 
-func (h *HGE) Music_SetPos(music Music, order, row int) {
+func (h *HGE) Music_SetPos(music *Music, order, row int) {
 	music.SetPos(order, row)
 }
 
-func (h *HGE) Music_GetPos(music Music) (order, row int, ok bool) {
+func (h *HGE) Music_GetPos(music *Music) (order, row int, ok bool) {
 	return music.Pos()
 }
 
-func (h *HGE) Music_SetInstrVolume(music Music, instr int, volume int) {
+func (h *HGE) Music_SetInstrVolume(music *Music, instr int, volume int) {
 	music.SetInstrVolume(instr, volume)
 }
 
-func (h *HGE) Music_GetInstrVolume(music Music, instr int) int {
+func (h *HGE) Music_GetInstrVolume(music *Music, instr int) int {
 	return music.InstrVolume(instr)
 }
 
-func (h *HGE) Music_SetChannelVolume(music Music, channel, volume int) {
-	music.SetChannelVolume(Channel(channel), volume)
+func (h *HGE) Music_SetChannelVolume(music *Music, channel, volume int) {
+	music.SetChannelVolume(channel, volume)
 }
 
-func (h *HGE) Music_GetChannelVolume(music Music, channel int) int {
-	return music.ChannelVolume(Channel(channel))
+func (h *HGE) Music_GetChannelVolume(music *Music, channel int) int {
+	return music.ChannelVolume(channel)
 }
 
-func (h *HGE) Stream_Load(filename string, size hge.Dword) Stream {
+func (h *HGE) Stream_Load(filename string, size hge.Dword) *Stream {
 	return NewStream(filename, size)
 }
 
-func (h *HGE) Stream_Free(stream Stream) {
+func (h *HGE) Stream_Free(stream *Stream) {
 	stream.Free()
 }
 
-func (h *HGE) Stream_Play(stream Stream, loop bool, a ...interface{}) Channel {
+func (h *HGE) Stream_Play(stream *Stream, loop bool, a ...interface{}) Channel {
 	return stream.Play(loop, a...)
 }
 
@@ -374,7 +389,7 @@ func (h *HGE) Gfx_RenderQuad(quad *Quad) {
 	quad.Render()
 }
 
-func (h *HGE) Gfx_StartBatch(prim_type int, tex Texture, blend int) (ver *Vertex, max_prim int, ok bool) {
+func (h *HGE) Gfx_StartBatch(prim_type int, tex *Texture, blend int) (ver *Vertex, max_prim int, ok bool) {
 	return StartBatch(prim_type, tex, blend)
 }
 
@@ -398,7 +413,7 @@ func (h *HGE) Target_Free(target *Target) {
 	target.Free()
 }
 
-func (h *HGE) Target_GetTexture(target Target) Texture {
+func (h *HGE) Target_GetTexture(target Target) *Texture {
 	return target.Texture()
 }
 
