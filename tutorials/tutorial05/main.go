@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	tex Texture
+	tex *Texture
 	dis dist.DistortionMesh
 	fnt *font.Font
 )
@@ -95,22 +95,23 @@ func RenderFunc() int {
 }
 
 func main() {
-	defer Free()
+	h := New()
+	defer h.Free()
 
-	SetState(LOGFILE, "tutorial05.log")
-	SetState(FRAMEFUNC, FrameFunc)
-	SetState(RENDERFUNC, RenderFunc)
-	SetState(TITLE, "HGE Tutorial 05 - Using distortion mesh")
-	SetState(WINDOWED, true)
-	SetState(SCREENWIDTH, 800)
-	SetState(SCREENHEIGHT, 600)
-	SetState(SCREENBPP, 32)
-	SetState(USESOUND, false)
+	h.SetState(LOGFILE, "tutorial05.log")
+	h.SetState(FRAMEFUNC, FrameFunc)
+	h.SetState(RENDERFUNC, RenderFunc)
+	h.SetState(TITLE, "HGE Tutorial 05 - Using distortion mesh")
+	h.SetState(WINDOWED, true)
+	h.SetState(SCREENWIDTH, 800)
+	h.SetState(SCREENHEIGHT, 600)
+	h.SetState(SCREENBPP, 32)
+	h.SetState(USESOUND, false)
 
-	if err := Initiate(); err == nil {
-		defer Shutdown()
+	if err := h.Initiate(); err == nil {
+		defer h.Shutdown()
 		tex = LoadTexture("texture.jpg")
-		if tex == 0 {
+		if tex == nil {
 			fmt.Println("Error: Can't load texture.jpg")
 			return
 		}
@@ -131,6 +132,6 @@ func main() {
 		}
 
 		// Let's rock now!
-		Start()
+		h.Start()
 	}
 }

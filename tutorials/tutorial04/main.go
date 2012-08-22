@@ -17,11 +17,11 @@ var (
 	fnt           *Font
 	par           *ParticleSystem
 
-	tex Texture
-	snd Effect
+	tex *Texture
+	snd *Effect
 
 	// HGE render target handle
-	target Target
+	target *Target
 
 	x  = 100.0
 	y  = 100.0
@@ -45,7 +45,7 @@ func boom() {
 // again. We use it here to update the render
 // target's texture handle that changes during recreation.
 func RestoreFunc() int {
-	if target != 0 {
+	if target != nil {
 		tar.SetTexture(target.Texture())
 	}
 
@@ -128,26 +128,25 @@ func RenderFunc() int {
 }
 
 func main() {
-	defer Free()
+	h := New()
+	defer h.Free()
 
-	SetState(LOGFILE, "tutorial04.log")
-	SetState(FRAMEFUNC, FrameFunc)
-	SetState(RENDERFUNC, RenderFunc)
-	SetState(GFXRESTOREFUNC, RestoreFunc)
-	SetState(TITLE, "HGE Tutorial 04 - Using render targets")
-	SetState(FPS, 100)
-	SetState(WINDOWED, true)
-	SetState(SCREENWIDTH, 800)
-	SetState(SCREENHEIGHT, 600)
-	SetState(SCREENBPP, 32)
+	h.SetState(LOGFILE, "tutorial04.log")
+	h.SetState(FRAMEFUNC, FrameFunc)
+	h.SetState(RENDERFUNC, RenderFunc)
+	h.SetState(GFXRESTOREFUNC, RestoreFunc)
+	h.SetState(TITLE, "HGE Tutorial 04 - Using render targets")
+	h.SetState(FPS, 100)
+	h.SetState(WINDOWED, true)
+	h.SetState(SCREENWIDTH, 800)
+	h.SetState(SCREENHEIGHT, 600)
+	h.SetState(SCREENBPP, 32)
 
-	target = 0
-
-	if err := Initiate(); err == nil {
-		defer Shutdown()
+	if err := h.Initiate(); err == nil {
+		defer h.Shutdown()
 		snd = NewEffect("menu.ogg")
 		tex = LoadTexture("particles.png")
-		if snd == 0 || tex == 0 {
+		if snd == nil || tex == nil {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
 			fmt.Printf("Error: Can't load one of the following files:\nmenu.ogg, particles.png, font1.fnt, font1.png, trail.psi\n")
@@ -187,6 +186,6 @@ func main() {
 		tar.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
 
 		// Let's rock now!
-		Start()
+		h.Start()
 	}
 }
