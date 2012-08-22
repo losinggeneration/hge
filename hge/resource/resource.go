@@ -7,11 +7,17 @@ package resource
 import "C"
 
 import (
+	"fmt"
 	"github.com/losinggeneration/hge-go/hge"
+	"runtime"
 	"unsafe"
 )
 
-type Resource uintptr
+type Pointer uintptr
+
+type Resource struct {
+	Pointer
+}
 
 var resourceHGE *hge.HGE
 
@@ -25,14 +31,21 @@ func NewResource(filename string) (*Resource, hge.Dword) {
 	fname := C.CString(filename)
 	defer C.free(unsafe.Pointer(fname))
 
-	r := Resource(C.HGE_Resource_Load(resourceHGE.HGE, fname, &s))
+	r := new(Resource)
 
-	return &r, hge.Dword(s)
+	r.Pointer = Pointer(C.HGE_Resource_Load(resourceHGE.HGE, fname, &s))
+
+	runtime.SetFinalizer(r, func(runtime *Resource) {
+		r.free()
+	})
+
+	return r, hge.Dword(s)
 }
 
 // Deletes a previously loaded resource from memory.
-func (r Resource) Free() {
-	C.HGE_Resource_Free(resourceHGE.HGE, unsafe.Pointer(r))
+func (r *Resource) free() {
+	fmt.Println("Resource.free")
+	C.HGE_Resource_Free(resourceHGE.HGE, unsafe.Pointer(r.Pointer))
 }
 
 // Loads a resource, puts the loaded data into a byte array, and frees the data.
@@ -43,8 +56,7 @@ func LoadBytes(filename string) []byte {
 		return nil
 	}
 
-	b := C.GoBytes(unsafe.Pointer(*r), C.int(size))
-	r.Free()
+	b := C.GoBytes(unsafe.Pointer(r.Pointer), C.int(size))
 
 	return b
 }
@@ -57,8 +69,7 @@ func LoadString(filename string) *string {
 		return nil
 	}
 
-	s := C.GoStringN((*C.char)(unsafe.Pointer(*r)), C.int(size))
-	r.Free()
+	s := C.GoStringN((*C.char)(unsafe.Pointer(r.Pointer)), C.int(size))
 
 	return &s
 }

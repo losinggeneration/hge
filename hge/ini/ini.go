@@ -11,18 +11,13 @@ import (
 	"unsafe"
 )
 
-var iniHGE *hge.HGE
-
-func init() {
-	iniHGE = hge.New()
-}
-
 type Ini struct {
 	Section, Name string
+	iniHGE        *hge.HGE
 }
 
 func NewIni(section, name string) Ini {
-	return Ini{section, name}
+	return Ini{section, name, hge.New()}
 }
 
 func (i Ini) SetInt(value int) {
@@ -30,7 +25,7 @@ func (i Ini) SetInt(value int) {
 	defer C.free(unsafe.Pointer(s))
 	defer C.free(unsafe.Pointer(n))
 
-	C.HGE_Ini_SetInt(iniHGE.HGE, s, n, C.int(value))
+	C.HGE_Ini_SetInt(i.iniHGE.HGE, s, n, C.int(value))
 }
 
 func (i Ini) GetInt(def_val int) int {
@@ -38,7 +33,7 @@ func (i Ini) GetInt(def_val int) int {
 	defer C.free(unsafe.Pointer(s))
 	defer C.free(unsafe.Pointer(n))
 
-	return int(C.HGE_Ini_GetInt(iniHGE.HGE, s, n, C.int(def_val)))
+	return int(C.HGE_Ini_GetInt(i.iniHGE.HGE, s, n, C.int(def_val)))
 }
 
 func (i Ini) SetFloat(value float64) {
@@ -46,7 +41,7 @@ func (i Ini) SetFloat(value float64) {
 	defer C.free(unsafe.Pointer(s))
 	defer C.free(unsafe.Pointer(n))
 
-	C.HGE_Ini_SetFloat(iniHGE.HGE, s, n, C.float(value))
+	C.HGE_Ini_SetFloat(i.iniHGE.HGE, s, n, C.float(value))
 }
 
 func (i Ini) GetFloat(def_val float64) float64 {
@@ -54,7 +49,7 @@ func (i Ini) GetFloat(def_val float64) float64 {
 	defer C.free(unsafe.Pointer(s))
 	defer C.free(unsafe.Pointer(n))
 
-	return float64(C.HGE_Ini_GetFloat(iniHGE.HGE, s, n, C.float(def_val)))
+	return float64(C.HGE_Ini_GetFloat(i.iniHGE.HGE, s, n, C.float(def_val)))
 }
 
 func (i Ini) SetString(value string) {
@@ -63,7 +58,7 @@ func (i Ini) SetString(value string) {
 	defer C.free(unsafe.Pointer(n))
 	defer C.free(unsafe.Pointer(v))
 
-	C.HGE_Ini_SetString(iniHGE.HGE, s, n, v)
+	C.HGE_Ini_SetString(i.iniHGE.HGE, s, n, v)
 }
 
 func (i Ini) GetString(def_val string) string {
@@ -72,5 +67,5 @@ func (i Ini) GetString(def_val string) string {
 	defer C.free(unsafe.Pointer(n))
 	defer C.free(unsafe.Pointer(df))
 
-	return C.GoString(C.HGE_Ini_GetString(iniHGE.HGE, s, n, df))
+	return C.GoString(C.HGE_Ini_GetString(i.iniHGE.HGE, s, n, df))
 }

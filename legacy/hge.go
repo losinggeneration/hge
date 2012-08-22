@@ -79,7 +79,6 @@ func (h *HGE) Resource_Load(filename string) (*Resource, hge.Dword) {
 
 // Deletes a previously loaded resource from memory.
 func (h *HGE) Resource_Free(res Resource) {
-	res.Free()
 }
 
 // Loads a resource, puts the loaded data into a byte array, and frees the data.
