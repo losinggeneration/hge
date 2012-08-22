@@ -48,16 +48,13 @@ func (r *Rand) Seed() {
 }
 
 func (r *Rand) Int(min, max int) int {
-	r.Seed()
 	return int(C.HGE_Random_Int(r.randHGE.HGE, C.int(min), C.int(max)))
 }
 
 func (r *Rand) Float32(min, max float32) float32 {
-	r.Seed()
 	return float32(C.HGE_Random_Float(r.randHGE.HGE, C.float(min), C.float(max)))
 }
 
 func (r *Rand) Float64(min, max float64) float64 {
-	r.Seed()
 	return float64(C.HGE_Random_Float(r.randHGE.HGE, C.float(min), C.float(max)))
 }
