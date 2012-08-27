@@ -6,16 +6,16 @@ import (
 )
 
 const (
-	ANIM_FWD        = 0
-	ANIM_REV        = 1
-	ANIM_PINGPONG   = 2
-	ANIM_NOPINGPONG = 0
-	ANIM_LOOP       = 4
-	ANIM_NOLOOP     = 0
+	FWD        = 0
+	REV        = 1
+	PINGPONG   = 2
+	NOPINGPONG = 0
+	LOOP       = 4
+	NOLOOP     = 0
 )
 
 type Animation struct {
-	sprite                        Sprite
+	Sprite
 	origWidth                     int
 	playing                       bool
 	speed, sinceLastFrame         float64
@@ -25,7 +25,7 @@ type Animation struct {
 func NewAnimation(tex *Texture, frames int, fps, x, y, w, h float64) Animation {
 	var a Animation
 
-	a.sprite = NewSprite(tex, x, y, w, h)
+	a.Sprite = NewSprite(tex, x, y, w, h)
 
 	a.origWidth = tex.Width(true)
 
@@ -33,7 +33,7 @@ func NewAnimation(tex *Texture, frames int, fps, x, y, w, h float64) Animation {
 	a.speed = 1.0 / fps
 	a.frames = frames
 
-	a.mode = ANIM_FWD | ANIM_LOOP
+	a.mode = FWD | LOOP
 	a.delta = 1
 	a.SetFrame(0)
 
@@ -43,7 +43,7 @@ func NewAnimation(tex *Texture, frames int, fps, x, y, w, h float64) Animation {
 func (a *Animation) Play() {
 	a.playing = true
 	a.sinceLastFrame = -1.0
-	if a.mode&ANIM_REV == ANIM_REV {
+	if a.mode&REV == REV {
 		a.delta = -1
 		a.SetFrame(a.frames - 1)
 	} else {
@@ -76,24 +76,24 @@ func (a *Animation) Update(deltaTime float64) {
 
 		if a.curFrame+a.delta == a.frames {
 			switch a.mode {
-			case ANIM_FWD,
-				ANIM_REV | ANIM_PINGPONG:
+			case FWD,
+				REV | PINGPONG:
 				a.playing = false
 
-			case ANIM_FWD | ANIM_PINGPONG,
-				ANIM_FWD | ANIM_PINGPONG | ANIM_LOOP,
-				ANIM_REV | ANIM_PINGPONG | ANIM_LOOP:
+			case FWD | PINGPONG,
+				FWD | PINGPONG | LOOP,
+				REV | PINGPONG | LOOP:
 				a.delta = -a.delta
 			}
 		} else if a.curFrame+a.delta < 0 {
 			switch a.mode {
-			case ANIM_REV,
-				ANIM_FWD | ANIM_PINGPONG:
+			case REV,
+				FWD | PINGPONG:
 				a.playing = false
 
-			case ANIM_REV | ANIM_PINGPONG,
-				ANIM_REV | ANIM_PINGPONG | ANIM_LOOP,
-				ANIM_FWD | ANIM_PINGPONG | ANIM_LOOP:
+			case REV | PINGPONG,
+				REV | PINGPONG | LOOP,
+				FWD | PINGPONG | LOOP:
 				a.delta = -a.delta
 			}
 		}
@@ -109,19 +109,19 @@ func (a Animation) IsPlaying() bool {
 }
 
 func (a *Animation) SetTexture(tex *Texture) {
-	a.sprite.SetTexture(tex)
+	a.Sprite.SetTexture(tex)
 	a.origWidth = tex.Width(true)
 }
 
 func (a *Animation) SetTextureRect(x1, y1, x2, y2 float64) {
-	a.sprite.SetTextureRect(x1, y1, x2, y2)
+	a.Sprite.SetTextureRect(x1, y1, x2, y2)
 	a.SetFrame(a.curFrame)
 }
 
 func (a *Animation) SetMode(mode int) {
 	a.mode = mode
 
-	if mode&ANIM_REV == ANIM_REV {
+	if mode&REV == REV {
 		a.delta = -1
 		a.SetFrame(a.frames - 1)
 	} else {
@@ -139,7 +139,7 @@ func (a *Animation) SetFrame(n int) {
 	// 	bool bX, bY, bHS;
 	// 	int ncols = int(orig_width) / int(width);
 
-	cols := int(a.origWidth / int(a.sprite.W))
+	cols := int(a.origWidth / int(a.W))
 
 	n = n % a.frames
 	if n < 0 {
@@ -148,34 +148,34 @@ func (a *Animation) SetFrame(n int) {
 	a.curFrame = n
 
 	// calculate texture coords for frame n
-	ty1 := a.sprite.TY
-	tx1 := a.sprite.TX + float64(n)*a.sprite.W
+	ty1 := a.TY
+	tx1 := a.TX + float64(n)*a.W
 
-	if tx1 > float64(a.origWidth)-a.sprite.W {
-		n -= int(float64(a.origWidth) - a.sprite.TX/a.sprite.W)
-		tx1 = a.sprite.W * float64(n%cols)
-		ty1 += a.sprite.H * float64(1+n/cols)
+	if tx1 > float64(a.origWidth)-a.W {
+		n -= int(float64(a.origWidth) - a.TX/a.W)
+		tx1 = a.W * float64(n%cols)
+		ty1 += a.H * float64(1+n/cols)
 	}
 
-	tx2 := tx1 + a.sprite.W
-	ty2 := ty1 + a.sprite.H
+	tx2 := tx1 + a.W
+	ty2 := ty1 + a.H
 
-	tx1 /= a.sprite.TexW
-	ty1 /= a.sprite.TexH
-	tx2 /= a.sprite.TexW
-	ty2 /= a.sprite.TexH
+	tx1 /= a.TexW
+	ty1 /= a.TexH
+	tx2 /= a.TexW
+	ty2 /= a.TexH
 
-	a.sprite.Quad.V[0].TX, a.sprite.Quad.V[0].TY = float32(tx1), float32(ty1)
-	a.sprite.Quad.V[1].TX, a.sprite.Quad.V[1].TY = float32(tx2), float32(ty1)
-	a.sprite.Quad.V[2].TX, a.sprite.Quad.V[2].TY = float32(tx2), float32(ty2)
-	a.sprite.Quad.V[3].TX, a.sprite.Quad.V[3].TY = float32(tx1), float32(ty2)
+	a.Quad.V[0].TX, a.Quad.V[0].TY = float32(tx1), float32(ty1)
+	a.Quad.V[1].TX, a.Quad.V[1].TY = float32(tx2), float32(ty1)
+	a.Quad.V[2].TX, a.Quad.V[2].TY = float32(tx2), float32(ty2)
+	a.Quad.V[3].TX, a.Quad.V[3].TY = float32(tx1), float32(ty2)
 
-	bX := a.sprite.XFlip
-	bY := a.sprite.YFlip
-	bHS := a.sprite.HSFlip
-	a.sprite.XFlip = false
-	a.sprite.YFlip = false
-	a.sprite.SetFlip(bX, bY, bHS)
+	bX := a.XFlip
+	bY := a.YFlip
+	bHS := a.HSFlip
+	a.XFlip = false
+	a.YFlip = false
+	a.SetFlip(bX, bY, bHS)
 }
 
 func (a *Animation) SetFrames(n int) {
