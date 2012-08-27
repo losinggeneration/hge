@@ -125,20 +125,20 @@ func main() {
 				return
 			}
 
-			spr = sprite.NewSprite(tex, 96, 64, 32, 32)
+			spr = sprite.New(tex, 96, 64, 32, 32)
 			spr.SetColor(0xFFFFA000)
 			spr.SetHotSpot(16, 16)
 
-			if fnt = font.NewFont("font1.fnt"); fnt == nil {
+			if fnt = font.New("font1.fnt"); fnt == nil {
 				fmt.Println("Error loading font1.fnt")
 				return
 			}
 
-			spt := sprite.NewSprite(tex, 32, 32, 32, 32)
+			spt := sprite.New(tex, 32, 32, 32, 32)
 			spt.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
 			spt.SetHotSpot(16, 16)
 
-			par = particle.NewParticleSystem("trail.psi", spt)
+			par = particle.New("trail.psi", spt)
 			if par == nil {
 				fmt.Println("Error loading trail.psi")
 				return

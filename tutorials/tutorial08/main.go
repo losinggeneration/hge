@@ -146,7 +146,7 @@ func main() {
 	if err := h.Initiate(); err == nil {
 		defer h.Shutdown()
 
-		fnt = font.NewFont("font1.fnt")
+		fnt = font.New("font1.fnt")
 
 		if !InitSimulation() {
 			// If one of the data files is not found, display an error message and shutdown
@@ -179,21 +179,21 @@ func InitSimulation() bool {
 	rand = New(0)
 
 	// Create sprites
-	sky = sprite.NewSprite(nil, 0, 0, SCREEN_WIDTH, SKY_HEIGHT)
-	sea = dist.NewDistortionMesh(SEA_SUBDIVISION, SEA_SUBDIVISION)
+	sky = sprite.New(nil, 0, 0, SCREEN_WIDTH, SKY_HEIGHT)
+	sea = dist.New(SEA_SUBDIVISION, SEA_SUBDIVISION)
 	sea.SetTextureRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-SKY_HEIGHT)
 
-	sun = sprite.NewSprite(texObjects, 81, 0, 114, 114)
+	sun = sprite.New(texObjects, 81, 0, 114, 114)
 	sun.SetHotSpot(57, 57)
-	moon = sprite.NewSprite(texObjects, 0, 0, 81, 81)
+	moon = sprite.New(texObjects, 0, 0, 81, 81)
 	moon.SetHotSpot(40, 40)
-	star = sprite.NewSprite(texObjects, 72, 81, 9, 9)
+	star = sprite.New(texObjects, 72, 81, 9, 9)
 	star.SetHotSpot(5, 5)
 
-	glow = sprite.NewSprite(texObjects, 128, 128, 128, 128)
+	glow = sprite.New(texObjects, 128, 128, 128, 128)
 	glow.SetHotSpot(64, 64)
 	glow.SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_NOZWRITE)
-	seaglow = sprite.NewSprite(texObjects, 128, 224, 128, 32)
+	seaglow = sprite.New(texObjects, 128, 224, 128, 32)
 	seaglow.SetHotSpot(64, 0)
 	seaglow.SetBlendMode(BLEND_COLORADD | BLEND_ALPHAADD | BLEND_NOZWRITE)
 

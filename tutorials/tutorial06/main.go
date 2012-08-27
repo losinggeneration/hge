@@ -125,15 +125,15 @@ func main() {
 		quad.V[2].X, quad.V[2].Y = 800, 600
 		quad.V[3].X, quad.V[3].Y = 0, 600
 
-		fnt = font.NewFont("font1.fnt")
+		fnt = font.New("font1.fnt")
 
 		if fnt == nil {
 			fmt.Println("Error loading font1.fnt")
 			return
 		}
 
-		cursor := sprite.NewSprite(cursorTex, 0, 0, 32, 32)
-		GUI = gui.NewGUI()
+		cursor := sprite.New(cursorTex, 0, 0, 32, 32)
+		GUI = gui.New()
 
 		GUI.AddCtrl(NewGUIMenuItem(1, fnt, snd, 400, 200, 0.0, "Play"))
 		GUI.AddCtrl(NewGUIMenuItem(2, fnt, snd, 400, 240, 0.1, "Options"))

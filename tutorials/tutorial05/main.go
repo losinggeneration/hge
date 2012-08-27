@@ -117,14 +117,14 @@ func main() {
 		}
 		defer tex.Free()
 
-		dis = dist.NewDistortionMesh(cols, rows)
+		dis = dist.New(cols, rows)
 		dis.SetTexture(tex)
 		dis.SetTextureRect(0, 0, 512, 512)
 		dis.SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_ZWRITE)
 		dis.Clear(Dword(0xFF000000))
 
 		// Load a font
-		fnt = font.NewFont("font1.fnt")
+		fnt = font.New("font1.fnt")
 
 		if fnt == nil {
 			fmt.Println("Error: Can't load font1.fnt or font1.png")

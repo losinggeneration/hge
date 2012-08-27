@@ -154,11 +154,11 @@ func main() {
 		defer h.Texture_Free(bgtex)
 
 		// Load font, create sprites
-		fnt = font.NewFont("font1.fnt")
-		spr = sprite.NewSprite(tex, 0, 0, 64, 64)
+		fnt = font.New("font1.fnt")
+		spr = sprite.New(tex, 0, 0, 64, 64)
 		spr.SetHotSpot(32, 32)
 
-		bgspr = sprite.NewSprite(bgtex, 0, 0, 800, 600)
+		bgspr = sprite.New(bgtex, 0, 0, 800, 600)
 		bgspr.SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_NOZWRITE)
 		bgspr.SetColor(0xFF000000, 0)
 		bgspr.SetColor(0xFF000000, 1)

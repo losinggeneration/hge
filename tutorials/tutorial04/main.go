@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	. "github.com/losinggeneration/hge-go/helpers/font"
-	. "github.com/losinggeneration/hge-go/helpers/particle"
-	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/helpers/font"
+	"github.com/losinggeneration/hge-go/helpers/particle"
+	"github.com/losinggeneration/hge-go/helpers/sprite"
+	"github.com/losinggeneration/hge-go/hge"
 	. "github.com/losinggeneration/hge-go/hge/gfx"
 	. "github.com/losinggeneration/hge-go/hge/input"
 	. "github.com/losinggeneration/hge-go/hge/sound"
@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	spr, spt, tar Sprite
-	fnt           *Font
-	par           *ParticleSystem
+	spr, spt, tar sprite.Sprite
+	fnt           *font.Font
+	par           *particle.ParticleSystem
 
 	tex *Texture
 	snd *Effect
@@ -118,29 +118,28 @@ func RenderFunc() int {
 	BeginScene()
 	Clear(0)
 	for i := 0.0; i < 6.0; i++ {
-		tar.SetColor(Dword(0xFFFFFF | ((int)((5-i)*40+55) << 24)))
-		tar.RenderEx(i*100.0, i*50.0, i*Pi/8, 1.0-i*0.1)
+		tar.SetColor(hge.Dword(0xFFFFFF | ((int)((5-i)*40+55) << 24)))
+		tar.RenderEx(i*100.0, i*50.0, i*hge.Pi/8, 1.0-i*0.1)
 	}
-	fnt.Printf(5, 5, TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", Delta(), GetFPS())
+	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", Delta(), GetFPS())
 	EndScene()
 
 	return 0
 }
 
 func main() {
-	h := New()
-	defer h.Free()
+	h := hge.New()
 
-	h.SetState(LOGFILE, "tutorial04.log")
-	h.SetState(FRAMEFUNC, FrameFunc)
-	h.SetState(RENDERFUNC, RenderFunc)
-	h.SetState(GFXRESTOREFUNC, RestoreFunc)
-	h.SetState(TITLE, "HGE Tutorial 04 - Using render targets")
-	h.SetState(FPS, 100)
-	h.SetState(WINDOWED, true)
-	h.SetState(SCREENWIDTH, 800)
-	h.SetState(SCREENHEIGHT, 600)
-	h.SetState(SCREENBPP, 32)
+	h.SetState(hge.LOGFILE, "tutorial04.log")
+	h.SetState(hge.FRAMEFUNC, FrameFunc)
+	h.SetState(hge.RENDERFUNC, RenderFunc)
+	h.SetState(hge.GFXRESTOREFUNC, RestoreFunc)
+	h.SetState(hge.TITLE, "HGE Tutorial 04 - Using render targets")
+	h.SetState(hge.FPS, 100)
+	h.SetState(hge.WINDOWED, true)
+	h.SetState(hge.SCREENWIDTH, 800)
+	h.SetState(hge.SCREENHEIGHT, 600)
+	h.SetState(hge.SCREENBPP, 32)
 
 	if err := h.Initiate(); err == nil {
 		defer h.Shutdown()
@@ -157,21 +156,21 @@ func main() {
 		defer snd.Free()
 		defer tex.Free()
 
-		spr = NewSprite(tex, 96, 64, 32, 32)
+		spr = sprite.New(tex, 96, 64, 32, 32)
 		spr.SetColor(0xFFFFA000)
 		spr.SetHotSpot(16, 16)
 
-		fnt = NewFont("font1.fnt")
+		fnt = font.New("font1.fnt")
 
 		if fnt == nil {
 			fmt.Println("Error: Can't load font1.fnt or font1.png")
 			return
 		}
 
-		spt = NewSprite(tex, 32, 32, 32, 32)
+		spt = sprite.New(tex, 32, 32, 32, 32)
 		spt.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
 		spt.SetHotSpot(16, 16)
-		par = NewParticleSystem("trail.psi", spt)
+		par = particle.New("trail.psi", spt)
 
 		if par == nil {
 			fmt.Println("Error: Cannot load trail.psi")
@@ -182,7 +181,7 @@ func main() {
 		// Create a render target and a sprite for it
 		target = NewTarget(512, 512, false)
 		defer target.Free()
-		tar = NewSprite(target.Texture(), 0, 0, 512, 512)
+		tar = sprite.New(target.Texture(), 0, 0, 512, 512)
 		tar.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
 
 		// Let's rock now!
