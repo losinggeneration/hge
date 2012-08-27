@@ -9,24 +9,12 @@ type Rect struct {
 	clean          bool
 }
 
-func NewRect(x1, y1, x2, y2 float64) Rect {
-	var r Rect
-
-	r.X1 = x1
-	r.Y1 = y1
-	r.X2 = x2
-	r.Y2 = y2
-	r.clean = false
-
-	return r
+func New(x1, y1, x2, y2 float64) *Rect {
+	return &Rect{x1, y1, x2, y2, false}
 }
 
-func NewCleanRect() Rect {
-	var r Rect
-
-	r.clean = true
-
-	return r
+func NewClean() *Rect {
+	return &Rect{0, 0, 0, 0, true}
 }
 
 func (rect *Rect) Clear() {
