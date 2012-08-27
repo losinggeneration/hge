@@ -1,8 +1,8 @@
 package animation
 
 import (
-	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
+	"github.com/losinggeneration/hge-go/helpers/sprite"
+	"github.com/losinggeneration/hge-go/hge/gfx"
 )
 
 const (
@@ -15,17 +15,17 @@ const (
 )
 
 type Animation struct {
-	Sprite
+	sprite.Sprite
 	origWidth                     int
 	playing                       bool
 	speed, sinceLastFrame         float64
 	mode, delta, frames, curFrame int
 }
 
-func NewAnimation(tex *Texture, frames int, fps, x, y, w, h float64) Animation {
+func New(tex *gfx.Texture, frames int, fps, x, y, w, h float64) Animation {
 	var a Animation
 
-	a.Sprite = NewSprite(tex, x, y, w, h)
+	a.Sprite = sprite.New(tex, x, y, w, h)
 
 	a.origWidth = tex.Width(true)
 
@@ -108,7 +108,7 @@ func (a Animation) IsPlaying() bool {
 	return a.playing
 }
 
-func (a *Animation) SetTexture(tex *Texture) {
+func (a *Animation) SetTexture(tex *gfx.Texture) {
 	a.Sprite.SetTexture(tex)
 	a.origWidth = tex.Width(true)
 }

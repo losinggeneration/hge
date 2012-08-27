@@ -2,14 +2,14 @@ package particle
 
 import (
 	"C"
-	. "github.com/losinggeneration/hge-go/helpers/color"
-	. "github.com/losinggeneration/hge-go/helpers/rect"
-	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/helpers/vector"
+	"github.com/losinggeneration/hge-go/helpers/color"
+	"github.com/losinggeneration/hge-go/helpers/rect"
+	"github.com/losinggeneration/hge-go/helpers/sprite"
+	"github.com/losinggeneration/hge-go/helpers/vector"
 	"github.com/losinggeneration/hge-go/hge"
 	"github.com/losinggeneration/hge-go/hge/rand"
-	. "github.com/losinggeneration/hge-go/hge/resource"
-	. "github.com/losinggeneration/hge-go/hge/timer"
+	"github.com/losinggeneration/hge-go/hge/resource"
+	"github.com/losinggeneration/hge-go/hge/timer"
 	"math"
 	"reflect"
 	"unsafe"
@@ -23,19 +23,19 @@ const (
 type cast unsafe.Pointer
 
 type particle struct {
-	location Vector
-	velocity Vector
+	location vector.Vector
+	velocity vector.Vector
 
 	gravity, radialAccel, tangentialAccel float64
 	spin, spinDelta                       float64
 	size, sizeDelta                       float64
-	color, colorDelta                     ColorRGB
+	color, colorDelta                     color.ColorRGB
 
 	age, terminalAge float64
 }
 
 type ParticleSystemInfo struct {
-	Sprite                         // texture + blend mode
+	sprite.Sprite                  // texture + blend mode
 	Emission                   int // particles per sec
 	Lifetime, LifeMin, LifeMax float64
 	Direction, Spread          float64
@@ -49,7 +49,7 @@ type ParticleSystemInfo struct {
 	SizeStart, SizeEnd, SizeVar            float64
 	SpinStart, SpinEnd, SpinVar            float64
 
-	ColorStart, ColorEnd ColorRGB
+	ColorStart, ColorEnd color.ColorRGB
 
 	ColorVar, AlphaVar float64
 }
@@ -58,19 +58,19 @@ type ParticleSystem struct {
 	Info ParticleSystemInfo
 
 	updateSpeed, residue, age, emissionResidue float64
-	prevLocation, location                     Vector
+	prevLocation, location                     vector.Vector
 
 	tx, ty float64
 
 	particlesAlive    int
-	boundingBox       Rect
+	boundingBox       rect.Rect
 	updateBoundingBox bool
 	particles         []particle
 	h                 *hge.HGE
 	rand              *rand.Rand
 }
 
-func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *ParticleSystem {
+func New(filename string, sprite sprite.Sprite, a ...interface{}) *ParticleSystem {
 	ps := new(ParticleSystem)
 	if len(a) == 1 {
 		if fps, ok := a[0].(float64); ok {
@@ -81,10 +81,10 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 	}
 
 	ps.h = hge.New()
-	ps.rand = rand.New(int(Time()))
+	ps.rand = rand.New(int(timer.Time()))
 	ps.rand.Seed()
 
-	ptr := LoadBytes(filename)
+	ptr := resource.LoadBytes(filename)
 
 	if ptr == nil {
 		ps.h.Log("Particle file (%s) seems to be empty.", filename)
@@ -137,7 +137,7 @@ func NewParticleSystem(filename string, sprite Sprite, a ...interface{}) *Partic
 	return ps
 }
 
-func NewParticleSystemWithInfo(psi ParticleSystemInfo, a ...interface{}) *ParticleSystem {
+func NewWithInfo(psi ParticleSystemInfo, a ...interface{}) *ParticleSystem {
 	ps := new(ParticleSystem)
 	if len(a) == 1 {
 		if fps, ok := a[0].(float64); ok {
@@ -267,7 +267,7 @@ func (ps ParticleSystem) Transposition() (x, y float64) {
 	return ps.tx, ps.ty
 }
 
-func (ps ParticleSystem) BoundingBox(rect *Rect) *Rect {
+func (ps ParticleSystem) BoundingBox(rect *rect.Rect) *rect.Rect {
 	rect.SetRect(ps.boundingBox)
 	return rect
 }
@@ -433,7 +433,7 @@ func (pm *ParticleManager) SpawPS(psi ParticleSystemInfo, x, y float64) *Particl
 		return nil
 	}
 
-	pm.list[pm.ps] = NewParticleSystemWithInfo(psi, pm.fps)
+	pm.list[pm.ps] = NewWithInfo(psi, pm.fps)
 	pm.list[pm.ps].FireAt(x, y)
 	pm.list[pm.ps].Transpose(pm.x, pm.y)
 	pm.ps++

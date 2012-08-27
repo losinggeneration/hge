@@ -24,15 +24,11 @@ type Color interface {
 	GetHWColor() Dword
 }
 
-func NewColorRGB(r, g, b, a float64) ColorRGB {
-	var c ColorRGB
-
-	c.R, c.G, c.B, c.A = r, g, b, a
-
-	return c
+func NewRGB(r, g, b, a float64) ColorRGB {
+	return ColorRGB{r, g, b, a}
 }
 
-func NewColorRGBCol(col Dword) ColorRGB {
+func NewRGBCol(col Dword) ColorRGB {
 	var c ColorRGB
 
 	c.SetHWColor(col)
@@ -41,15 +37,15 @@ func NewColorRGBCol(col Dword) ColorRGB {
 }
 
 func (c ColorRGB) Sub(c2 ColorRGB) ColorRGB {
-	return NewColorRGB(c.R-c2.R, c.G-c2.G, c.B-c2.B, c.A-c2.A)
+	return NewRGB(c.R-c2.R, c.G-c2.G, c.B-c2.B, c.A-c2.A)
 }
 
 func (c ColorRGB) Add(c2 ColorRGB) ColorRGB {
-	return NewColorRGB(c.R+c2.R, c.G+c2.G, c.B+c2.B, c.A+c2.A)
+	return NewRGB(c.R+c2.R, c.G+c2.G, c.B+c2.B, c.A+c2.A)
 }
 
 func (c ColorRGB) Mul(c2 ColorRGB) ColorRGB {
-	return NewColorRGB(c.R*c2.R, c.G*c2.G, c.B*c2.B, c.A*c2.A)
+	return NewRGB(c.R*c2.R, c.G*c2.G, c.B*c2.B, c.A*c2.A)
 }
 
 func (c *ColorRGB) SubEqual(c2 ColorRGB) *ColorRGB {
@@ -75,11 +71,11 @@ func (c ColorRGB) Eq(c2 ColorRGB) bool {
 }
 
 func (c ColorRGB) DivScalar(scalar float64) ColorRGB {
-	return NewColorRGB(c.R/scalar, c.G/scalar, c.B/scalar, c.A/scalar)
+	return NewRGB(c.R/scalar, c.G/scalar, c.B/scalar, c.A/scalar)
 }
 
 func (c ColorRGB) MulScalar(scalar float64) ColorRGB {
-	return NewColorRGB(c.R*scalar, c.G*scalar, c.B*scalar, c.A*scalar)
+	return NewRGB(c.R*scalar, c.G*scalar, c.B*scalar, c.A*scalar)
 }
 
 func (c *ColorRGB) MulScalarEqual(scalar float64) *ColorRGB {
@@ -113,15 +109,11 @@ type ColorHSV struct {
 	H, S, V, A float64
 }
 
-func NewColorHSV(h, s, v, a float64) ColorHSV {
-	var c ColorHSV
-
-	c.H, c.S, c.V, c.A = h, s, v, a
-
-	return c
+func NewHSV(h, s, v, a float64) ColorHSV {
+	return ColorHSV{h, s, v, a}
 }
 
-func NewColorHSVCol(col Dword) ColorHSV {
+func NewHSVCol(col Dword) ColorHSV {
 	var c ColorHSV
 
 	c.SetHWColor(col)
@@ -130,15 +122,15 @@ func NewColorHSVCol(col Dword) ColorHSV {
 }
 
 func (c ColorHSV) Sub(c2 ColorHSV) ColorHSV {
-	return NewColorHSV(c.H-c2.H, c.S-c2.S, c.V-c2.V, c.A-c2.A)
+	return NewHSV(c.H-c2.H, c.S-c2.S, c.V-c2.V, c.A-c2.A)
 }
 
 func (c ColorHSV) Add(c2 ColorHSV) ColorHSV {
-	return NewColorHSV(c.H+c2.H, c.S+c2.S, c.V+c2.V, c.A+c2.A)
+	return NewHSV(c.H+c2.H, c.S+c2.S, c.V+c2.V, c.A+c2.A)
 }
 
 func (c ColorHSV) Mul(c2 ColorHSV) ColorHSV {
-	return NewColorHSV(c.H*c2.H, c.S*c2.S, c.V*c2.V, c.A*c2.A)
+	return NewHSV(c.H*c2.H, c.S*c2.S, c.V*c2.V, c.A*c2.A)
 }
 
 func (c *ColorHSV) SubEqual(c2 ColorHSV) *ColorHSV {
@@ -164,11 +156,11 @@ func (c ColorHSV) Eq(c2 ColorHSV) bool {
 }
 
 func (c ColorHSV) DivScalar(scalar float64) ColorHSV {
-	return NewColorHSV(c.H/scalar, c.S/scalar, c.V/scalar, c.A/scalar)
+	return NewHSV(c.H/scalar, c.S/scalar, c.V/scalar, c.A/scalar)
 }
 
 func (c ColorHSV) MulScalar(scalar float64) ColorHSV {
-	return NewColorHSV(c.H*scalar, c.S*scalar, c.V*scalar, c.A*scalar)
+	return NewHSV(c.H*scalar, c.S*scalar, c.V*scalar, c.A*scalar)
 }
 
 func (c *ColorHSV) MulScalarEqual(scalar float64) *ColorHSV {

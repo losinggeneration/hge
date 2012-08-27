@@ -3,24 +3,24 @@ package guictrls
 import (
 	"container/list"
 	"fmt"
-	. "github.com/losinggeneration/hge-go/helpers/font"
-	. "github.com/losinggeneration/hge-go/helpers/gui"
-	. "github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
-	. "github.com/losinggeneration/hge-go/hge/input"
+	"github.com/losinggeneration/hge-go/helpers/font"
+	"github.com/losinggeneration/hge-go/helpers/gui"
+	"github.com/losinggeneration/hge-go/helpers/sprite"
+	"github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge/gfx"
+	"github.com/losinggeneration/hge-go/hge/input"
 )
 
 type GUIText struct {
-	GUIObject
+	gui.GUIObject
 
-	font   *Font
+	font   *font.Font
 	tx, ty float64
 	align  int
 	text   string
 }
 
-func NewGUIText(id int, x, y, w, h float64, fnt *Font) *GUIText {
+func NewGUIText(id int, x, y, w, h float64, fnt *font.Font) *GUIText {
 	t := new(GUIText)
 
 	t.GUIObject.Initialize()
@@ -56,13 +56,13 @@ func (t *GUIText) Printf(format string, a ...interface{}) {
 }
 
 type GUIButton struct {
-	GUIObject
+	gui.GUIObject
 
 	trigger, pressed, oldState bool
-	up, down                   Sprite
+	up, down                   sprite.Sprite
 }
 
-func NewGUIButton(id int, x, y, w, h float64, tex *Texture, tx, ty float64) *GUIButton {
+func NewGUIButton(id int, x, y, w, h float64, tex *gfx.Texture, tx, ty float64) *GUIButton {
 	b := new(GUIButton)
 
 	b.GUIObject.Initialize()
@@ -72,8 +72,8 @@ func NewGUIButton(id int, x, y, w, h float64, tex *Texture, tx, ty float64) *GUI
 	b.GUIObject.Enabled = true
 	b.GUIObject.Rect.Set(x, y, x+w, y+h)
 
-	b.up = NewSprite(tex, tx, ty, w, h)
-	b.down = NewSprite(tex, tx+w, ty, w, h)
+	b.up = sprite.New(tex, tx, ty, w, h)
+	b.down = sprite.New(tex, tx+w, ty, w, h)
 
 	b.GUIObject.Render = func() {
 		if b.pressed {
@@ -121,15 +121,15 @@ const (
 )
 
 type GUISlider struct {
-	GUIObject
+	gui.GUIObject
 	pressed, vertical bool
 	mode              int
 	min, max, val     float64
 	sl_w, sl_h        float64
-	Sprite
+	sprite.Sprite
 }
 
-func NewGUISlider(id int, x, y, w, h float64, tex *Texture, tx, ty, sw, sh float64, a ...interface{}) *GUISlider {
+func NewGUISlider(id int, x, y, w, h float64, tex *gfx.Texture, tx, ty, sw, sh float64, a ...interface{}) *GUISlider {
 	s := new(GUISlider)
 
 	if len(a) == 1 {
@@ -149,7 +149,7 @@ func NewGUISlider(id int, x, y, w, h float64, tex *Texture, tx, ty, sw, sh float
 	s.max, s.val = 100, 50
 	s.sl_w, s.sl_h = sw, sh
 
-	s.Sprite = NewSprite(tex, tx, ty, sw, sh)
+	s.Sprite = sprite.New(tex, tx, ty, sw, sh)
 
 	s.GUIObject.Render = func() {
 		var x1, y1, x2, y2 float64
@@ -259,17 +259,17 @@ type guiListboxItem struct {
 }
 
 type GUIListBox struct {
-	GUIObject
+	gui.GUIObject
 
-	highlight Sprite
-	*Font
-	color, highlightColor        Dword
+	highlight sprite.Sprite
+	*font.Font
+	color, highlightColor        hge.Dword
 	items, selectedItem, topItem int
 	mx, my                       float64
 	*list.List
 }
 
-func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor, spriteHighlightColor Dword) *GUIListBox {
+func NewGUIListBox(id int, x, y, w, h float64, fnt *font.Font, color, highlightColor, spriteHighlightColor hge.Dword) *GUIListBox {
 	l := new(GUIListBox)
 
 	l.GUIObject.Initialize()
@@ -278,8 +278,8 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 	l.GUIObject.Visible = true
 	l.GUIObject.Enabled = true
 	l.GUIObject.Rect.Set(x, y, x+w, y+h)
-	l.Font = font
-	l.highlight = NewSprite(nil, 0, 0, w, font.GetHeight())
+	l.Font = fnt
+	l.highlight = sprite.New(nil, 0, 0, w, fnt.GetHeight())
 	l.highlight.SetColor(highlightColor)
 	l.color = color
 	l.highlightColor = highlightColor
@@ -307,7 +307,7 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 				l.Font.SetColor(l.color)
 			}
 
-			l.Font.Render(l.GUIObject.Rect.X1+3, l.GUIObject.Rect.Y1+float64(i)*l.Font.GetHeight(), TEXT_LEFT, item.Value.(*guiListboxItem).text)
+			l.Font.Render(l.GUIObject.Rect.X1+3, l.GUIObject.Rect.Y1+float64(i)*l.Font.GetHeight(), font.TEXT_LEFT, item.Value.(*guiListboxItem).text)
 
 			item = item.Next()
 		}
@@ -341,9 +341,9 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 		return true
 	}
 
-	l.GUIObject.KeyClick = func(key Key, chr int) bool {
+	l.GUIObject.KeyClick = func(key input.Key, chr int) bool {
 		switch key {
-		case K_DOWN:
+		case input.K_DOWN:
 			if l.selectedItem < l.Len()-1 {
 				l.selectedItem++
 				if l.selectedItem > l.topItem+l.NumRows()-1 {
@@ -352,7 +352,7 @@ func NewGUIListBox(id int, x, y, w, h float64, font *Font, color, highlightColor
 				return true
 			}
 
-		case K_UP:
+		case input.K_UP:
 			if l.selectedItem > 0 {
 				l.selectedItem--
 				if l.selectedItem < l.topItem {

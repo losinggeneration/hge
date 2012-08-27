@@ -15,7 +15,7 @@ type StringTable struct {
 	stringsMap map[string]string
 }
 
-func NewStringTable(filename string) *StringTable {
+func New(filename string) *StringTable {
 	st := new(StringTable)
 	h := hge.New()
 

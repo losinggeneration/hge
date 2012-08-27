@@ -4,10 +4,10 @@ import (
 	"C"
 	"errors"
 	"fmt"
-	. "github.com/losinggeneration/hge-go/helpers/sprite"
+	"github.com/losinggeneration/hge-go/helpers/sprite"
 	"github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
-	. "github.com/losinggeneration/hge-go/hge/resource"
+	"github.com/losinggeneration/hge-go/hge/gfx"
+	"github.com/losinggeneration/hge-go/hge/resource"
 	"strconv"
 	"strings"
 )
@@ -34,8 +34,8 @@ const (
  * Font struct
  */
 type Font struct {
-	texture    *Texture
-	letters    [256]*Sprite
+	texture    *gfx.Texture
+	letters    [256]*sprite.Sprite
 	pre        [256]float64
 	post       [256]float64
 	height     float64
@@ -101,7 +101,7 @@ func tokenizeChar(value string) (chr byte, x, y, w, h, a, c float64) {
 	return
 }
 
-func NewFont(filename string, arg ...interface{}) *Font {
+func New(filename string, arg ...interface{}) *Font {
 	mipmap := false
 
 	if len(arg) == 1 {
@@ -118,10 +118,10 @@ func NewFont(filename string, arg ...interface{}) *Font {
 	f.spacing = 1.0
 
 	f.z = 0.5
-	f.blend = BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE
+	f.blend = gfx.BLEND_COLORMUL | gfx.BLEND_ALPHABLEND | gfx.BLEND_NOZWRITE
 	f.color = 0xFFFFFFFF
 
-	desc := LoadString(filename)
+	desc := resource.LoadString(filename)
 
 	if desc == nil {
 		h.Log("Font %s seems to be empty.", filename)
@@ -149,11 +149,11 @@ func NewFont(filename string, arg ...interface{}) *Font {
 		}
 
 		if option == fntBITMAPTAG {
-			f.texture = LoadTexture(value, 0, mipmap)
+			f.texture = gfx.LoadTexture(value, 0, mipmap)
 		} else if option == fntCHARTAG {
 			chr, x, y, w, h, a, c := tokenizeChar(value)
 
-			sprt := NewSprite(f.texture, x, y, w, h)
+			sprt := sprite.New(f.texture, x, y, w, h)
 
 			f.letters[chr] = &sprt
 			f.pre[chr] = a
@@ -290,7 +290,7 @@ func (f Font) GetSpacing() float64 {
 	return f.spacing
 }
 
-func (f Font) GetSprite(chr byte) *Sprite {
+func (f Font) GetSprite(chr byte) *sprite.Sprite {
 	return f.letters[chr]
 }
 

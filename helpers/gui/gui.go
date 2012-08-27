@@ -2,10 +2,10 @@ package gui
 
 import (
 	"container/list"
-	. "github.com/losinggeneration/hge-go/helpers/rect"
-	. "github.com/losinggeneration/hge-go/helpers/sprite"
+	"github.com/losinggeneration/hge-go/helpers/rect"
+	"github.com/losinggeneration/hge-go/helpers/sprite"
 	"github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/input"
+	"github.com/losinggeneration/hge-go/hge/input"
 )
 
 const (
@@ -18,8 +18,8 @@ const (
 type GUIObject struct {
 	Id                       int
 	Static, Visible, Enabled bool
-	Rect                     Rect
-	Color                    hge.Dword
+	rect.Rect
+	Color hge.Dword
 	*GUI
 
 	Render func()
@@ -36,7 +36,7 @@ type GUIObject struct {
 	MouseLButton func(down bool) bool
 	MouseRButton func(down bool) bool
 	MouseWheel   func(notches int) bool
-	KeyClick     func(key Key, chr int) bool
+	KeyClick     func(key input.Key, chr int) bool
 
 	SetColor func(color hge.Dword)
 }
@@ -56,7 +56,7 @@ func (gobj *GUIObject) Initialize() {
 	gobj.MouseLButton = func(down bool) bool { return false }
 	gobj.MouseRButton = func(down bool) bool { return false }
 	gobj.MouseWheel = func(notches int) bool { return false }
-	gobj.KeyClick = func(key Key, chr int) bool { return false }
+	gobj.KeyClick = func(key input.Key, chr int) bool { return false }
 
 	gobj.SetColor = func(color hge.Dword) { gobj.Color = color }
 }
@@ -65,12 +65,12 @@ type GUI struct {
 	ctrls                                    *list.List
 	ctrlLock, ctrlFocus, ctrlOver            *GUIObject
 	navMode, enterLeave                      int
-	cursor                                   *Sprite
-	mouse                                    Mouse
+	cursor                                   *sprite.Sprite
+	mouse                                    input.Mouse
 	lPressed, lReleased, rPressed, rReleased bool
 }
 
-func NewGUI() GUI {
+func New() GUI {
 	var g GUI
 
 	g.ctrls = list.New()
@@ -153,7 +153,7 @@ func (g *GUI) SetNavMode(mode int) {
 	g.navMode = mode
 }
 
-func (g *GUI) SetCursor(spr *Sprite) {
+func (g *GUI) SetCursor(spr *sprite.Sprite) {
 	g.cursor = spr
 }
 
@@ -230,10 +230,10 @@ func (g *GUI) Move(dx, dy float64) {
 func (g *GUI) Update(dt float64) int {
 	// Update the mouse variables
 	g.mouse.Pos()
-	g.lPressed = NewKey(K_LBUTTON).Down()
-	g.lReleased = NewKey(K_LBUTTON).Up()
-	g.rPressed = NewKey(K_RBUTTON).Down()
-	g.rReleased = NewKey(K_RBUTTON).Up()
+	g.lPressed = input.NewKey(input.K_LBUTTON).Down()
+	g.lReleased = input.NewKey(input.K_LBUTTON).Up()
+	g.rPressed = input.NewKey(input.K_RBUTTON).Down()
+	g.rReleased = input.NewKey(input.K_RBUTTON).Up()
 	g.mouse.WheelMovement()
 
 	// Update all controls
@@ -262,9 +262,9 @@ func (g *GUI) Update(dt float64) int {
 	}
 
 	// Handle keys
-	key := GetKey()
-	if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == K_LEFT) ||
-		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == K_UP) {
+	key := input.GetKey()
+	if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == input.K_LEFT) ||
+		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == input.K_UP) {
 		ctrl := g.ctrlFocus
 		if ctrl == nil {
 			e := g.ctrls.Front()
@@ -303,8 +303,8 @@ func (g *GUI) Update(dt float64) int {
 			}
 			g.ctrlFocus = ctrl
 		}
-	} else if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == K_RIGHT) ||
-		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == K_DOWN) {
+	} else if ((g.navMode&GUI_LEFTRIGHT) == GUI_LEFTRIGHT && key == input.K_RIGHT) ||
+		((g.navMode&GUI_UPDOWN) == GUI_UPDOWN && key == input.K_DOWN) {
 		ctrl := g.ctrlFocus
 		if ctrl == nil {
 			e := g.ctrls.Back()
@@ -343,15 +343,15 @@ func (g *GUI) Update(dt float64) int {
 			}
 			g.ctrlFocus = ctrl
 		}
-	} else if g.ctrlFocus != nil && key > 0 && key != K_LBUTTON && key != K_RBUTTON {
-		if g.ctrlFocus.KeyClick(key, GetChar()) {
+	} else if g.ctrlFocus != nil && key > 0 && key != input.K_LBUTTON && key != input.K_RBUTTON {
+		if g.ctrlFocus.KeyClick(key, input.GetChar()) {
 			return g.ctrlFocus.Id
 		}
 	}
 
 	// Handle mouse
-	lDown := NewKey(K_LBUTTON).State()
-	rDown := NewKey(K_RBUTTON).State()
+	lDown := input.NewKey(input.K_LBUTTON).State()
+	rDown := input.NewKey(input.K_RBUTTON).State()
 
 	if g.ctrlLock != nil {
 		ctrl := g.ctrlLock
