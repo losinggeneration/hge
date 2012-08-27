@@ -10,24 +10,20 @@ type Vector struct {
 	X, Y float64
 }
 
-func NewVector(x, y float64) Vector {
-	var v Vector
-
-	v.X, v.Y = x, y
-
-	return v
+func New(x, y float64) Vector {
+	return Vector{x, y}
 }
 
 func (v Vector) Neg() Vector {
-	return NewVector(-v.X, -v.Y)
+	return New(-v.X, -v.Y)
 }
 
 func (v Vector) Sub(v2 Vector) Vector {
-	return NewVector(v.X-v2.X, v.Y-v2.Y)
+	return New(v.X-v2.X, v.Y-v2.Y)
 }
 
 func (v Vector) Add(v2 Vector) Vector {
-	return NewVector(v.X+v2.X, v.Y+v2.Y)
+	return New(v.X+v2.X, v.Y+v2.Y)
 }
 
 func (v *Vector) SubEqual(v2 Vector) *Vector {
@@ -47,11 +43,11 @@ func (v Vector) Eq(v2 Vector) bool {
 }
 
 func (v Vector) Div(scalar float64) Vector {
-	return NewVector(v.X/scalar, v.Y/scalar)
+	return New(v.X/scalar, v.Y/scalar)
 }
 
 func (v Vector) Mul(scalar float64) Vector {
-	return NewVector(v.X*scalar, v.Y*scalar)
+	return New(v.X*scalar, v.Y*scalar)
 }
 
 func (v *Vector) MulEqual(scalar float64) *Vector {
@@ -71,11 +67,10 @@ func (v Vector) Len() float64 {
 func (v Vector) Angle(arg ...interface{}) float64 {
 	if len(arg) == 1 {
 		if vec, ok := arg[0].(Vector); ok {
-			s, t := vec, vec
+			v.Normalize()
+			vec.Normalize()
 
-			s.Normalize()
-			t.Normalize()
-			return math.Acos(s.Dot(t))
+			return math.Acos(v.Dot(vec))
 		}
 	} else {
 		return math.Atan2(v.Y, v.X)
