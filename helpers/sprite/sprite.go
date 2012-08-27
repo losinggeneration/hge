@@ -1,21 +1,21 @@
 package sprite
 
 import (
-	. "github.com/losinggeneration/hge-go/helpers/rect"
-	. "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
+	"github.com/losinggeneration/hge-go/helpers/rect"
+	"github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge/gfx"
 	"math"
 )
 
 type Sprite struct {
-	Quad
+	gfx.Quad
 	TX, TY, W, H         float64
 	TexW, TexH           float64
 	HotX, HotY           float64
 	XFlip, YFlip, HSFlip bool
 }
 
-func NewSprite(texture *Texture, texx, texy, w, h float64) Sprite {
+func New(texture *gfx.Texture, texx, texy, w, h float64) Sprite {
 	var sprite Sprite
 
 	sprite.TX, sprite.TY = texx, texy
@@ -51,7 +51,7 @@ func NewSprite(texture *Texture, texx, texy, w, h float64) Sprite {
 	sprite.Quad.V[2].Color = 0xffffffff
 	sprite.Quad.V[3].Color = 0xffffffff
 
-	sprite.Quad.Blend = BLEND_DEFAULT
+	sprite.Quad.Blend = gfx.BLEND_DEFAULT
 
 	return sprite
 }
@@ -145,7 +145,7 @@ func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64) {
 	sprite.Quad.Render()
 }
 
-func (sprite *Sprite) SetTexture(tex *Texture) {
+func (sprite *Sprite) SetTexture(tex *gfx.Texture) {
 	var tw, th float64
 
 	sprite.Quad.Texture = tex
@@ -208,7 +208,7 @@ func (sprite *Sprite) SetTextureRect(x, y, w, h float64, a ...interface{}) {
 	sprite.SetFlip(bX, bY, bHS)
 }
 
-func (sprite *Sprite) SetColor(col Dword, arg ...interface{}) {
+func (sprite *Sprite) SetColor(col hge.Dword, arg ...interface{}) {
 	i := -1
 
 	if len(arg) == 1 {
@@ -308,7 +308,7 @@ func (sprite *Sprite) SetFlip(x, y, hotSpot bool) {
 	}
 }
 
-func (sprite *Sprite) Texture() *Texture {
+func (sprite *Sprite) Texture() *gfx.Texture {
 	return sprite.Quad.Texture
 }
 
@@ -316,7 +316,7 @@ func (sprite *Sprite) TextureRect() (x, y, w, h float64) {
 	return sprite.TX, sprite.TY, sprite.W, sprite.H
 }
 
-func (sprite *Sprite) Color(arg ...interface{}) Dword {
+func (sprite *Sprite) Color(arg ...interface{}) hge.Dword {
 	i := 0
 	if len(arg) == 1 {
 		if ni, ok := arg[0].(int); ok {
@@ -360,16 +360,15 @@ func (sprite *Sprite) Height() float64 {
 	return sprite.H
 }
 
-func (sprite *Sprite) BoundingBox(x, y float64, rect *Rect) *Rect {
-	rect.Set(x-sprite.HotX, y-sprite.HotY, x-sprite.HotX+sprite.W, y-sprite.HotY+sprite.H)
-	return rect
+func (sprite *Sprite) BoundingBox(x, y float64) *rect.Rect {
+	return rect.New(x-sprite.HotX, y-sprite.HotY, x-sprite.HotX+sprite.W, y-sprite.HotY+sprite.H)
 }
 
-func (sprite *Sprite) BoundingBoxEx(x, y, rot, hscale, vscale float64, rect *Rect) *Rect {
+func (sprite *Sprite) BoundingBoxEx(x, y, rot, hscale, vscale float64) *rect.Rect {
 	var tx1, ty1, tx2, ty2 float64
 	var sint, cost float64
 
-	rect.Clear()
+	rect := new(rect.Rect)
 
 	tx1 = -sprite.HotX * hscale
 	ty1 = -sprite.HotY * vscale
