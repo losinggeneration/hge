@@ -31,7 +31,6 @@ func NewEffect(filename string, a ...interface{}) *Effect {
 
 	if len(a) == 1 {
 		if s, ok := a[0].(hge.Dword); ok {
-			// 			return Effect(C.HGE_Effect_Load(soundHGE.HGE, fname, C.DWORD(size)))
 			size = s
 		}
 	}
