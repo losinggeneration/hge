@@ -33,17 +33,6 @@ const (
 	Two_Pi = 2 / math.Pi
 )
 
-// Hardware color macros
-// #define ARGB(a,r,g,b)	((Dword(a)<<24) + (Dword(r)<<16) + (Dword(g)<<8) + Dword(b))
-// #define GETA(col)		((col)>>24)
-// #define GETR(col)		(((col)>>16) & 0xFF)
-// #define GETG(col)		(((col)>>8) & 0xFF)
-// #define GETB(col)		((col) & 0xFF)
-// #define SETA(col,a)		(((col) & 0x00FFFFFF) + (Dword(a)<<24))
-// #define SETR(col,r)		(((col) & 0xFF00FFFF) + (Dword(r)<<16))
-// #define SETG(col,g)		(((col) & 0xFFFF00FF) + (Dword(g)<<8))
-// #define SETB(col,b)		(((col) & 0xFFFFFF00) + Dword(b))
-
 // HGE System state constants
 const (
 	WINDOWED      BoolState = C.HGE_C_WINDOWED      // bool run in window? (default: false)
