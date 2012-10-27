@@ -1,7 +1,5 @@
 package rand
 
-import "github.com/losinggeneration/hge-go/hge"
-
 func Seed(a ...interface{}) {
 	seed := 1
 	if len(a) == 1 {
@@ -29,12 +27,11 @@ func Float64(min, max float64) float64 {
 }
 
 type Rand struct {
-	seed    int
-	randHGE *hge.HGE
+	seed int
 }
 
 func New(seed int) *Rand {
-	return &Rand{seed, hge.New()}
+	return &Rand{seed}
 }
 
 func (r *Rand) Seed() {
