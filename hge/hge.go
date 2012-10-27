@@ -1,8 +1,12 @@
 package hge
 
 import (
+	"fmt"
+	"github.com/losinggeneration/hge-go/hge/rand"
+	"log"
 	"math"
-	"runtime"
+	"os"
+	"time"
 )
 
 const (
@@ -31,7 +35,7 @@ const (
 
 	SHOWSPLASH BoolState = iota // bool show splash? (default: true)
 
-// 	BOOLSTATE_FORCE_DWORD BoolState = C.HGE_C_BOOLSTATE_FORCE_DWORD
+	boolstate BoolState = iota
 )
 
 const (
@@ -42,14 +46,14 @@ const (
 	GFXRESTOREFUNC FuncState = iota // func() bool gfx restore function (default: nil)
 	EXITFUNC       FuncState = iota // func() bool exit function (default: nil)
 
-// 	FUNCSTATE_FORCE_DWORD FuncState = C.HGE_C_FUNCSTATE_FORCE_DWORD
+	funcstate FuncState = iota
 )
 
 const (
 	HWND       HwndState = iota // int		window handle: read only
 	HWNDPARENT HwndState = iota // int		parent win handle	(default: 0)
 
-// 	HWNDSTATE_FORCE_DWORD HwndState = C.HGE_C_HWNDSTATE_FORCE_DWORD
+	hwndstate HwndState = iota
 )
 
 type Hwnd struct {
@@ -72,7 +76,7 @@ const (
 	ORIGSCREENWIDTH  IntState = iota // int original screen width (default: 800 ... not valid until hge.System_Initiate()!)
 	ORIGSCREENHEIGHT IntState = iota // int original screen height (default: 600 ... not valid until hge.System_Initiate()!))
 
-// 	INTSTATE_FORCE_DWORD IntState = C.HGE_C_INTSTATE_FORCE_DWORD
+	intstate IntState = iota
 )
 
 const (
@@ -82,7 +86,7 @@ const (
 	INIFILE StringState = iota // string ini file (default: nil) (meaning no file)
 	LOGFILE StringState = iota // string log file (default: nil) (meaning no file)
 
-// 	STRINGSTATE_FORCE_DWORD StringState = C.HGE_C_STRINGSTATE_FORCE_DWORD
+	stringstate StringState = iota
 )
 
 type (
@@ -93,7 +97,15 @@ type (
 	StringState int
 )
 
-type StateFunc func() int
+type StateFunc func() bool
+
+var (
+	stateBools   = new([boolstate]bool)
+	stateFuncs   = new([funcstate]StateFunc)
+	stateHwnds   = new([hwndstate]*Hwnd)
+	stateInts    = new([intstate]int)
+	stateStrings = new([stringstate]string)
+)
 
 // HGE_POWERSTATUS system state special constants
 const (
@@ -101,8 +113,9 @@ const (
 	PWR_UNSUPPORTED = iota
 )
 
-// HGE struct from C
+// HGE struct
 type HGE struct {
+	log *log.Logger
 }
 
 type Error struct {
@@ -124,19 +137,46 @@ func New(a ...interface{}) *HGE {
 	}
 
 	h := new(HGE)
-	runtime.SetFinalizer(h, func(hge *HGE) {
-		hge.Free()
-	})
 
 	return h
 }
 
-// Releases the memory the C++ library allocated for the HGE struct
-func (h *HGE) Free() {
-}
-
 // Initializes hardware and software needed to run engine.
-func (h *HGE) Initiate() error {
+func (h *HGE) Initialize() error {
+	h.Log("")
+	h.Log("-------------------------------------------------------------------")
+	h.Log(" hge-go can be found at http://github.com/losinggeneration/hge-go/")
+	h.Log("  Please don't bother Relish Games about the Go port of HGE.")
+	h.Log(" They are responsible for the Windows C++ version, not this build.")
+	h.Log("-------------------------------------------------------------------")
+	h.Log("")
+
+	h.Log("HGE Started...")
+
+	h.Log("hge-unix version: %X.%X.%X", VERSION>>8, (VERSION&0xF0)>>4, VERSION&0xF)
+
+	h.Log("Date: %s", time.Now())
+
+	h.Log("Application: %s", stateStrings[TITLE])
+
+	// Init subsystems
+	if err := initNative(); err != nil {
+		h.Shutdown()
+		return err
+	}
+	rand.Seed()
+	initPowerStatus()
+	initInput()
+	if err := initGfx(); err != nil {
+		h.Shutdown()
+		return err
+	}
+	if err := initSound(); err != nil {
+		h.Shutdown()
+		return err
+	}
+
+	h.Log("Init done.\n")
 	return nil
 }
 
@@ -144,8 +184,8 @@ func (h *HGE) Initiate() error {
 func (h *HGE) Shutdown() {
 }
 
-// Starts running user defined frame func (h *HGE)tion.
-func (h *HGE) Start() error {
+// Starts running user defined frame function.
+func (h *HGE) Run() error {
 	return nil
 }
 
@@ -156,6 +196,9 @@ func (h *HGE) GetErrorMessage() string {
 
 // Writes a formatted message to the log file.
 func (h *HGE) Log(format string, v ...interface{}) {
+	if h.log != nil {
+		h.log.Printf(">> "+format, v...)
+	}
 }
 
 // Launches an URL or external executable/data file.
@@ -170,59 +213,111 @@ func (h *HGE) Snapshot(a ...interface{}) {
 // Sets internal system states.
 // First param should be one of: BoolState, IntState, StringState, FuncState, HwndState
 // Second parameter must be of the matching type, bool, int, string, StateFunc/func (h *HGE)() int, *Hwnd
-func (h *HGE) SetState(a ...interface{}) {
+func (h *HGE) SetState(a ...interface{}) error {
 	if len(a) == 2 {
 		switch a[0].(type) {
 		case BoolState:
 			if bs, ok := a[1].(bool); ok {
-				h.setStateBool(a[0].(BoolState), bs)
-				return
+				return h.setStateBool(a[0].(BoolState), bs)
 			}
 
 		case IntState:
 			if is, ok := a[1].(int); ok {
-				h.setStateInt(a[0].(IntState), is)
-				return
+				return h.setStateInt(a[0].(IntState), is)
 			}
 
 		case StringState:
 			if ss, ok := a[1].(string); ok {
-				h.setStateString(a[0].(StringState), ss)
-				return
+				return h.setStateString(a[0].(StringState), ss)
 			}
 
 		case FuncState:
 			switch a[1].(type) {
 			case StateFunc:
-				h.setStateFunc(a[0].(FuncState), a[1].(StateFunc))
-				return
-			case func() int:
-				h.setStateFunc(a[0].(FuncState), a[1].(func() int))
-				return
+				return h.setStateFunc(a[0].(FuncState), a[1].(StateFunc))
+			case func() bool:
+				return h.setStateFunc(a[0].(FuncState), a[1].(func() bool))
 			}
 
 		case HwndState:
 			if hs, ok := a[1].(*Hwnd); ok {
-				h.setStateHwnd(a[0].(HwndState), hs)
-				return
+				return h.setStateHwnd(a[0].(HwndState), hs)
 			}
 		}
 	}
+
+	return fmt.Errorf("Invalid arguments passed to SetState")
 }
 
-func (h *HGE) setStateBool(state BoolState, value bool) {
+func (h *HGE) setStateBool(state BoolState, value bool) error {
+	if state >= boolstate || state < 0 {
+		h.Log("Invalid bool state")
+		return fmt.Errorf("Invald bool state: %d %s", state, value)
+	}
+
+	stateBools[state] = value
+
+	return nil
 }
 
-func (h *HGE) setStateFunc(state FuncState, value StateFunc) {
+func (h *HGE) setStateFunc(state FuncState, value StateFunc) error {
+	if state >= funcstate || state < 0 {
+		h.Log("Invalid function state")
+		return fmt.Errorf("Invald function state: %d %s", state, value)
+	}
+
+	stateFuncs[state] = value
+
+	return nil
 }
 
-func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) {
+func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) error {
+	if state >= hwndstate || state < 0 {
+		h.Log("Invalid hwnd state")
+		return fmt.Errorf("Invald hwnd state: %d %s", state, value)
+	}
+
+	stateHwnds[state] = value
+
+	return nil
 }
 
-func (h *HGE) setStateInt(state IntState, value int) {
+func (h *HGE) setStateInt(state IntState, value int) error {
+	if state >= intstate || state < 0 {
+		h.Log("Invalid int state")
+		return fmt.Errorf("Invald int state: %d %s", state, value)
+	}
+
+	stateInts[state] = value
+
+	return nil
 }
 
-func (h *HGE) setStateString(state StringState, value string) {
+func (h *HGE) setStateString(state StringState, value string) error {
+	if state >= stringstate || state < 0 {
+		h.Log("Invalid string state")
+		return fmt.Errorf("Invald string state: %d %s", state, value)
+	}
+
+	stateStrings[state] = value
+
+	switch state {
+	case LOGFILE:
+		l, e := setupLogfile()
+		h.log = l
+		return e
+	}
+
+	return nil
+}
+
+// TODO the log file likely needs close called on it at some point
+func setupLogfile() (*log.Logger, error) {
+	file, err := os.Create(stateStrings[LOGFILE])
+	if err != nil {
+		return nil, err
+	}
+	return log.New(file, "<< ", log.LstdFlags), nil
 }
 
 // Returns internal system state values.
@@ -250,11 +345,19 @@ func (h *HGE) GetState(a ...interface{}) interface{} {
 }
 
 func (h *HGE) getStateBool(state BoolState) bool {
-	return true
+	if state >= boolstate || state < 0 {
+		return false
+	}
+
+	return stateBools[state]
 }
 
 func (h *HGE) getStateFunc(state FuncState) StateFunc {
-	return nil
+	if state >= funcstate || state < 0 {
+		return nil
+	}
+
+	return stateFuncs[state]
 }
 
 func (h *HGE) getStateHwnd(state HwndState) Hwnd {
@@ -262,9 +365,17 @@ func (h *HGE) getStateHwnd(state HwndState) Hwnd {
 }
 
 func (h *HGE) getStateInt(state IntState) int {
-	return 0
+	if state >= intstate || state < 0 {
+		return 0
+	}
+
+	return stateInts[state]
 }
 
 func (h *HGE) getStateString(state StringState) string {
-	return ""
+	if state >= stringstate || state < 0 {
+		return ""
+	}
+
+	return stateStrings[state]
 }
