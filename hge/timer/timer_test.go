@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+/// TODO Fix these tests as they are not very good.
 func TestReset(t *testing.T) {
 	tm := time.Now()
 	Reset()
