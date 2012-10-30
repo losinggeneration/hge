@@ -82,8 +82,8 @@ func (h *HGE) Initialize() error {
 	h.Log("")
 	h.Log("-------------------------------------------------------------------")
 	h.Log(" hge-go can be found at http://github.com/losinggeneration/hge-go/")
-	h.Log(" Please don't bother Relish Games about the Go port of HGE.")
-	h.Log(" They are responsible for the Windows C++ version, not this build.")
+	h.Log(" This project is based on (mostly the design of) HGE.")
+	h.Log(" Please don't bother Relish Games or Icculus about this port.")
 	h.Log("-------------------------------------------------------------------")
 	h.Log("")
 
