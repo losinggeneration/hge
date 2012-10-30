@@ -141,6 +141,16 @@ func New(a ...interface{}) *HGE {
 	return h
 }
 
+var singleton *HGE = nil
+
+func Shared(a ...interface{}) *HGE {
+	if singleton == nil {
+		singleton = New(a...)
+	}
+
+	return singleton
+}
+
 // Initializes hardware and software needed to run engine.
 func (h *HGE) Initialize() error {
 	h.Log("")
