@@ -9,6 +9,10 @@ import (
 
 type Hwnd sdl.Surface
 
+func setTitle() {
+	sdl.WM_SetCaption(stateStrings[TITLE], stateStrings[TITLE])
+}
+
 func initNative() error {
 	if sdl.Init(sdl.INIT_EVERYTHING) == -1 {
 		return fmt.Errorf(sdl.GetError())
@@ -29,11 +33,14 @@ func initNative() error {
 	if stateInts[SCREENBPP] >= 32 {
 		bpp = 8
 	}
+
 	zbuffer := 0
 	if stateBools[ZBUFFER] {
 		zbuffer = 16
 	}
-	sdl.WM_SetCaption(stateStrings[TITLE], stateStrings[TITLE])
+
+	setTitle()
+
 	sdl.GL_SetAttribute(sdl.GL_RED_SIZE, bpp)
 	sdl.GL_SetAttribute(sdl.GL_GREEN_SIZE, bpp)
 	sdl.GL_SetAttribute(sdl.GL_BLUE_SIZE, bpp)
@@ -42,10 +49,12 @@ func initNative() error {
 	sdl.GL_SetAttribute(sdl.GL_ACCELERATED_VISUAL, 1)
 	sdl.GL_SetAttribute(sdl.GL_DOUBLEBUFFER, 1)
 	// 	sdl.GL_SetAttribute(sdl.GL_SWAP_CONTROL, vsync ? 1 : 0);
+
 	flags := uint32(sdl.OPENGL)
 	if !stateBools[WINDOWED] {
 		flags |= sdl.FULLSCREEN
 	}
+
 	hwnd := sdl.SetVideoMode(stateInts[SCREENWIDTH], stateInts[SCREENHEIGHT], stateInts[SCREENBPP], flags)
 	if hwnd == nil {
 		sdl.Quit()

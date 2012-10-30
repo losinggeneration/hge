@@ -180,10 +180,10 @@ func (h *HGE) setStateString(state StringState, value string) error {
 
 	// Implemented in setup_states.go
 	switch state {
+	case TITLE:
+		return h.setupTitle()
 	case LOGFILE:
-		l, e := h.setupLogfile()
-		h.log = l
-		return e
+		return h.setupLogfile()
 	}
 
 	return nil

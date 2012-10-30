@@ -5,11 +5,17 @@ import (
 	"os"
 )
 
+func (h *HGE) setupTitle() error {
+	setTitle()
+	return nil
+}
+
 // TODO the log file likely needs close called on it at some point
-func (h *HGE) setupLogfile() (*log.Logger, error) {
+func (h *HGE) setupLogfile() error {
 	file, err := os.Create(stateStrings[LOGFILE])
 	if err != nil {
-		return nil, h.postError(err)
+		return h.postError(err)
 	}
-	return log.New(file, "<< ", log.LstdFlags), nil
+	h.log = log.New(file, "<< ", log.LstdFlags)
+	return nil
 }
