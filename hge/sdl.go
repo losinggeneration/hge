@@ -7,6 +7,8 @@ import (
 	"github.com/banthar/Go-SDL/sdl"
 )
 
+type Hwnd sdl.Surface
+
 func initNative() error {
 	if sdl.Init(sdl.INIT_EVERYTHING) == -1 {
 		return fmt.Errorf(sdl.GetError())
@@ -49,6 +51,8 @@ func initNative() error {
 		sdl.Quit()
 		return fmt.Errorf(sdl.GetError())
 	}
+
+	stateHwnds[HWND] = (*Hwnd)(hwnd)
 
 	if !stateBools[WINDOWED] {
 		// 		bMouseOver = true;
