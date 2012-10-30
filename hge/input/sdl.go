@@ -17,6 +17,15 @@ type InputEvent struct {
 	Y     float32 // mouse cursor y-coordinate
 }
 
+func Process() {
+}
+
+func ClearQueue() {
+}
+
+func UpdateMouse() {
+}
+
 func Initialize() error {
 	return fmt.Errorf("Input Initialize not implemented")
 }

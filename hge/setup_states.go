@@ -9,7 +9,7 @@ import (
 func (h *HGE) setupLogfile() (*log.Logger, error) {
 	file, err := os.Create(stateStrings[LOGFILE])
 	if err != nil {
-		return nil, h.lastError(err)
+		return nil, h.postError(err)
 	}
 	return log.New(file, "<< ", log.LstdFlags), nil
 }
