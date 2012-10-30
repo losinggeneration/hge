@@ -1,3 +1,5 @@
+// For now we only build SDL, if we need to in the future we can use build tags
+// such as: +build sdl
 package hge
 
 import (

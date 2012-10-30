@@ -1,4 +1,14 @@
+// For now we only build SDL, if we need to in the future we can use build tags
+// such as: +build sdl
+// I doubt there will ever bee the need for anything like: +build sdl,openal
+// but it's an option
 package sound
+
+import "fmt"
+
+func Initialize() error {
+	return fmt.Errorf("Sound Initialize not implemented")
+}
 
 // HGE Handle type
 type Effect struct {
@@ -13,7 +23,7 @@ func (e *Effect) Free() {
 }
 
 func (e *Effect) Play() Channel {
-	return Channel{}
+	return e.PlayEx(100, 0, 1.0, false)
 }
 
 func (e *Effect) PlayEx(a ...interface{}) Channel {
