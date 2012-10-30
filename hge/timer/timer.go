@@ -16,6 +16,7 @@ func Reset() {
 	t = timer{s: n, l: n}
 }
 
+// Updates the internal state. Should be called every frame by the main loop
 func Update() {
 	n := time.Now()
 
@@ -35,14 +36,17 @@ func Update() {
 	t.l = n
 }
 
+// The time since we've created the timer
 func Time() float64 {
 	return time.Since(t.s).Seconds()
 }
 
+// Time since the last call to Update
 func Delta() float64 {
 	return time.Since(t.l).Seconds()
 }
 
+// The aproximate frames per second
 func FPS() int {
 	return t.f
 }
