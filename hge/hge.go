@@ -122,6 +122,7 @@ func (h *HGE) Initialize() error {
 
 //  Restores video mode and frees allocated resources.
 func (h *HGE) Shutdown() {
+	shutdownNative()
 }
 
 // Starts running user defined frame function.

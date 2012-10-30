@@ -64,18 +64,9 @@ func initNative() error {
 	return nil
 }
 
+func shutdownNative() {
+}
+
 func initPowerStatus() error {
-	return nil
-}
-
-func initInput() error {
-	return nil
-}
-
-func initGfx() error {
-	return nil
-}
-
-func initSound() error {
 	return nil
 }
