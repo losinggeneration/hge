@@ -18,6 +18,8 @@ const (
 	boolstate BoolState = iota
 )
 
+// When any of these return false, it indicates to stop the main loop from
+// continuing to run.
 const (
 	FRAMEFUNC      FuncState = iota // func() bool frame function (default: nil) (you MUST set this)
 	RENDERFUNC     FuncState = iota // func() bool render function (default: nil)

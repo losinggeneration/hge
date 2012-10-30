@@ -1,3 +1,7 @@
+// This is mostly a convience/utility package. It can easily change the
+// sub-package states, such as how many frames-per-second should be rendered in
+// the gfx package. It also provides some utilities like a main loop and logging
+// to a file.
 package hge
 
 import (
@@ -10,6 +14,7 @@ import (
 	"time"
 )
 
+// The current version of this package
 const (
 	VERSION = 0x181
 )
@@ -43,15 +48,7 @@ type HGE struct {
 	log *log.Logger
 }
 
-type Error struct {
-	*HGE
-}
-
-func (e *Error) Error() string {
-	return e.GetErrorMessage()
-}
-
-// Creates a new instance of an hge structure
+// Creates a new instance of an HGE structure
 func New(a ...interface{}) *HGE {
 	if len(a) == 1 {
 		if v, ok := a[0].(int); ok {
@@ -70,6 +67,8 @@ func New(a ...interface{}) *HGE {
 
 var singleton *HGE = nil
 
+// This will create a shared instance of an HGE structure.
+// It's basically a singleton interface.
 func Shared(a ...interface{}) *HGE {
 	if singleton == nil {
 		singleton = New(a...)
@@ -83,7 +82,7 @@ func (h *HGE) Initialize() error {
 	h.Log("")
 	h.Log("-------------------------------------------------------------------")
 	h.Log(" hge-go can be found at http://github.com/losinggeneration/hge-go/")
-	h.Log("  Please don't bother Relish Games about the Go port of HGE.")
+	h.Log(" Please don't bother Relish Games about the Go port of HGE.")
 	h.Log(" They are responsible for the Windows C++ version, not this build.")
 	h.Log("-------------------------------------------------------------------")
 	h.Log("")
@@ -120,17 +119,20 @@ func (h *HGE) Initialize() error {
 	return nil
 }
 
-//  Restores video mode and frees allocated resources.
+// Shuts all subsystems down (if needed)
 func (h *HGE) Shutdown() {
 	shutdownNative()
+	h.Log("Finished")
 }
 
-// Starts running user defined frame function.
+// This is the main game loop. It does things like updates the graphics, handles
+// user input, and all. The user supplied functions are run if defined as well.
+// The frame function must be defined before calling Run.
 func (h *HGE) Run() error {
 	return nil
 }
 
-//  Returns last occured HGE error description.
+// Returns last occured HGE error description.
 func (h *HGE) GetErrorMessage() string {
 	return ""
 }
@@ -147,6 +149,6 @@ func (h *HGE) Launch(url string) bool {
 	return true
 }
 
-//  Saves current screen snapshot into a file.
+// Saves current screen snapshot into a file.
 func (h *HGE) Snapshot(a ...interface{}) {
 }
