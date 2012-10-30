@@ -5,6 +5,7 @@
 package hge
 
 import (
+	"fmt"
 	"github.com/losinggeneration/hge-go/hge/gfx"
 	"github.com/losinggeneration/hge-go/hge/input"
 	"github.com/losinggeneration/hge-go/hge/rand"
@@ -45,7 +46,8 @@ const (
 
 // HGE struct
 type HGE struct {
-	log *log.Logger
+	log        *log.Logger
+	last_error error
 }
 
 // Creates a new instance of an HGE structure
@@ -134,7 +136,22 @@ func (h *HGE) Run() error {
 
 // Returns last occured HGE error description.
 func (h *HGE) GetErrorMessage() string {
-	return ""
+	msg := fmt.Sprint(h.last_error)
+	h.last_error = nil
+	return msg
+}
+
+// This is for errors that might not be able to be logged
+func (h *HGE) lastError(e error) error {
+	h.last_error = e
+	return e
+}
+
+// Log the error, set last_error, and return the error to the user
+func (h *HGE) logError(format string, v ...interface{}) error {
+	h.Log(format, v...)
+	h.last_error = fmt.Errorf(format, v...)
+	return h.last_error
 }
 
 // Writes a formatted message to the log file.

@@ -1,7 +1,5 @@
 package hge
 
-import "fmt"
-
 // HGE System state constants
 const (
 	WINDOWED      BoolState = iota // bool run in window? (default: false)
@@ -111,22 +109,27 @@ func (h *HGE) SetState(a ...interface{}) error {
 				return h.setStateFunc(a[0].(FuncState), a[1].(StateFunc))
 			case func() bool:
 				return h.setStateFunc(a[0].(FuncState), a[1].(func() bool))
+			default:
+				return h.setStateFunc(a[0].(FuncState), nil)
 			}
 
 		case HwndState:
-			if hs, ok := a[1].(*Hwnd); ok {
-				return h.setStateHwnd(a[0].(HwndState), hs)
+			switch a[1].(type) {
+			case *Hwnd:
+				return h.setStateHwnd(a[0].(HwndState), a[1].(*Hwnd))
+			default:
+				return h.setStateHwnd(a[0].(HwndState), nil)
 			}
 		}
 	}
 
-	return fmt.Errorf("Invalid arguments passed to SetState")
+	return h.logError("Invalid arguments passed to SetState:", a...)
 }
 
 func (h *HGE) setStateBool(state BoolState, value bool) error {
 	if state >= boolstate || state < 0 {
 		h.Log("Invalid bool state")
-		return fmt.Errorf("Invald bool state: %d %s", state, value)
+		return h.logError("Invald bool state: %d %s", state, value)
 	}
 
 	stateBools[state] = value
@@ -137,7 +140,7 @@ func (h *HGE) setStateBool(state BoolState, value bool) error {
 func (h *HGE) setStateFunc(state FuncState, value StateFunc) error {
 	if state >= funcstate || state < 0 {
 		h.Log("Invalid function state")
-		return fmt.Errorf("Invald function state: %d %s", state, value)
+		return h.logError("Invald function state: %d %s", state, value)
 	}
 
 	stateFuncs[state] = value
@@ -148,7 +151,7 @@ func (h *HGE) setStateFunc(state FuncState, value StateFunc) error {
 func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) error {
 	if state >= hwndstate || state < 0 {
 		h.Log("Invalid hwnd state")
-		return fmt.Errorf("Invald hwnd state: %d %s", state, value)
+		return h.logError("Invald hwnd state: %d %s", state, value)
 	}
 
 	stateHwnds[state] = value
@@ -159,7 +162,7 @@ func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) error {
 func (h *HGE) setStateInt(state IntState, value int) error {
 	if state >= intstate || state < 0 {
 		h.Log("Invalid int state")
-		return fmt.Errorf("Invald int state: %d %s", state, value)
+		return h.logError("Invald int state: %d %s", state, value)
 	}
 
 	stateInts[state] = value
@@ -170,7 +173,7 @@ func (h *HGE) setStateInt(state IntState, value int) error {
 func (h *HGE) setStateString(state StringState, value string) error {
 	if state >= stringstate || state < 0 {
 		h.Log("Invalid string state")
-		return fmt.Errorf("Invald string state: %d %s", state, value)
+		return h.logError("Invald string state: %d %s", state, value)
 	}
 
 	stateStrings[state] = value
@@ -178,7 +181,7 @@ func (h *HGE) setStateString(state StringState, value string) error {
 	// Implemented in setup_states.go
 	switch state {
 	case LOGFILE:
-		l, e := setupLogfile()
+		l, e := h.setupLogfile()
 		h.log = l
 		return e
 	}
