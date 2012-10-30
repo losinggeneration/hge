@@ -16,7 +16,7 @@ const (
 	boolstate BoolState = iota
 )
 
-// When any of these return false, it indicates to stop the main loop from
+// When any of these return true, it indicates to stop the main loop from
 // continuing to run.
 const (
 	FRAMEFUNC      FuncState = iota // func() bool frame function (default: nil) (you MUST set this)
@@ -149,7 +149,7 @@ func (h *HGE) setStateFunc(state FuncState, value StateFunc) error {
 }
 
 func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) error {
-	if state >= hwndstate || state < 0 {
+	if state != HWNDPARENT {
 		h.Log("Invalid hwnd state")
 		return h.logError("Invald hwnd state: %d %s", state, value)
 	}
