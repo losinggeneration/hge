@@ -80,7 +80,47 @@ var (
 	stateHwnds   = new([hwndstate]*Hwnd)
 	stateInts    = new([intstate]int)
 	stateStrings = new([stringstate]string)
+
+	setupBools   = new([boolstate]func(*HGE) error)
+	setupHwnds   = new([hwndstate]func(*HGE) error)
+	setupInts    = new([intstate]func(*HGE) error)
+	setupStrings = new([stringstate]func(*HGE) error)
 )
+
+func init() {
+	// Bool states
+	setupBools[WINDOWED] = setupWindowed
+	setupBools[ZBUFFER] = setupZBuffer
+	setupBools[TEXTUREFILTER] = setupTextureFilter
+	setupBools[USESOUND] = setupUseSound
+	setupBools[DONTSUSPEND] = setupDonetSuspend
+	setupBools[HIDEMOUSE] = setupHideMouse
+	setupBools[SHOWSPLASH] = setupShowSplash
+
+	// Func states: no setup needed
+
+	// Hwnd states
+	setupHwnds[HWNDPARENT] = setupHwndParent
+
+	// Int states
+	setupInts[SCREENWIDTH] = setupScreenWidth
+	setupInts[SCREENHEIGHT] = setupScreenHeight
+	setupInts[SCREENBPP] = setupScreenBPP
+	setupInts[ORIGSCREENWIDTH] = setupOrigScreenWidth
+	setupInts[ORIGSCREENHEIGHT] = setupOrigScreenHeight
+	setupInts[FPS] = setupFPS
+	setupInts[SAMPLERATE] = setupSampleRate
+	setupInts[FXVOLUME] = setupFxVolume
+	setupInts[MUSVOLUME] = setupMusVolume
+	setupInts[STREAMVOLUME] = setupStreamVolume
+	setupInts[POWERSTATUS] = setupPowerStatus
+
+	// String states
+	setupStrings[ICON] = setupIcon
+	setupStrings[TITLE] = setupTitle
+	setupStrings[INIFILE] = setupInifile
+	setupStrings[LOGFILE] = setupLogfile
+}
 
 // Sets internal system states.
 // First param should be one of: BoolState, IntState, StringState, FuncState, HwndState
@@ -133,8 +173,7 @@ func (h *HGE) setStateBool(state BoolState, value bool) error {
 	}
 
 	stateBools[state] = value
-
-	return nil
+	return setupBools[state](h)
 }
 
 func (h *HGE) setStateFunc(state FuncState, value StateFunc) error {
@@ -155,8 +194,7 @@ func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) error {
 	}
 
 	stateHwnds[state] = value
-
-	return nil
+	return setupHwnds[state](h)
 }
 
 func (h *HGE) setStateInt(state IntState, value int) error {
@@ -166,8 +204,7 @@ func (h *HGE) setStateInt(state IntState, value int) error {
 	}
 
 	stateInts[state] = value
-
-	return nil
+	return setupInts[state](h)
 }
 
 func (h *HGE) setStateString(state StringState, value string) error {
@@ -177,16 +214,7 @@ func (h *HGE) setStateString(state StringState, value string) error {
 	}
 
 	stateStrings[state] = value
-
-	// Implemented in setup_states.go
-	switch state {
-	case TITLE:
-		return h.setupTitle()
-	case LOGFILE:
-		return h.setupLogfile()
-	}
-
-	return nil
+	return setupStrings[state](h)
 }
 
 // Returns internal system state values.
