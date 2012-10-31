@@ -7,7 +7,7 @@ This API still needs input. There may still be breakage. A stable legacy API is 
 ======================
 
 This is a binding (currently the hge-unix version) and port of HGE to Go.
-It split up into a few parts:
+It's split up into a few parts:
 * The binding which provides a binding to the main C++ HGE class via C binding of hge-unix.
 * The helper classes available in C++ where ported to Go using just the core binding.
 * There is also a native reimplementation of the engine with some breaking changes.
