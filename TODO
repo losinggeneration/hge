@@ -1,7 +1,5 @@
 * From C++, the hgeResourceManager is not implemented yet.
 * Font needs to be extended to fully support the specified font file format.
-* Figure out why the gui ctrls in tutorial06 are not center justified.
-* Figure out why the mouse input in tutorial06 isn't triggering quite correctly.
 * DistortionMesh seems to possibly be having issues because it's using float64
   instead of float32 (speculation.)
 * Figuring out logical places to integrate channels (input handling perhaps.)
