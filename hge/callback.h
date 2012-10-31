@@ -3,13 +3,6 @@
 
 #include "hge_c.h"
 
-extern BOOL goFrameFunc();
-extern BOOL goRenderFunc();
-extern BOOL goFocusLostFunc();
-extern BOOL goFocusGainFunc();
-extern BOOL goGfxRestoreFunc();
-extern BOOL goExitFunc();
-
 void setFrameFunc(HGE_t* h, HGE_FuncState_t ff);
 void setRenderFunc(HGE_t* h, HGE_FuncState_t ff);
 void setFocusLostFunc(HGE_t* h, HGE_FuncState_t ff);
