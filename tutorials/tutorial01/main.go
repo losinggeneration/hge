@@ -5,6 +5,7 @@ import (
 	"github.com/losinggeneration/hge-go/hge"
 	"github.com/losinggeneration/hge-go/hge/input"
 	"os"
+	"time"
 )
 
 func FrameFunc() int {
@@ -36,4 +37,5 @@ func main() {
 	}
 
 	h.Log("Test")
+	time.Sleep(1 * time.Second)
 }
