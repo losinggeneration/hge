@@ -213,10 +213,12 @@ func (h *HGE) Log(format string, v ...interface{}) {
 }
 
 // Launches an URL or external executable/data file.
+// TODO
 func (h *HGE) Launch(url string) bool {
 	return true
 }
 
 // Saves current screen snapshot into a file.
+// TODO
 func (h *HGE) Snapshot(a ...interface{}) {
 }

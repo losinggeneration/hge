@@ -4,28 +4,34 @@ package input
 
 import "fmt"
 
+type Type int
 type Key int
+type Flag int
 
 // HGE Input Event structure
 type InputEvent struct {
-	Type  int     // event type
-	Key   int     // key code
-	Flags int     // event flags
+	Type  Type    // event type
+	Key   Key     // key code
+	Flags Flag    // event flags
 	Chr   int     // character code
 	Wheel int     // wheel shift
 	X     float32 // mouse cursor x-coordinate
 	Y     float32 // mouse cursor y-coordinate
 }
 
+// Process events
 func Process() {
 }
 
+// Clear the event queue
 func ClearQueue() {
 }
 
+// Update the internal mouse structure
 func UpdateMouse() {
 }
 
+// Initialize the event structure
 func Initialize() error {
 	return fmt.Errorf("Input Initialize not implemented")
 }
