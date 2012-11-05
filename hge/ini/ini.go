@@ -9,7 +9,7 @@ type Ini struct {
 	iniHGE        *hge.HGE
 }
 
-func NewIni(section, name string) Ini {
+func New(section, name string) Ini {
 	return Ini{}
 }
 

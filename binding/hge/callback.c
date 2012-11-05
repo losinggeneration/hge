@@ -1,5 +1,12 @@
 #include "callback.h"
 
+extern BOOL goFrameFunc();
+extern BOOL goRenderFunc();
+extern BOOL goFocusLostFunc();
+extern BOOL goFocusGainFunc();
+extern BOOL goGfxRestoreFunc();
+extern BOOL goExitFunc();
+
 void setFrameFunc(HGE_t *h, HGE_FuncState_t ff) {
 	HGE_System_SetStateFunc(h, ff, goFrameFunc);
 }

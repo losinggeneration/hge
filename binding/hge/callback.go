@@ -1,6 +1,5 @@
 package hge
 
-// #include "callback.h"
 import "C"
 
 type StateFunc func() int

@@ -2,10 +2,10 @@ package gui
 
 import (
 	"container/list"
-	"github.com/losinggeneration/hge-go/helpers/rect"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/input"
+	"github.com/losinggeneration/hge-go/binding/helpers/rect"
+	"github.com/losinggeneration/hge-go/binding/helpers/sprite"
+	"github.com/losinggeneration/hge-go/binding/hge"
+	"github.com/losinggeneration/hge-go/binding/hge/input"
 )
 
 const (
@@ -19,7 +19,7 @@ type GUIObject struct {
 	Id                       int
 	Static, Visible, Enabled bool
 	rect.Rect
-	Color uint32
+	Color hge.Dword
 	*GUI
 
 	Render func()
@@ -38,7 +38,7 @@ type GUIObject struct {
 	MouseWheel   func(notches int) bool
 	KeyClick     func(key input.Key, chr int) bool
 
-	SetColor func(color uint32)
+	SetColor func(color hge.Dword)
 }
 
 func (gobj *GUIObject) Initialize() {
@@ -58,7 +58,7 @@ func (gobj *GUIObject) Initialize() {
 	gobj.MouseWheel = func(notches int) bool { return false }
 	gobj.KeyClick = func(key input.Key, chr int) bool { return false }
 
-	gobj.SetColor = func(color uint32) { gobj.Color = color }
+	gobj.SetColor = func(color hge.Dword) { gobj.Color = color }
 }
 
 type GUI struct {
@@ -157,7 +157,7 @@ func (g *GUI) SetCursor(spr *sprite.Sprite) {
 	g.cursor = spr
 }
 
-func (g *GUI) SetColor(color uint32) {
+func (g *GUI) SetColor(color hge.Dword) {
 	for e := g.ctrls.Front(); e != nil; e = e.Next() {
 		e.Value.(*GUIObject).SetColor(color)
 	}
@@ -230,10 +230,10 @@ func (g *GUI) Move(dx, dy float64) {
 func (g *GUI) Update(dt float64) int {
 	// Update the mouse variables
 	g.mouse.Pos()
-	g.lPressed = input.K_LBUTTON.Down()
-	g.lReleased = input.K_LBUTTON.Up()
-	g.rPressed = input.K_RBUTTON.Down()
-	g.rReleased = input.K_RBUTTON.Up()
+	g.lPressed = input.NewKey(input.K_LBUTTON).Down()
+	g.lReleased = input.NewKey(input.K_LBUTTON).Up()
+	g.rPressed = input.NewKey(input.K_RBUTTON).Down()
+	g.rReleased = input.NewKey(input.K_RBUTTON).Up()
 	g.mouse.WheelMovement()
 
 	// Update all controls
@@ -350,8 +350,8 @@ func (g *GUI) Update(dt float64) int {
 	}
 
 	// Handle mouse
-	lDown := input.K_LBUTTON.State()
-	rDown := input.K_RBUTTON.State()
+	lDown := input.NewKey(input.K_LBUTTON).State()
+	rDown := input.NewKey(input.K_RBUTTON).State()
 
 	if g.ctrlLock != nil {
 		ctrl := g.ctrlLock

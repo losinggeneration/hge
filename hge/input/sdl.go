@@ -61,10 +61,6 @@ func (m *Mouse) IsOver() bool {
 	return false
 }
 
-func NewKey(i int) Key {
-	return 0
-}
-
 func (k Key) Down() bool {
 	return false
 }

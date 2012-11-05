@@ -1,6 +1,7 @@
 package color
 
 import (
+	. "github.com/losinggeneration/hge-go/binding/hge"
 	"math"
 )
 
@@ -19,15 +20,15 @@ type ColorRGB struct {
 
 type Color interface {
 	Clamp()
-	SetHWColor(col uint32)
-	GetHWColor() uint32
+	SetHWColor(col Dword)
+	GetHWColor() Dword
 }
 
 func NewRGB(r, g, b, a float64) ColorRGB {
 	return ColorRGB{r, g, b, a}
 }
 
-func NewRGBCol(col uint32) ColorRGB {
+func NewRGBCol(col Dword) ColorRGB {
 	var c ColorRGB
 
 	c.SetHWColor(col)
@@ -93,15 +94,15 @@ func (c *ColorRGB) Clamp() {
 	colorClamp(&c.A)
 }
 
-func (c *ColorRGB) SetHWColor(col uint32) {
+func (c *ColorRGB) SetHWColor(col Dword) {
 	c.A = float64(col>>24) / 255.0
 	c.R = float64((col>>16)&0xFF) / 255.0
 	c.G = float64((col>>8)&0xFF) / 255.0
 	c.B = float64(col&0xFF) / 255.0
 }
 
-func (c ColorRGB) HWColor() uint32 {
-	return (uint32(c.A*255.0) << 24) + (uint32(c.R*255.0) << 16) + (uint32(c.G*255.0) << 8) + uint32(c.B*255.0)
+func (c ColorRGB) HWColor() Dword {
+	return (Dword(c.A*255.0) << 24) + (Dword(c.R*255.0) << 16) + (Dword(c.G*255.0) << 8) + Dword(c.B*255.0)
 }
 
 type ColorHSV struct {
@@ -112,7 +113,7 @@ func NewHSV(h, s, v, a float64) ColorHSV {
 	return ColorHSV{h, s, v, a}
 }
 
-func NewHSVCol(col uint32) ColorHSV {
+func NewHSVCol(col Dword) ColorHSV {
 	var c ColorHSV
 
 	c.SetHWColor(col)
@@ -178,7 +179,7 @@ func (c *ColorHSV) Clamp() {
 	colorClamp(&c.A)
 }
 
-func (c *ColorHSV) SetHWColor(col uint32) {
+func (c *ColorHSV) SetHWColor(col Dword) {
 	c.A = float64(col>>24) / 255.0
 	r := float64((col>>16)&0xFF) / 255.0
 	g := float64((col>>8)&0xFF) / 255.0
@@ -215,7 +216,7 @@ func (c *ColorHSV) SetHWColor(col uint32) {
 	}
 }
 
-func (c ColorHSV) HWColor() uint32 {
+func (c ColorHSV) HWColor() Dword {
 	var r, g, b float64
 	if c.S == 0 {
 		r = c.V
@@ -258,5 +259,5 @@ func (c ColorHSV) HWColor() uint32 {
 		}
 	}
 
-	return (uint32(c.A*255.0) << 24) + (uint32(r*255.0) << 16) + (uint32(g*255.0) << 8) + uint32(b*255.0)
+	return (Dword(c.A*255.0) << 24) + (Dword(r*255.0) << 16) + (Dword(g*255.0) << 8) + Dword(b*255.0)
 }

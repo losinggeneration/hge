@@ -1,5 +1,7 @@
 package resource
 
+import "fmt"
+
 type Pointer uintptr
 
 type Resource struct {
@@ -16,13 +18,13 @@ func (r *Resource) Free() {
 }
 
 // Loads a resource, puts the loaded data into a byte array, and frees the data.
-func LoadBytes(filename string) []byte {
-	return []byte{}
+func LoadBytes(filename string) ([]byte, error) {
+	return []byte{}, fmt.Errorf("LoadBytes not implemented")
 }
 
 // Loads a resource, puts the data into a string, and frees the data.
-func LoadString(filename string) string {
-	return ""
+func LoadString(filename string) (string, error) {
+	return "", fmt.Errorf("LoadString not implemented")
 }
 
 // Attaches a resource pack.

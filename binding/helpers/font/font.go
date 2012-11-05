@@ -4,10 +4,10 @@ import (
 	"C"
 	"errors"
 	"fmt"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/gfx"
-	"github.com/losinggeneration/hge-go/hge/resource"
+	"github.com/losinggeneration/hge-go/binding/helpers/sprite"
+	"github.com/losinggeneration/hge-go/binding/hge"
+	"github.com/losinggeneration/hge-go/binding/hge/gfx"
+	"github.com/losinggeneration/hge-go/binding/hge/resource"
 	"strconv"
 	"strings"
 )
@@ -45,7 +45,7 @@ type Font struct {
 	tracking   float64
 	spacing    float64
 
-	color uint32
+	color hge.Dword
 	z     float64
 	blend int
 }
@@ -121,14 +121,14 @@ func New(filename string, arg ...interface{}) *Font {
 	f.blend = gfx.BLEND_COLORMUL | gfx.BLEND_ALPHABLEND | gfx.BLEND_NOZWRITE
 	f.color = 0xFFFFFFFF
 
-	desc, err := resource.LoadString(filename)
+	desc := resource.LoadString(filename)
 
-	if err != nil {
+	if desc == nil {
 		h.Log("Font %s seems to be empty.", filename)
 		return nil
 	}
 
-	lines := getLines(desc)
+	lines := getLines(*desc)
 
 	if len(lines) == 0 || lines[0] != fntHEADERTAG {
 		h.Log("Font %s has incorrect format.", filename)
@@ -208,7 +208,7 @@ func (f *Font) Printf(x, y float64, align int, format string, arg ...interface{}
 func (f *Font) Printfb(x, y, w, h float64, align int, format string, arg ...interface{}) {
 }
 
-func (f *Font) SetColor(color uint32) {
+func (f *Font) SetColor(color hge.Dword) {
 	f.color = color
 
 	for i := 0; i < 256; i++ {
@@ -258,7 +258,7 @@ func (f *Font) SetSpacing(spacing float64) {
 	f.spacing = spacing
 }
 
-func (f Font) GetColor() uint32 {
+func (f Font) GetColor() hge.Dword {
 	return f.color
 }
 

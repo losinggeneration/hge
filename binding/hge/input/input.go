@@ -7,7 +7,7 @@ package input
 import "C"
 
 import (
-	"github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/binding/hge"
 	"unsafe"
 )
 

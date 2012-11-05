@@ -1,7 +1,8 @@
 package distortionmesh
 
 import (
-	"github.com/losinggeneration/hge-go/hge/gfx"
+	"github.com/losinggeneration/hge-go/binding/hge"
+	"github.com/losinggeneration/hge-go/binding/hge/gfx"
 )
 
 const (
@@ -76,7 +77,7 @@ func (dm *DistortionMesh) Render(x, y float64) {
 
 //DWORD col=0xFFFFFFFF, float z=0.5f);
 func (dm *DistortionMesh) Clear(a ...interface{}) {
-	col := uint32(0xFFFFFFFF)
+	col := hge.Dword(0xFFFFFFFF)
 	z := 0.5
 
 	for i := 0; i < len(a); i++ {
@@ -85,10 +86,10 @@ func (dm *DistortionMesh) Clear(a ...interface{}) {
 			z = a[i].(float64)
 		case float32:
 			z = float64(a[i].(float32))
-		case uint32:
-			col = a[i].(uint32)
+		case hge.Dword:
+			col = a[i].(hge.Dword)
 		case uint:
-			col = uint32(a[i].(uint))
+			col = hge.Dword(a[i].(uint))
 		}
 	}
 
@@ -149,7 +150,7 @@ func (dm *DistortionMesh) SetZ(col, row int, z float64) {
 	}
 }
 
-func (dm *DistortionMesh) SetColor(col, row int, color uint32) {
+func (dm *DistortionMesh) SetColor(col, row int, color hge.Dword) {
 	if row < dm.rows && col < dm.cols {
 		dm.dispArray[row*dm.cols+col].Color = color
 	}
@@ -191,7 +192,7 @@ func (dm DistortionMesh) Z(col, row int) float64 {
 	return 0.0
 }
 
-func (dm DistortionMesh) Color(col, row int) uint32 {
+func (dm DistortionMesh) Color(col, row int) hge.Dword {
 	if row < dm.rows && col < dm.cols {
 		return dm.dispArray[row*dm.cols+col].Color
 	}

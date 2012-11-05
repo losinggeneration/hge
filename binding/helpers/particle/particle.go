@@ -2,14 +2,14 @@ package particle
 
 import (
 	"C"
-	"github.com/losinggeneration/hge-go/helpers/color"
-	"github.com/losinggeneration/hge-go/helpers/rect"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/helpers/vector"
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/rand"
-	"github.com/losinggeneration/hge-go/hge/resource"
-	"github.com/losinggeneration/hge-go/hge/timer"
+	"github.com/losinggeneration/hge-go/binding/helpers/color"
+	"github.com/losinggeneration/hge-go/binding/helpers/rect"
+	"github.com/losinggeneration/hge-go/binding/helpers/sprite"
+	"github.com/losinggeneration/hge-go/binding/helpers/vector"
+	"github.com/losinggeneration/hge-go/binding/hge"
+	"github.com/losinggeneration/hge-go/binding/hge/rand"
+	"github.com/losinggeneration/hge-go/binding/hge/resource"
+	"github.com/losinggeneration/hge-go/binding/hge/timer"
 	"math"
 	"reflect"
 	"unsafe"
@@ -84,9 +84,9 @@ func New(filename string, sprite sprite.Sprite, a ...interface{}) *ParticleSyste
 	ps.rand = rand.New(int(timer.Time()))
 	ps.rand.Seed()
 
-	ptr, err := resource.LoadBytes(filename)
+	ptr := resource.LoadBytes(filename)
 
-	if err != nil {
+	if ptr == nil {
 		ps.h.Log("Particle file (%s) seems to be empty.", filename)
 		return nil
 	}

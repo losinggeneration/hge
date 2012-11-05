@@ -1,8 +1,8 @@
 package strings
 
 import (
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/resource"
+	"github.com/losinggeneration/hge-go/binding/hge"
+	. "github.com/losinggeneration/hge-go/binding/hge/resource"
 	"strings"
 )
 
@@ -21,9 +21,9 @@ func New(filename string) *StringTable {
 
 	st.stringsMap = make(map[string]string)
 
-	f, e := resource.LoadString(filename)
+	f := LoadString(filename)
 
-	if e != nil || !strings.HasPrefix(f, strHEADERTAG) {
+	if f == nil || !strings.HasPrefix(*f, strHEADERTAG) {
 		h.Log(strFORMATERROR, filename)
 		return nil
 	}
@@ -33,8 +33,8 @@ func New(filename string) *StringTable {
 		identifier, value                string
 	)
 
-	reader := strings.NewReader(f)
-	_, e = reader.Seek(int64(len(strHEADERTAG)), 0)
+	reader := strings.NewReader(*f)
+	_, e := reader.Seek(int64(len(strHEADERTAG)), 0)
 
 	if e != nil {
 		h.Log("Unable to seek past header tag")

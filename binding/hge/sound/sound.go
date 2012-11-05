@@ -8,7 +8,7 @@ import "C"
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/binding/hge"
 	"runtime"
 	"unsafe"
 )

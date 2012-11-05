@@ -1,8 +1,9 @@
 package sprite
 
 import (
-	"github.com/losinggeneration/hge-go/helpers/rect"
-	"github.com/losinggeneration/hge-go/hge/gfx"
+	"github.com/losinggeneration/hge-go/binding/helpers/rect"
+	"github.com/losinggeneration/hge-go/binding/hge"
+	"github.com/losinggeneration/hge-go/binding/hge/gfx"
 	"math"
 )
 
@@ -207,7 +208,7 @@ func (sprite *Sprite) SetTextureRect(x, y, w, h float64, a ...interface{}) {
 	sprite.SetFlip(bX, bY, bHS)
 }
 
-func (sprite *Sprite) SetColor(col uint32, arg ...interface{}) {
+func (sprite *Sprite) SetColor(col hge.Dword, arg ...interface{}) {
 	i := -1
 
 	if len(arg) == 1 {
@@ -315,7 +316,7 @@ func (sprite *Sprite) TextureRect() (x, y, w, h float64) {
 	return sprite.TX, sprite.TY, sprite.W, sprite.H
 }
 
-func (sprite *Sprite) Color(arg ...interface{}) uint32 {
+func (sprite *Sprite) Color(arg ...interface{}) hge.Dword {
 	i := 0
 	if len(arg) == 1 {
 		if ni, ok := arg[0].(int); ok {

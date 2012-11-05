@@ -3,11 +3,12 @@ package guictrls
 import (
 	"container/list"
 	"fmt"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/gui"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge/gfx"
-	"github.com/losinggeneration/hge-go/hge/input"
+	"github.com/losinggeneration/hge-go/binding/helpers/font"
+	"github.com/losinggeneration/hge-go/binding/helpers/gui"
+	"github.com/losinggeneration/hge-go/binding/helpers/sprite"
+	"github.com/losinggeneration/hge-go/binding/hge"
+	"github.com/losinggeneration/hge-go/binding/hge/gfx"
+	"github.com/losinggeneration/hge-go/binding/hge/input"
 )
 
 type GUIText struct {
@@ -262,13 +263,13 @@ type GUIListBox struct {
 
 	highlight sprite.Sprite
 	*font.Font
-	color, highlightColor        uint32
+	color, highlightColor        hge.Dword
 	items, selectedItem, topItem int
 	mx, my                       float64
 	*list.List
 }
 
-func NewGUIListBox(id int, x, y, w, h float64, fnt *font.Font, color, highlightColor, spriteHighlightColor uint32) *GUIListBox {
+func NewGUIListBox(id int, x, y, w, h float64, fnt *font.Font, color, highlightColor, spriteHighlightColor hge.Dword) *GUIListBox {
 	l := new(GUIListBox)
 
 	l.GUIObject.Initialize()
