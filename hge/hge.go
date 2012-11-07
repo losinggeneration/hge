@@ -97,6 +97,7 @@ func (h *HGE) Initialize() error {
 
 	// Init subsystems
 	if err := initNative(); err != nil {
+		h.postError(err)
 		h.Shutdown()
 		return err
 	}
@@ -106,14 +107,18 @@ func (h *HGE) Initialize() error {
 	initPowerStatus()
 	input.Initialize()
 
+	// Later on this should be a fatal error
 	if err := gfx.Initialize(); err != nil {
-		h.Shutdown()
-		return err
+		h.postError(err)
+		// h.Shutdown()
+		// return err
 	}
 
+	// later on this should be a fatal error
 	if err := sound.Initialize(); err != nil {
-		h.Shutdown()
-		return err
+		h.postError(err)
+		// h.Shutdown()
+		// return err
 	}
 
 	h.Log("Init done.\n")
@@ -209,6 +214,9 @@ func (h *HGE) logError(format string, v ...interface{}) error {
 func (h *HGE) Log(format string, v ...interface{}) {
 	if h.log != nil {
 		h.log.Printf(">> "+format, v...)
+	} else {
+		// log to stdout if there's no log file set
+		fmt.Printf(">> "+format+"\n", v...)
 	}
 }
 
