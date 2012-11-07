@@ -8,12 +8,16 @@ import (
 	"time"
 )
 
-func FrameFunc() int {
-	if input.NewKey(input.K_ESCAPE).State() {
-		return 1
+func FrameFunc() bool {
+	if input.K_ESCAPE.Down() {
+		return true
 	}
 
-	return 0
+	// 	if input.K_ESCAPE.State() {
+	// 		return true
+	// 	}
+
+	return false
 }
 
 func main() {
@@ -36,6 +40,6 @@ func main() {
 		h.Start()
 	}
 
-	h.Log("Test")
+	fmt.Println("Finished!")
 	time.Sleep(1 * time.Second)
 }

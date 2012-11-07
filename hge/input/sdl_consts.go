@@ -144,4 +144,6 @@ const (
 	K_F10 Key = sdl.K_F10
 	K_F11 Key = sdl.K_F11
 	K_F12 Key = sdl.K_F12
+
+	last_key = iota + key_offset
 )
