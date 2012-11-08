@@ -2,61 +2,105 @@
 // such as: +build sdl
 package input
 
-import "fmt"
+// import "fmt"
 import "github.com/banthar/Go-SDL/sdl"
 
 type Type int
 type Key int
-type Flag int
+type Flag sdl.Mod
+type Button int
 
 // HGE Input Event structure
 type InputEvent struct {
 	Type    Type    // event type
 	Key     Key     // key code
 	Flags   Flag    // event flags
-	Chr     int     // character code
+	Chr     uint8   // character code
+	Button  Button  // Mouse Button
 	Wheel   int     // wheel shift
-	X       float32 // mouse cursor x-coordinate
-	Y       float32 // mouse cursor y-coordinate
+	X       float64 // mouse cursor x-coordinate
+	Y       float64 // mouse cursor y-coordinate
 	cleared bool    // true if there is no useful data here
 }
 
 var (
-	keys      [last_key]bool
-	keySym    Key
-	lastEvent InputEvent
+	keys       [last_key]bool
+	keySym     Key
+	lastKeySym Key
+	mb         [4]bool
+	mm         Mouse
+	event      InputEvent
+	lastEvent  InputEvent
 )
 
 // Process events
 func Process() {
-	for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
-		switch e.(type) {
-		case *sdl.KeyboardEvent:
-			k, _ := e.(*sdl.KeyboardEvent)
-			keys[k.Keysym.Sym] = 1 == k.State
-			keySym = Key(k.Keysym.Sym)
-			lastEvent.Key = Key(keySym)
+	e := sdl.PollEvent()
+	// 	for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
+	switch e.(type) {
+	case *sdl.KeyboardEvent:
+		k, _ := e.(*sdl.KeyboardEvent)
+
+		keys[k.Keysym.Sym] = 1 == k.State
+		keySym = Key(k.Keysym.Sym)
+
+		event.Type = Type(k.Type)
+		event.Key = Key(keySym)
+		event.Flags = Flag(k.Keysym.Mod)
+		event.Chr = k.Keysym.Scancode
+
+		if event.Key == lastEvent.Key {
+			event.Flags |= INP_REPEAT
+		}
+
+	case *sdl.MouseMotionEvent:
+		m, _ := e.(*sdl.MouseMotionEvent)
+
+		event.Type = Type(m.Type)
+		event.X = float64(m.X)
+		event.Y = float64(m.Y)
+
+	case *sdl.MouseButtonEvent:
+		m, _ := e.(*sdl.MouseButtonEvent)
+
+		event.Type = Type(m.Type)
+		if m.Button == sdl.BUTTON_WHEELUP {
+			event.Wheel = 1
+		} else if m.Button == sdl.BUTTON_WHEELDOWN {
+			event.Wheel = -1
+		} else {
+			event.Button = Button(m.Button)
 		}
 	}
+	// 	}
 }
 
 // Clear the event queue
 func ClearQueue() {
-	keySym = 0
 	for i := 0; i < last_key; i++ {
 		keys[i] = false
 	}
 
-	lastEvent = InputEvent{cleared: true}
+	lastEvent = event
+	lastKeySym = keySym
+	event = InputEvent{cleared: true}
+	keySym = 0
 }
 
 // Update the internal mouse structure
 func UpdateMouse() {
+	if !event.cleared {
+		mm.X = event.X
+		mm.Y = event.Y
+	}
+
+	mm.Wheel = event.Wheel
 }
 
 // Initialize the event structure
 func Initialize() error {
-	return fmt.Errorf("Input Initialize not implemented")
+	ClearQueue()
+	return nil
 }
 
 type Mouse struct {
@@ -65,19 +109,22 @@ type Mouse struct {
 	Over  bool
 }
 
-func NewMouse(x, y float64) *Mouse {
-	return &Mouse{X: x, Y: y}
+func New() *Mouse {
+	return &Mouse{}
 }
 
 func (m *Mouse) Pos() (x, y float64) {
-	return 0, 0
+	return m.X, m.Y
 }
 
-func (m Mouse) SetPos(a ...interface{}) {
+func (m Mouse) SetPos(x, y float64) {
+	m.X, m.Y = x, y
+	mm.X, mm.Y = x, y
+	sdl.WarpMouse(int(x), int(y))
 }
 
 func (m *Mouse) WheelMovement() int {
-	return 0
+	return m.Wheel
 }
 
 func (m *Mouse) IsOver() bool {
@@ -85,19 +132,20 @@ func (m *Mouse) IsOver() bool {
 }
 
 func (k Key) Down() bool {
-	return keys[k]
+	return keys[k] == true
 }
 
 func (k Key) Up() bool {
-	return keys[k]
+	return keys[k] == false
 }
 
 func (k Key) State() bool {
 	ks := sdl.GetKeyState()
 	return ks[k] == 1
 }
+
 func (k Key) Name() string {
-	return ""
+	return sdl.GetKeyName(sdl.Key(k))
 }
 
 func GetKey() Key {
@@ -108,10 +156,10 @@ func GetChar() uint8 {
 	return uint8(keySym)
 }
 
-func GetEvent() (e *InputEvent, b bool) {
-	if lastEvent.cleared {
-		return nil, false
+func GetEvent() (e InputEvent, b bool) {
+	if event.cleared {
+		return event, false
 	}
 
-	return &lastEvent, true
+	return event, true
 }

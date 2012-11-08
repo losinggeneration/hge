@@ -6,23 +6,29 @@ import "github.com/banthar/Go-SDL/sdl"
 
 // HGE Input Event type constants
 const (
-	INPUT_KEYDOWN     Type = iota
-	INPUT_KEYUP       Type = iota
-	INPUT_MBUTTONDOWN Type = iota
-	INPUT_MBUTTONUP   Type = iota
-	INPUT_MOUSEMOVE   Type = iota
-	INPUT_MOUSEWHEEL  Type = iota
+	INPUT_KEYDOWN     Type = sdl.KEYDOWN
+	INPUT_KEYUP       Type = sdl.KEYUP
+	INPUT_MBUTTONDOWN Type = sdl.MOUSEBUTTONDOWN
+	INPUT_MBUTTONUP   Type = sdl.MOUSEBUTTONUP
+	INPUT_MOUSEMOVE   Type = sdl.MOUSEMOTION
+	INPUT_MOUSEWHEEL  Type = sdl.NUMEVENTS + iota
 )
 
 // HGE Input Event flags
 const (
-	INP_SHIFT      Flag = iota
-	INP_CTRL       Flag = iota
-	INP_ALT        Flag = iota
-	INP_CAPSLOCK   Flag = iota
-	INP_SCROLLLOCK Flag = iota
-	INP_NUMLOCK    Flag = iota
-	INP_REPEAT     Flag = iota
+	INP_SHIFT      Flag = sdl.KMOD_LSHIFT | sdl.KMOD_RSHIFT
+	INP_CTRL       Flag = sdl.KMOD_LCTRL | sdl.KMOD_RCTRL
+	INP_ALT        Flag = sdl.KMOD_LALT | sdl.KMOD_RALT
+	INP_CAPSLOCK   Flag = sdl.KMOD_CAPS
+	INP_SCROLLLOCK Flag = sdl.KMOD_MODE
+	INP_NUMLOCK    Flag = sdl.KMOD_NUM
+	INP_REPEAT     Flag = 0x20000
+)
+
+const (
+	M_LBUTTON Button = sdl.BUTTON_LEFT
+	M_RBUTTON Button = sdl.BUTTON_RIGHT
+	M_MBUTTON Button = sdl.BUTTON_MIDDLE
 )
 
 // This is the offset so it doesn't clash with any SDL key defines
@@ -30,10 +36,6 @@ const key_offset = 0x160
 
 // HGE_ Virtual-key codes
 const (
-	K_LBUTTON Key = iota + key_offset
-	K_RBUTTON Key = iota + key_offset
-	K_MBUTTON Key = iota + key_offset
-
 	K_ESCAPE    Key = sdl.K_ESCAPE
 	K_BACKSPACE Key = sdl.K_BACKSPACE
 	K_TAB       Key = sdl.K_TAB

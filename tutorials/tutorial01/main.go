@@ -5,17 +5,17 @@ import (
 	"github.com/losinggeneration/hge-go/hge"
 	"github.com/losinggeneration/hge-go/hge/input"
 	"os"
-	"time"
 )
 
 func FrameFunc() bool {
-	if input.K_ESCAPE.Down() {
+	if input.K_ESCAPE.State() {
 		return true
 	}
 
-	// 	if input.K_ESCAPE.State() {
-	// 		return true
-	// 	}
+	m := input.New()
+	// 	x, y := m.Pos()
+	// 	fmt.Println(x,y,m.WheelMovement())
+	fmt.Println(m.WheelMovement())
 
 	return false
 }
@@ -41,5 +41,4 @@ func main() {
 	}
 
 	fmt.Println("Finished!")
-	time.Sleep(1 * time.Second)
 }
