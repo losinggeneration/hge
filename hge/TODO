@@ -1,7 +1,7 @@
 HGE (75% - Launch & Snapshot unimplemented, States need to communicate with respective packages)
 gfx (5% - Skeleton done)
 ini (5% - Skeleton done)
-input (5% - Skeleton done)
+input (85% - Mostly done, seems functional, but needs more testing)
 rand (100%)
 resource (5% - Skeleton done)
 sound (5% - Skeleton done)
