@@ -1,4 +1,4 @@
-// This is mostly a convience/utility package. It can easily change the
+// This is mostly a convenience/utility package. It can easily change the
 // sub-package states, such as how many frames-per-second should be rendered in
 // the gfx package. It also provides some utilities like a main loop and logging
 // to a file.
@@ -105,7 +105,10 @@ func (h *HGE) Initialize() error {
 	timer.Reset()
 	rand.Seed()
 	initPowerStatus()
-	input.Initialize()
+
+	if err := input.Initialize(); err != nil {
+		h.postError(err)
+	}
 
 	// Later on this should be a fatal error
 	if err := gfx.Initialize(); err != nil {
@@ -190,17 +193,16 @@ func (h *HGE) Run() error {
 	return nil
 }
 
-// Returns last occured HGE error description.
+// Returns last occurred HGE error description.
 func (h *HGE) GetErrorMessage() string {
 	msg := fmt.Sprint(h.last_error)
 	h.last_error = nil
 	return msg
 }
 
-// This is for errors that might not be able to be logged
+// Convenience to pass error on to Logging function
 func (h *HGE) postError(e error) error {
-	h.last_error = e
-	return e
+	return h.logError(e.Error())
 }
 
 // Log the error, set last_error, and return the error to the user

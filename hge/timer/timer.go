@@ -46,7 +46,7 @@ func Delta() float64 {
 	return time.Since(t.l).Seconds()
 }
 
-// The aproximate frames per second
+// The approximate frames per second
 func FPS() int {
 	return t.f
 }

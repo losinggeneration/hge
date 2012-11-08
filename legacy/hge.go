@@ -40,7 +40,7 @@ func (h *HGE) System_Start() bool {
 	return h.h.Start() == nil
 }
 
-//  Returns last occured HGE error description.
+//  Returns last occurred HGE error description.
 func (h *HGE) System_GetErrorMessage() string {
 	return h.h.GetErrorMessage()
 }
