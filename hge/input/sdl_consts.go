@@ -25,6 +25,7 @@ const (
 	INP_REPEAT     Flag = 0x20000
 )
 
+// HGE Input Mouse buttons
 const (
 	M_LBUTTON Button = sdl.BUTTON_LEFT
 	M_RBUTTON Button = sdl.BUTTON_RIGHT
@@ -34,7 +35,7 @@ const (
 // This is the offset so it doesn't clash with any SDL key defines
 const key_offset = 0x160
 
-// HGE_ Virtual-key codes
+// HGE Virtual-key codes
 const (
 	K_ESCAPE    Key = sdl.K_ESCAPE
 	K_BACKSPACE Key = sdl.K_BACKSPACE

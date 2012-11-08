@@ -5,10 +5,10 @@ package input
 // import "fmt"
 import "github.com/banthar/Go-SDL/sdl"
 
-type Type int
-type Key int
-type Flag sdl.Mod
-type Button int
+type Type int     // A HGE Input Event type constants
+type Key int      // A HGE Virtual-key code
+type Flag sdl.Mod // HGE Input Event flags (multiple ones may be OR'd)
+type Button int   // A HGE Input Mouse button
 
 // HGE Input Event structure
 type InputEvent struct {
@@ -34,6 +34,7 @@ var (
 )
 
 // Process events
+// Called automatically by hge.Run()
 func Process() {
 	e := sdl.PollEvent()
 	// 	for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
@@ -76,6 +77,7 @@ func Process() {
 }
 
 // Clear the event queue
+// Called automatically by hge.Run()
 func ClearQueue() {
 	for i := 0; i < last_key; i++ {
 		keys[i] = false
@@ -88,6 +90,7 @@ func ClearQueue() {
 }
 
 // Update the internal mouse structure
+// Called automatically by hge.Run()
 func UpdateMouse() {
 	if !event.cleared {
 		mm.X = event.X
@@ -98,31 +101,39 @@ func UpdateMouse() {
 }
 
 // Initialize the event structure
+// Called automatically in hge.Initialize()
 func Initialize() error {
 	ClearQueue()
 	return nil
 }
 
 type Mouse struct {
-	X, Y  float64
-	Wheel int
-	Over  bool
+	X, Y  float64 // The position of the mouse relative to the top left corner
+	Wheel int     // The scroll wheel movement: negative down/positive up
+	Over  bool    // If the mouse is over the window
 }
 
 func New() *Mouse {
 	return &Mouse{}
 }
 
+// Returns the last known position of the mouse relative to the top-left corner
 func (m *Mouse) Pos() (x, y float64) {
 	return m.X, m.Y
 }
 
+// Set the mouse position to (x,y)
 func (m Mouse) SetPos(x, y float64) {
 	m.X, m.Y = x, y
 	mm.X, mm.Y = x, y
 	sdl.WarpMouse(int(x), int(y))
 }
 
+// Returns the movement if there's been any mouse movement since the last time
+// the events were updated.
+// Returns a positive value is returned if the wheel is scrolled up
+// Returns a negative value if it's scrolled down
+// Returns zero on no movement
 func (m *Mouse) WheelMovement() int {
 	return m.Wheel
 }
@@ -131,14 +142,20 @@ func (m *Mouse) IsOver() bool {
 	return false
 }
 
+// Returns true if there's been a key pressed down since the last time the
+// events were updated
 func (k Key) Down() bool {
 	return keys[k] == true
 }
 
+// Returns true if there's been a key pressed down since the last time the
+// events were updated
 func (k Key) Up() bool {
 	return keys[k] == false
 }
 
+// The current state of the button
+// Returns true if the key is currently pressed, false otherwise
 func (k Key) State() bool {
 	ks := sdl.GetKeyState()
 	return ks[k] == 1
