@@ -242,6 +242,7 @@ func GetChar() int {
 }
 
 func GetEvent() (e *InputEvent, b bool) {
+	e = new(InputEvent)
 	b = C.HGE_Input_GetEvent(inputHGE.HGE, (*C.HGE_InputEvent_t)(unsafe.Pointer(e))) == 1
 	return e, b
 }
