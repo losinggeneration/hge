@@ -1,50 +1,77 @@
+// Functions to give  random numbers over exclusive ranges.
 package rand
 
+import (
+	"math"
+	"math/rand"
+)
+
+var rnd *Rand
+
+// Seed uses the provided seed value to initialize the generator to a
+// deterministic state. If Seed is not called, the generator behaves as if
+// seeded by Seed(1).
 func Seed(a ...interface{}) {
-	seed := 1
+	seed := int64(1)
 	if len(a) == 1 {
 		if s, ok := a[0].(int); ok {
-			seed = s
+			seed = int64(s)
 		}
 		if s, ok := a[0].(int64); ok {
-			seed = int(s)
+			seed = s
 		}
 	}
 
-	New(seed).Seed()
+	rnd := New(seed)
+	rnd.Seed()
 }
 
+// Returns a pseudo-random number in (min, max). It panics if max-min <= 0.
 func Int(min, max int) int {
-	return New(0).Int(min, max)
+	return rnd.Int(min, max)
 }
 
+// Returns a pseudo-random number in (min, max). It panics if max-min <= 0.
 func Float32(min, max float32) float32 {
-	return New(0).Float32(min, max)
+	return rnd.Float32(min, max)
 }
 
+// Returns a pseudo-random number in (min, max). It panics if max-min <= 0.
 func Float64(min, max float64) float64 {
-	return New(0).Float64(min, max)
+	return rnd.Float64(min, max)
 }
 
+// A Rand is a source of random numbers.
 type Rand struct {
-	seed int
+	seed int64
+	r    *rand.Rand
 }
 
-func New(seed int) *Rand {
-	return &Rand{seed}
+// New returns a new Rand that uses random values from the seeded number to
+// generate other random values.
+func New(seed int64) *Rand {
+	return &Rand{seed: seed,
+		r: rand.New(rand.NewSource(seed)),
+	}
 }
 
+// Seed uses the provided seed value to initialize the generator to a
+// deterministic state.
 func (r *Rand) Seed() {
+	r.r.Seed(r.seed)
 }
 
+// Returns a pseudo-random number in (min, max). It panics if max-min <= 0.
 func (r *Rand) Int(min, max int) int {
-	return 0
+	return r.r.Intn(max-min) + min
 }
 
+// Returns a pseudo-random number in (min, max). It panics if max-min <= 0.
 func (r *Rand) Float32(min, max float32) float32 {
-	return 0
+	return float32(r.Float64(float64(min), float64(max)))
 }
 
+// Returns a pseudo-random number in (min, max). It panics if max-min <= 0.
 func (r *Rand) Float64(min, max float64) float64 {
-	return 0
+	return math.Mod(r.r.ExpFloat64(), max-min) + min
 }
