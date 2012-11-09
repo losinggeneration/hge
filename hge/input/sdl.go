@@ -138,6 +138,9 @@ func (m *Mouse) WheelMovement() int {
 	return m.Wheel
 }
 
+// Returns if the mouse is currently over the window
+// Always true when in fullscreen mode
+// TODO Currently unimplemented
 func (m *Mouse) IsOver() bool {
 	return false
 }
@@ -161,18 +164,22 @@ func (k Key) State() bool {
 	return ks[k] == 1
 }
 
+// Return the key name
 func (k Key) Name() string {
 	return sdl.GetKeyName(sdl.Key(k))
 }
 
+// Get the last polled key
 func GetKey() Key {
 	return keySym
 }
 
+// Get the key character code
 func GetChar() uint8 {
 	return uint8(keySym)
 }
 
+// Get the event structure from the last time the events where updated
 func GetEvent() (e InputEvent, b bool) {
 	if event.cleared {
 		return event, false
