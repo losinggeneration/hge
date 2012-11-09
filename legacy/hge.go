@@ -1,5 +1,6 @@
 package legacy
 
+import "fmt"
 import (
 	"github.com/losinggeneration/hge-go/hge"
 	"github.com/losinggeneration/hge-go/hge/gfx"
@@ -14,6 +15,35 @@ import (
 // HGE struct
 type HGE struct {
 	h *hge.HGE
+}
+
+type (
+	BoolState   hge.BoolState
+	FuncState   hge.FuncState
+	HwndState   hge.HwndState
+	IntState    hge.IntState
+	StringState hge.StringState
+)
+
+type StateFunc hge.StateFunc
+
+type Hwnd hge.Hwnd
+
+type Type input.Type     // A HGE Input Event type constants
+type Key input.Key       // A HGE Virtual-key code
+type Flag input.Flag     // HGE Input Event flags (multiple ones may be OR'd)
+type Button input.Button // A HGE Input Mouse button
+
+// HGE Input Event structure
+type InputEvent struct {
+	Type   Type    // event type
+	Key    Key     // key code
+	Flags  Flag    // event flags
+	Chr    uint8   // character code
+	Button Button  // Mouse Button
+	Wheel  int     // wheel shift
+	X      float64 // mouse cursor x-coordinate
+	Y      float64 // mouse cursor y-coordinate
 }
 
 // Creates a new instance of an HGE structure
@@ -64,12 +94,68 @@ func (h *HGE) System_Snapshot(a ...interface{}) {
 // First param should be one of: BoolState, IntState, StringState, FuncState, HwndState
 // Second parameter must be of the matching type, bool, int, string, StateFunc/func() int, *Hwnd
 func (h *HGE) System_SetState(a ...interface{}) {
-	h.h.SetState(a...)
+	if len(a) == 2 {
+		switch a[0].(type) {
+		case BoolState:
+			if bs, ok := a[1].(bool); ok {
+				h.h.SetState(hge.BoolState(a[0].(BoolState)), bs)
+			}
+
+		case IntState:
+			if is, ok := a[1].(int); ok {
+				h.h.SetState(hge.IntState(a[0].(IntState)), is)
+			}
+
+		case StringState:
+			if ss, ok := a[1].(string); ok {
+				h.h.SetState(hge.StringState(a[0].(StringState)), ss)
+			}
+
+		case FuncState:
+			switch a[1].(type) {
+			case StateFunc:
+				h.h.SetState(hge.FuncState(a[0].(FuncState)), hge.StateFunc(a[1].(StateFunc)))
+			case func() bool:
+				h.h.SetState(hge.FuncState(a[0].(FuncState)), a[1].(func() bool))
+			default:
+				h.h.SetState(hge.FuncState(a[0].(FuncState)), nil)
+			}
+
+		case HwndState:
+			switch a[1].(type) {
+			case *Hwnd:
+				h.h.SetState(hge.HwndState(a[0].(HwndState)), (*hge.Hwnd)(a[1].(*Hwnd)))
+			default:
+				h.h.SetState(hge.HwndState(a[0].(HwndState)), nil)
+			}
+		default:
+			fmt.Println(a)
+		}
+	}
 }
 
 // Returns internal system state values.
 func (h *HGE) System_GetState(a ...interface{}) interface{} {
-	return h.h.GetState(a...)
+	if len(a) == 1 {
+		switch a[0].(type) {
+		case BoolState:
+			return h.h.GetState(hge.BoolState(a[0].(BoolState)))
+
+		case IntState:
+			return h.h.GetState(hge.IntState(a[0].(IntState)))
+
+		case StringState:
+			return h.h.GetState(hge.StringState(a[0].(StringState)))
+
+		case FuncState:
+			return h.h.GetState(hge.FuncState(a[0].(FuncState)))
+
+		case HwndState:
+			return h.h.GetState(hge.HwndState(a[0].(HwndState)))
+		}
+	}
+
+	return nil
 }
 
 // Loads a resource into memory from disk.
@@ -157,13 +243,13 @@ func (h *HGE) Ini_GetString(section, name, def_val string) string {
 var random = rand.New(0)
 
 func (h *HGE) Random_Seed(a ...interface{}) {
-	seed := 1
+	seed := int64(1)
 	if len(a) == 1 {
 		if s, ok := a[0].(int); ok {
-			seed = s
+			seed = int64(s)
 		}
 		if s, ok := a[0].(int64); ok {
-			seed = int(s)
+			seed = s
 		}
 	}
 
@@ -328,7 +414,7 @@ func (h *HGE) Channel_IsSliding(chn sound.Channel) bool {
 }
 
 func (h *HGE) Input_GetMousePos() (x, y float64) {
-	return input.NewMouse(0, 0).Pos()
+	return input.New().Pos()
 }
 
 func (h *HGE) Input_SetMousePos(x, y float64) {
@@ -336,43 +422,44 @@ func (h *HGE) Input_SetMousePos(x, y float64) {
 }
 
 func (h *HGE) Input_GetMouseWheel() int {
-	return input.NewMouse(0, 0).WheelMovement()
+	return input.New().WheelMovement()
 }
 
 func (h *HGE) Input_IsMouseOver() bool {
-	return input.NewMouse(0, 0).IsOver()
+	return input.New().IsOver()
 }
 
-func newKey(key int) input.Key {
+func newKey(key Key) input.Key {
 	return input.Key(key)
 }
 
-func (h *HGE) Input_KeyDown(key int) bool {
+func (h *HGE) Input_KeyDown(key Key) bool {
 	return newKey(key).Down()
 }
 
-func (h *HGE) Input_KeyUp(key int) bool {
+func (h *HGE) Input_KeyUp(key Key) bool {
 	return newKey(key).Up()
 }
 
-func (h *HGE) Input_GetKeyState(key int) bool {
+func (h *HGE) Input_GetKeyState(key Key) bool {
 	return newKey(key).State()
 }
 
-func (h *HGE) Input_GetKeyName(key int) string {
+func (h *HGE) Input_GetKeyName(key Key) string {
 	return newKey(key).Name()
 }
 
-func (h *HGE) Input_GetKey() int {
-	return int(input.GetKey())
+func (h *HGE) Input_GetKey() Key {
+	return Key(input.GetKey())
 }
 
-func (h *HGE) Input_GetChar() int {
+func (h *HGE) Input_GetChar() uint8 {
 	return input.GetChar()
 }
 
 func (h *HGE) Input_GetEvent(event *input.InputEvent) bool {
-	event, b := input.GetEvent()
+	e, b := input.GetEvent()
+	event = &e
 	return b
 }
 

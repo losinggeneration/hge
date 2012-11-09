@@ -10,9 +10,7 @@ package main
 
 import (
 	"fmt"
-	HGE "github.com/losinggeneration/hge-go/hge"
 	"github.com/losinggeneration/hge-go/hge/gfx"
-	"github.com/losinggeneration/hge-go/hge/input"
 	"github.com/losinggeneration/hge-go/hge/sound"
 	hge "github.com/losinggeneration/hge-go/legacy"
 )
@@ -45,19 +43,19 @@ func FrameFunc() int {
 	dt := float64(h.Timer_GetDelta())
 
 	// Process keys
-	if h.Input_GetKeyState(input.K_ESCAPE) {
+	if h.Input_GetKeyState(hge.K_ESCAPE) {
 		return 1
 	}
-	if h.Input_GetKeyState(input.K_LEFT) {
+	if h.Input_GetKeyState(hge.K_LEFT) {
 		dx -= speed * dt
 	}
-	if h.Input_GetKeyState(input.K_RIGHT) {
+	if h.Input_GetKeyState(hge.K_RIGHT) {
 		dx += speed * dt
 	}
-	if h.Input_GetKeyState(input.K_UP) {
+	if h.Input_GetKeyState(hge.K_UP) {
 		dy -= speed * dt
 	}
-	if h.Input_GetKeyState(input.K_DOWN) {
+	if h.Input_GetKeyState(hge.K_DOWN) {
 		dy += speed * dt
 	}
 
@@ -126,20 +124,20 @@ func RenderFunc() int {
 
 func main() {
 	// Get HGE interface
-	h = hge.Create(HGE.VERSION)
+	h = hge.Create(hge.VERSION)
 	defer h.Release()
 
 	// Set up log file, frame function, render function and window title
-	h.System_SetState(HGE.LOGFILE, "tutorial02.log")
-	h.System_SetState(HGE.FRAMEFUNC, FrameFunc)
-	h.System_SetState(HGE.RENDERFUNC, RenderFunc)
-	h.System_SetState(HGE.TITLE, "HGE Tutorial 02 - Using input, sound and rendering")
+	h.System_SetState(hge.LOGFILE, "tutorial02.log")
+	h.System_SetState(hge.FRAMEFUNC, FrameFunc)
+	h.System_SetState(hge.RENDERFUNC, RenderFunc)
+	h.System_SetState(hge.TITLE, "HGE Tutorial 02 - Using input, sound and rendering")
 
 	// Set up video mode
-	h.System_SetState(HGE.WINDOWED, true)
-	h.System_SetState(HGE.SCREENWIDTH, 800)
-	h.System_SetState(HGE.SCREENHEIGHT, 600)
-	h.System_SetState(HGE.SCREENBPP, 32)
+	h.System_SetState(hge.WINDOWED, true)
+	h.System_SetState(hge.SCREENWIDTH, 800)
+	h.System_SetState(hge.SCREENHEIGHT, 600)
+	h.System_SetState(hge.SCREENBPP, 32)
 
 	if h.System_Initiate() {
 		defer h.System_Shutdown()
