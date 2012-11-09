@@ -39,12 +39,12 @@ func boom() {
 	h.Effect_PlayEx(snd, 100, pan, pitch)
 }
 
-func FrameFunc() int {
+func FrameFunc() bool {
 	dt := float64(h.Timer_GetDelta())
 
 	// Process keys
 	if h.Input_GetKeyState(hge.K_ESCAPE) {
-		return 1
+		return true
 	}
 	if h.Input_GetKeyState(hge.K_LEFT) {
 		dx -= speed * dt
@@ -96,13 +96,13 @@ func FrameFunc() int {
 	quad.V[3].Y = float32(y + 16)
 
 	// Continue execution
-	return 0
+	return false
 }
 
 // This function will be called by HGE when
 // the application window should be redrawn.
 // Put your rendering code here.
-func RenderFunc() int {
+func RenderFunc() bool {
 	// Begin rendering quads.
 	// This function must be called
 	// before any actual rendering.
@@ -119,7 +119,7 @@ func RenderFunc() int {
 	h.Gfx_EndScene()
 
 	// RenderFunc should always return false
-	return 0
+	return false
 }
 
 func main() {
@@ -141,10 +141,11 @@ func main() {
 
 	if h.System_Initiate() {
 		defer h.System_Shutdown()
+
 		// Load sound and texture
 		snd = h.Effect_Load("menu.ogg")
 		quad.Texture = h.Texture_Load("particles.png")
-		if snd == nil || quad.Texture == nil {
+		if /*snd == nil ||*/ quad.Texture == nil {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
 			fmt.Println("Error: Can't load menu.ogg or particles.png")

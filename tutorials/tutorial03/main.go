@@ -5,13 +5,11 @@ import (
 	"github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/particle"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
-	. "github.com/losinggeneration/hge-go/hge/input"
-	. "github.com/losinggeneration/hge-go/hge/sound"
-	. "github.com/losinggeneration/hge-go/hge/timer"
-	"runtime"
-	"time"
+	"github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge-go/hge/gfx"
+	"github.com/losinggeneration/hge-go/hge/input"
+	"github.com/losinggeneration/hge-go/hge/sound"
+	"github.com/losinggeneration/hge-go/hge/timer"
 )
 
 // An example of using closures
@@ -27,7 +25,7 @@ func main() {
 			fnt *font.Font
 			par *particle.ParticleSystem
 
-			snd *Effect
+			snd *sound.Effect
 
 			x  = 100.0
 			y  = 100.0
@@ -35,17 +33,17 @@ func main() {
 			dy = 0.0
 		)
 
-		hge := New()
+		h := hge.New()
 
-		hge.SetState(LOGFILE, "tutorial03.log")
-		hge.SetState(TITLE, "HGE Tutorial 03 - Using helper classes")
-		hge.SetState(FPS, 100)
-		hge.SetState(WINDOWED, true)
-		hge.SetState(SCREENWIDTH, 800)
-		hge.SetState(SCREENHEIGHT, 600)
-		hge.SetState(SCREENBPP, 32)
-		hge.SetState(FRAMEFUNC, func() int {
-			dt := float64(Delta())
+		h.SetState(hge.LOGFILE, "tutorial03.log")
+		h.SetState(hge.TITLE, "HGE Tutorial 03 - Using helper classes")
+		h.SetState(hge.FPS, 100)
+		h.SetState(hge.WINDOWED, true)
+		h.SetState(hge.SCREENWIDTH, 800)
+		h.SetState(hge.SCREENHEIGHT, 600)
+		h.SetState(hge.SCREENBPP, 32)
+		h.SetState(hge.FRAMEFUNC, func() int {
+			dt := float64(timer.Delta())
 
 			boom := func() {
 				pan := int((x - 400) / 4)
@@ -54,19 +52,19 @@ func main() {
 			}
 
 			// Process keys
-			if NewKey(K_ESCAPE).State() {
+			if input.K_ESCAPE.State() {
 				return 1
 			}
-			if NewKey(K_LEFT).State() {
+			if input.K_LEFT.State() {
 				dx -= speed * dt
 			}
-			if NewKey(K_RIGHT).State() {
+			if input.K_RIGHT.State() {
 				dx += speed * dt
 			}
-			if NewKey(K_UP).State() {
+			if input.K_UP.State() {
 				dy -= speed * dt
 			}
-			if NewKey(K_DOWN).State() {
+			if input.K_DOWN.State() {
 				dy += speed * dt
 			}
 
@@ -104,22 +102,22 @@ func main() {
 			return 0
 		})
 
-		hge.SetState(RENDERFUNC, func() int {
-			BeginScene()
-			Clear(0)
+		h.SetState(hge.RENDERFUNC, func() int {
+			gfx.BeginScene()
+			gfx.Clear(0)
 			par.Render()
 			spr.Render(x, y)
-			fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", Delta(), GetFPS())
-			EndScene()
+			fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", timer.Delta(), timer.FPS())
+			gfx.EndScene()
 
 			return 0
 		})
 
-		if err := hge.Initiate(); err == nil {
-			defer hge.Shutdown()
+		if err := h.Initiate(); err == nil {
+			defer h.Shutdown()
 
-			snd = NewEffect("menu.ogg")
-			tex := LoadTexture("particles.png")
+			snd = sound.NewEffect("menu.ogg")
+			tex := gfx.LoadTexture("particles.png")
 			if snd == nil || tex == nil {
 				fmt.Printf("Error: Can't load one of the following files:\nmenu.ogg, particles.png, font1.fnt, font1.png, trail.psi\n")
 				return
@@ -135,7 +133,7 @@ func main() {
 			}
 
 			spt := sprite.New(tex, 32, 32, 32, 32)
-			spt.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
+			spt.SetBlendMode(gfx.BLEND_COLORMUL | gfx.BLEND_ALPHAADD | gfx.BLEND_NOZWRITE)
 			spt.SetHotSpot(16, 16)
 
 			par = particle.New("trail.psi", spt)
@@ -145,13 +143,7 @@ func main() {
 			}
 			par.Fire()
 
-			hge.Start()
+			h.Start()
 		}
 	}()
-
-	for i := 0; i < 10; i++ {
-		fmt.Println("Sleeping")
-		time.Sleep(1 * time.Second)
-		runtime.GC()
-	}
 }
