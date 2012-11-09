@@ -6,15 +6,41 @@
 package gfx
 
 import "fmt"
+import (
+	"github.com/banthar/Go-SDL/sdl"
+	gl "github.com/chsc/gogl/gl33"
+	"runtime"
+)
+
+var (
+	width, height gl.Sizei
+)
+
+func SetWidth(w int) {
+	width = gl.Sizei(w)
+}
+
+func SetHeight(h int) {
+	height = gl.Sizei(h)
+}
 
 func Initialize() error {
+	err := gl.Init()
+	if err != nil {
+		return err
+	}
+
+	gl.Viewport(0, 0, width, height)
+
 	return fmt.Errorf("Gfx initialize not implemented")
 }
 func BeginScene(a ...interface{}) bool {
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	return false
 }
 
 func EndScene() {
+	sdl.GL_SwapBuffers()
 }
 
 func Clear(color uint32) {
@@ -86,18 +112,28 @@ func (t *Target) Texture() *Texture {
 
 // HGE Handle type
 type Texture struct {
-	texture interface{}
+	tex gl.Uint
 }
 
 func NewTexture(width, height int) *Texture {
-	return nil
+	var t gl.Uint
+	gl.GenTextures(1, &t)
+	tex := Texture{tex: t}
+
+	runtime.SetFinalizer(&tex, func(texture *Texture) {
+		texture.free()
+	})
+
+	return &tex
 }
 
-func LoadTexture(filename string, a ...interface{}) *Texture {
-	return nil
+func LoadTexture(filename string, a ...interface{}) (*Texture, error) {
+	return NewTexture(0, 0), nil
+	return &Texture{}, fmt.Errorf("Unable to load texture")
 }
 
-func (t *Texture) Free() {
+func (t *Texture) free() {
+	gl.DeleteTextures(1, &t.tex)
 }
 
 func (t *Texture) Width(a ...interface{}) int {

@@ -520,11 +520,14 @@ func (h *HGE) Texture_Create(width, height int) *gfx.Texture {
 }
 
 func (h *HGE) Texture_Load(filename string, a ...interface{}) *gfx.Texture {
-	return gfx.LoadTexture(filename, a...)
+	t, e := gfx.LoadTexture(filename, a...)
+	if e != nil {
+		return nil
+	}
+	return t
 }
 
 func (h *HGE) Texture_Free(tex *gfx.Texture) {
-	tex.Free()
 }
 
 func (h *HGE) Texture_GetWidth(tex gfx.Texture, a ...interface{}) int {

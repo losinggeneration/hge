@@ -1,6 +1,7 @@
 package hge
 
 import (
+	"github.com/losinggeneration/hge-go/hge/gfx"
 	"log"
 	"os"
 )
@@ -44,10 +45,12 @@ func setupHwndParent(h *HGE) error {
 //////// Int states
 
 func setupScreenWidth(h *HGE) error {
+	gfx.SetWidth(stateInts[SCREENWIDTH])
 	return nil
 }
 
 func setupScreenHeight(h *HGE) error {
+	gfx.SetHeight(stateInts[SCREENHEIGHT])
 	return nil
 }
 
