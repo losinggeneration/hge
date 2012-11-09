@@ -1,7 +1,6 @@
 package particle
 
 import (
-	"C"
 	"github.com/losinggeneration/hge-go/helpers/color"
 	"github.com/losinggeneration/hge-go/helpers/rect"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
@@ -81,7 +80,7 @@ func New(filename string, sprite sprite.Sprite, a ...interface{}) *ParticleSyste
 	}
 
 	ps.h = hge.New()
-	ps.rand = rand.New(int(timer.Time()))
+	ps.rand = rand.New(int64(timer.Time()))
 	ps.rand.Seed()
 
 	ptr, err := resource.LoadBytes(filename)
