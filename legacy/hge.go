@@ -472,7 +472,7 @@ func (h *HGE) Gfx_EndScene() {
 }
 
 func (h *HGE) Gfx_Clear(color uint32) {
-	gfx.Clear(color)
+	gfx.Clear(gfx.ARGBToColor(color))
 }
 
 func (h *HGE) Gfx_RenderLine(x1, y1, x2, y2 float64, a ...interface{}) {

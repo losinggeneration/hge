@@ -19,6 +19,7 @@ var (
 	h *hge.HGE
 
 	quad gfx.Quad
+	line gfx.Line
 
 	snd *sound.Effect
 
@@ -109,11 +110,13 @@ func RenderFunc() bool {
 	h.Gfx_BeginScene()
 
 	// Clear screen with black color
-	h.Gfx_Clear(0)
+	h.Gfx_Clear(0xff)
 
 	// Render quads here. This time just
 	// one of them will serve our needs.
 	h.Gfx_RenderQuad(&quad)
+	line.Render()
+	h.Gfx_RenderLine(100, 100, 150, 150)
 
 	// End rendering and update the screen
 	h.Gfx_EndScene()
@@ -161,7 +164,7 @@ func main() {
 			// Set up z-coordinate of vertices
 			quad.V[i].Z = 0.5
 			// Set up color. The format of DWORD col is 0xAARRGGBB
-			quad.V[i].Color = 0xFFFFA000
+			quad.V[i].Color = gfx.ARGBToColor(0xFFFFA000)
 		}
 
 		// Set up quad's texture coordinates.
@@ -175,6 +178,12 @@ func main() {
 		quad.V[2].TY = 96.0 / 128.0
 		quad.V[3].TX = 96.0 / 128.0
 		quad.V[3].TY = 96.0 / 128.0
+
+		line.X1 = 300
+		line.Y1 = 300
+		line.X2 = 400
+		line.Y2 = 300
+		line.Color = gfx.ARGBToColor(0xFFFFA000)
 
 		// Let's rock now!
 		h.System_Start()

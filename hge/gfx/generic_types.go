@@ -20,18 +20,22 @@ const (
 	PRIM_QUADS   = iota
 )
 
+type Color struct {
+	R, G, B, A uint32
+}
+
 // HGE Vertex structure
 type Vertex struct {
 	X, Y   float32 // screen position
 	Z      float32 // Z-buffer depth 0..1
-	Color  uint32  // color
+	Color  Color   // color
 	TX, TY float32 // texture coordinates
 }
 
 type Line struct {
 	X1, Y1, X2, Y2 float64
 	Z              float64
-	Color          uint32
+	Color          Color
 }
 
 // HGE Triple structure

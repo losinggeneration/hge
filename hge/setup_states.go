@@ -12,6 +12,7 @@ func setupWindowed(h *HGE) error {
 }
 
 func setupZBuffer(h *HGE) error {
+	gfx.SetZBuffer(stateBools[ZBUFFER])
 	return nil
 }
 
