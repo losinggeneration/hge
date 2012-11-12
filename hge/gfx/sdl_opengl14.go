@@ -3,13 +3,17 @@
 // I doubt there will ever bee the need for anything like: +build sdl,opengl
 // or: +build sdl,software
 // but it's an option
+
+// +build opengl,1_4
+
 package gfx
 
-import "fmt"
+// import "fmt"
 import (
 	"github.com/banthar/Go-SDL/sdl"
-	gl "github.com/chsc/gogl/gl33"
-	"runtime"
+	gl "github.com/chsc/gogl/gl21"
+
+// 	"runtime"
 )
 
 var (
@@ -25,14 +29,29 @@ func SetHeight(h int) {
 }
 
 func Initialize() error {
-	err := gl.Init()
-	if err != nil {
+	if err := gl.InitVersion10(); err != nil {
+		return err
+	}
+	if err := gl.InitVersion11(); err != nil {
+		return err
+	}
+	if err := gl.InitVersion12(); err != nil {
+		return err
+	}
+	if err := gl.InitVersion13(); err != nil {
+		return err
+	}
+	if err := gl.InitVersion14(); err != nil {
 		return err
 	}
 
+	gl.Enable(gl.TEXTURE_2D)
+	gl.ClearColor(0.0, 0.0, 0.0, 0.0)
 	gl.Viewport(0, 0, width, height)
+	// 	gl.MatrixMode(gl.PROJECTION)
+	// 	gl.LoadIdentity()
 
-	return fmt.Errorf("Gfx initialize not implemented")
+	return nil
 }
 func BeginScene(a ...interface{}) bool {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
@@ -108,45 +127,4 @@ func (t *Target) Free() {
 
 func (t *Target) Texture() *Texture {
 	return nil
-}
-
-// HGE Handle type
-type Texture struct {
-	tex gl.Uint
-}
-
-func NewTexture(width, height int) *Texture {
-	var t gl.Uint
-	gl.GenTextures(1, &t)
-	tex := Texture{tex: t}
-
-	runtime.SetFinalizer(&tex, func(texture *Texture) {
-		texture.free()
-	})
-
-	return &tex
-}
-
-func LoadTexture(filename string, a ...interface{}) (*Texture, error) {
-	return NewTexture(0, 0), nil
-	return &Texture{}, fmt.Errorf("Unable to load texture")
-}
-
-func (t *Texture) free() {
-	gl.DeleteTextures(1, &t.tex)
-}
-
-func (t *Texture) Width(a ...interface{}) int {
-	return 0
-}
-
-func (t *Texture) Height(a ...interface{}) int {
-	return 0
-}
-
-func (t *Texture) Lock(a ...interface{}) *uint32 {
-	return nil
-}
-
-func (t *Texture) Unlock() {
 }
