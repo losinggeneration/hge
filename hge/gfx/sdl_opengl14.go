@@ -102,7 +102,7 @@ func EndScene() {
 }
 
 func Clear(color Color) {
-	gl.ClearColor(gl.Clampf(color.R), gl.Clampf(color.G), gl.Clampf(color.B), gl.Clampf(color.A))
+	gl.ClearColor(gl.Float(color.R), gl.Float(color.G), gl.Float(color.B), gl.Float(color.A))
 }
 
 // Converts an ARGB uint32 to a Color structure
