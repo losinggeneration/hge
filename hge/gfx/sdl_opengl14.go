@@ -19,6 +19,7 @@ import (
 var (
 	width, height gl.Sizei
 	zBuffer       bool
+	curBlendMode  int = BLEND_DEFAULT
 )
 
 func SetWidth(w int) {
@@ -105,6 +106,39 @@ func Clear(color Color) {
 	gl.ClearColor(gl.Float(color.R), gl.Float(color.G), gl.Float(color.B), gl.Float(color.A))
 }
 
+func setBlendMode(blend int) {
+	if (blend & BLEND_ALPHABLEND) != (curBlendMode & BLEND_ALPHABLEND) {
+		if blend&BLEND_ALPHABLEND == BLEND_ALPHABLEND {
+			gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+		} else {
+			gl.BlendFunc(gl.SRC_ALPHA, gl.ONE)
+		}
+	}
+
+	if (blend & BLEND_ZWRITE) != (curBlendMode & BLEND_ZWRITE) {
+		if blend&BLEND_ZWRITE == BLEND_ZWRITE {
+			gl.DepthMask(gl.TRUE)
+		} else {
+			gl.DepthMask(gl.FALSE)
+		}
+	}
+
+	if (blend & BLEND_COLORADD) != (curBlendMode & BLEND_COLORADD) {
+		if blend&BLEND_COLORADD == BLEND_COLORADD {
+			gl.TexEnvi(gl.TEXTURE_ENV, gl.TEXTURE_ENV_MODE, gl.ADD)
+		} else {
+			gl.TexEnvi(gl.TEXTURE_ENV, gl.TEXTURE_ENV_MODE, gl.MODULATE)
+		}
+	}
+
+	curBlendMode = blend
+}
+
+// Converts a RGBA uint32 to a Color structure
+func RGBAToColor(c uint32) Color {
+	return Color{R: c >> 24, G: (c >> 16) & 0xFF, B: (c >> 8) & 0xFF, A: c & 0xFF}
+}
+
 // Converts an ARGB uint32 to a Color structure
 func ARGBToColor(c uint32) Color {
 	return Color{A: c >> 24, R: (c >> 16) & 0xFF, G: (c >> 8) & 0xFF, B: c & 0xFF}
@@ -141,7 +175,7 @@ func NewLine(x1, y1, x2, y2 float64, a ...interface{}) Line {
 
 func (l Line) Render() {
 	gl.Begin(gl.LINES)
-	gl.Color4ui(gl.Uint(l.Color.R), gl.Uint(l.Color.G), gl.Uint(l.Color.B), gl.Uint(l.Color.A))
+	gl.Color3ub(gl.Ubyte(l.Color.R), gl.Ubyte(l.Color.G), gl.Ubyte(l.Color.B))
 	gl.Vertex2d(gl.Double(l.X1), gl.Double(l.Y1))
 	gl.Vertex2d(gl.Double(l.X2), gl.Double(l.Y2))
 	gl.End()
@@ -150,7 +184,25 @@ func (l Line) Render() {
 func (t *Triple) Render() {
 }
 
+func (v *Vertex) Render() {
+	gl.Color4ub(gl.Ubyte(v.Color.R), gl.Ubyte(v.Color.G), gl.Ubyte(v.Color.B), gl.Ubyte(v.Color.A))
+	gl.Vertex2d(gl.Double(v.X), gl.Double(v.Y))
+}
+
 func (q *Quad) Render() {
+	if q.Texture != nil {
+		q.Texture.bind()
+	}
+	setBlendMode(q.Blend)
+
+	gl.Begin(gl.QUADS)
+	for _, v := range q.V {
+		if q.Texture != nil {
+			q.Texture.coord(Vertex{X: v.TX, Y: 1 - v.TY})
+		}
+		v.Render()
+	}
+	gl.End()
 }
 
 func StartBatch(prim_type int, tex *Texture, blend int) (ver *Vertex, max_prim int, ok bool) {

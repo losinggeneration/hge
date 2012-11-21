@@ -2,7 +2,7 @@
 
 package gfx
 
-// import "fmt"	
+// import "fmt"
 import (
 	"errors"
 	gl "github.com/chsc/gogl/gl21"
@@ -28,7 +28,7 @@ func decodeImage(r io.Reader) (*img, error) {
 
 	rgba, ok := i.(*image.NRGBA)
 	if !ok {
-		return nil, errors.New("Texuter must be an NRGBA image.")
+		return nil, errors.New("Texture must be an NRGBA image.")
 	}
 
 	is := new(img)
@@ -79,8 +79,9 @@ func LoadTexture(filename string, a ...interface{}) (*Texture, error) {
 
 	t.w, t.h = b.w, b.h
 
+	gl.Enable(gl.TEXTURE_2D)
 	gl.GenTextures(1, &t.tex)
-	gl.BindTexture(gl.TEXTURE_2D, t.tex)
+	t.bind()
 	gl.TexImage2D(gl.TEXTURE_2D, 0, 4, b.w, b.h, 0, gl.RGBA, gl.UNSIGNED_BYTE, gl.Pointer(&b.bytes[0]))
 
 	return t, nil
@@ -88,6 +89,14 @@ func LoadTexture(filename string, a ...interface{}) (*Texture, error) {
 
 func (t *Texture) free() {
 	gl.DeleteTextures(1, &t.tex)
+}
+
+func (t *Texture) bind() {
+	gl.BindTexture(gl.TEXTURE_2D, t.tex)
+}
+
+func (t *Texture) coord(v Vertex) {
+	gl.TexCoord2d(gl.Double(v.X), gl.Double(v.Y))
 }
 
 func (t *Texture) Width(a ...interface{}) int {

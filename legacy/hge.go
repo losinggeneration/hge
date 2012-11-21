@@ -75,6 +75,10 @@ func (h *HGE) System_GetErrorMessage() string {
 	return h.h.GetErrorMessage()
 }
 
+func (h *HGE) logError(e error) {
+	h.h.Log("%s", e)
+}
+
 // Writes a formatted message to the log file.
 func (h *HGE) System_Log(format string, v ...interface{}) {
 	h.h.Log(format, v...)
@@ -472,7 +476,7 @@ func (h *HGE) Gfx_EndScene() {
 }
 
 func (h *HGE) Gfx_Clear(color uint32) {
-	gfx.Clear(gfx.ARGBToColor(color))
+	gfx.Clear(gfx.RGBAToColor(color))
 }
 
 func (h *HGE) Gfx_RenderLine(x1, y1, x2, y2 float64, a ...interface{}) {
@@ -522,6 +526,8 @@ func (h *HGE) Texture_Create(width, height int) *gfx.Texture {
 func (h *HGE) Texture_Load(filename string, a ...interface{}) *gfx.Texture {
 	t, e := gfx.LoadTexture(filename, a...)
 	if e != nil {
+		fmt.Println(e)
+		h.logError(e)
 		return nil
 	}
 	return t

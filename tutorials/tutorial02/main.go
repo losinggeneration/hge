@@ -110,13 +110,13 @@ func RenderFunc() bool {
 	h.Gfx_BeginScene()
 
 	// Clear screen with black color
-	h.Gfx_Clear(0xff)
+	h.Gfx_Clear(0xffFF)
 
 	// Render quads here. This time just
 	// one of them will serve our needs.
 	h.Gfx_RenderQuad(&quad)
 	line.Render()
-	h.Gfx_RenderLine(100, 100, 150, 150)
+	h.Gfx_RenderLine(100, 100, 150, 150, uint32(0xFFFFFFFF))
 
 	// End rendering and update the screen
 	h.Gfx_EndScene()
