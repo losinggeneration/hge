@@ -57,15 +57,15 @@ func New(texture *gfx.Texture, texx, texy, w, h float64) Sprite {
 }
 
 func (sprite *Sprite) Render(x, y float64) {
-	tempx1 := x - sprite.HotX
-	tempy1 := y - sprite.HotY
-	tempx2 := x + sprite.W - sprite.HotX
-	tempy2 := y + sprite.H - sprite.HotY
+	tempx1 := float32(x - sprite.HotX)
+	tempy1 := float32(y - sprite.HotY)
+	tempx2 := float32(x + sprite.W - sprite.HotX)
+	tempy2 := float32(y + sprite.H - sprite.HotY)
 
-	sprite.Quad.V[0].X, sprite.Quad.V[0].Y = float32(tempx1), float32(tempy1)
-	sprite.Quad.V[1].X, sprite.Quad.V[1].Y = float32(tempx2), float32(tempy1)
-	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = float32(tempx2), float32(tempy2)
-	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = float32(tempx1), float32(tempy2)
+	sprite.Quad.V[0].X, sprite.Quad.V[0].Y = tempx1, tempy1
+	sprite.Quad.V[1].X, sprite.Quad.V[1].Y = tempx2, tempy1
+	sprite.Quad.V[2].X, sprite.Quad.V[2].Y = tempx2, tempy2
+	sprite.Quad.V[3].X, sprite.Quad.V[3].Y = tempx1, tempy2
 
 	sprite.Quad.Render()
 }
