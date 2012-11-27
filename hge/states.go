@@ -100,6 +100,7 @@ func init() {
 	// Func states: no setup needed
 
 	// Hwnd states
+	setupHwnds[HWND] = setupHwnd
 	setupHwnds[HWNDPARENT] = setupHwndParent
 
 	// Int states
@@ -141,6 +142,12 @@ func (h *HGE) SetState(a ...interface{}) error {
 		case StringState:
 			if ss, ok := a[1].(string); ok {
 				return h.setStateString(a[0].(StringState), ss)
+			}
+			if ss, ok := a[1].(*string); ok && ss != nil {
+				return h.setStateString(a[0].(StringState), *ss)
+			} else {
+				// A nil string state
+				return h.setStateString(a[0].(StringState), "")
 			}
 
 		case FuncState:
@@ -187,14 +194,18 @@ func (h *HGE) setStateFunc(state FuncState, value StateFunc) error {
 	return nil
 }
 
+func (h *HGE) setStateHwndPrivate(state HwndState, value *Hwnd) error {
+	stateHwnds[state] = value
+	return setupHwnds[state](h)
+}
+
 func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) error {
 	if state != HWNDPARENT {
 		h.Log("Invalid hwnd state")
 		return h.logError("Invald hwnd state: %d %s", state, value)
 	}
 
-	stateHwnds[state] = value
-	return setupHwnds[state](h)
+	return h.setStateHwndPrivate(state, value)
 }
 
 func (h *HGE) setStateInt(state IntState, value int) error {
@@ -296,8 +307,8 @@ func (h *HGE) setDefaultStates() {
 	h.SetState(EXITFUNC, nil)       // func() bool exit function (default: nil)
 
 	// Hwnd States
-	h.SetState(HWND, nil)       // int		window handle: read only
-	h.SetState(HWNDPARENT, nil) // int		parent win handle	(default: 0)
+	h.setStateHwndPrivate(HWND, nil) // int		window handle: read only
+	h.SetState(HWNDPARENT, nil)      // int		parent win handle	(default: 0)
 
 	// Int states
 	h.SetState(SCREENWIDTH, 800)    // int screen width (default: 800)
@@ -316,5 +327,5 @@ func (h *HGE) setDefaultStates() {
 	h.SetState(ICON, "")     // string icon resource (default: nil)
 	h.SetState(TITLE, "HGE") // string window title (default: "HGE")
 	h.SetState(INIFILE, "")  // string ini file (default: nil) (meaning no file)
-	h.SetState(LOGFILE, "")  // string log file (default: nil) (meaning no file)
+	h.SetState(LOGFILE, nil) // string log file (default: nil) (meaning no file)
 }

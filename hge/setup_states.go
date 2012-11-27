@@ -39,6 +39,10 @@ func setupShowSplash(h *HGE) error {
 //////// Func states: no setup needed
 
 //////// Hwnd states
+func setupHwnd(h *HGE) error {
+	return nil
+}
+
 func setupHwndParent(h *HGE) error {
 	return nil
 }
