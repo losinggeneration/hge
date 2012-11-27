@@ -11,6 +11,7 @@ import (
 	"github.com/losinggeneration/hge-go/hge/rand"
 	"github.com/losinggeneration/hge-go/hge/sound"
 	"github.com/losinggeneration/hge-go/hge/timer"
+	"io"
 	"log"
 	"math"
 	"time"
@@ -42,9 +43,18 @@ const (
 	FPS_VSYNC     = -1
 )
 
+type logger struct {
+	*log.Logger
+	file io.WriteCloser
+}
+
+func newLogger(out io.WriteCloser, prefix string, flag int) *logger {
+	return &logger{log.New(out, prefix, flag), out}
+}
+
 // HGE struct
 type HGE struct {
-	log        *log.Logger
+	log        *logger
 	last_error error
 }
 
@@ -132,6 +142,9 @@ func (h *HGE) Initialize() error {
 func (h *HGE) Shutdown() {
 	shutdownNative()
 	h.Log("Finished")
+	if h.log != nil {
+		h.log.file.Close()
+	}
 }
 
 // This is the main game loop. It does things like updates the graphics, handles

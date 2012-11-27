@@ -112,10 +112,18 @@ func setupInifile(h *HGE) error {
 
 // TODO the log file likely needs close called on it at some point
 func setupLogfile(h *HGE) error {
+	if stateStrings[LOGFILE] == "" {
+		if h.log != nil {
+			h.log.file.Close()
+			h.log = nil
+		}
+		return nil
+	}
+
 	file, err := os.Create(stateStrings[LOGFILE])
 	if err != nil {
 		return h.postError(err)
 	}
-	h.log = log.New(file, "<< ", log.LstdFlags)
+	h.log = newLogger(file, "<< ", log.LstdFlags)
 	return nil
 }
