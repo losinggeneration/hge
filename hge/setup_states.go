@@ -17,6 +17,7 @@ func setupZBuffer(h *HGE) error {
 }
 
 func setupTextureFilter(h *HGE) error {
+	gfx.SetTextureFilter(stateBools[TEXTUREFILTER])
 	return nil
 }
 
