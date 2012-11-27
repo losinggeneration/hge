@@ -2,7 +2,7 @@ package hge
 
 // HGE System state constants
 const (
-	WINDOWED      BoolState = iota // bool run in window? (default: false)
+	WINDOWED      BoolState = iota // bool run in window? (default: true)
 	ZBUFFER       BoolState = iota // bool use z-buffer? (default: false)
 	TEXTUREFILTER BoolState = iota // bool texture filtering? (default: true)
 
@@ -290,7 +290,7 @@ func (h *HGE) getStateString(state StringState) string {
 
 func (h *HGE) setDefaultStates() {
 	// Bool states
-	h.SetState(WINDOWED, false)     // bool run in window? (default: false)
+	h.SetState(WINDOWED, true)      // bool run in window? (default: true)
 	h.SetState(ZBUFFER, false)      // bool use z-buffer? (default: false)
 	h.SetState(TEXTUREFILTER, true) // bool texture filtering? (default: true)
 	h.SetState(USESOUND, true)      // bool use sound? (default: true)
