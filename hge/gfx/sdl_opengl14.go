@@ -198,6 +198,8 @@ func (q *Quad) Render() {
 	gl.Begin(gl.QUADS)
 	for _, v := range q.V {
 		if q.Texture != nil {
+			// The Y axis has to be inverted for OpenGL, we have the top left
+			// corner (0,0) and it's the bottom left in OpenGL
 			q.Texture.coord(Vertex{X: v.TX, Y: 1 - v.TY})
 		}
 		v.Render()
