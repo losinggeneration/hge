@@ -110,7 +110,7 @@ func RenderFunc() bool {
 	h.Gfx_BeginScene()
 
 	// Clear screen with black color
-	h.Gfx_Clear(0xffFF)
+	h.Gfx_Clear(0)
 
 	// Render quads here. This time just
 	// one of them will serve our needs.

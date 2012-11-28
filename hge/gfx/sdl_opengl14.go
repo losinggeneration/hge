@@ -17,9 +17,10 @@ import (
 )
 
 var (
-	width, height gl.Sizei
-	zBuffer       bool
-	curBlendMode  int = BLEND_DEFAULT
+	width, height      gl.Sizei
+	zBuffer            bool
+	curBlendMode       int = BLEND_DEFAULT
+	defaultTextureType gl.Enum
 )
 
 func SetWidth(w int) {
@@ -66,10 +67,51 @@ func Initialize() error {
 		return err
 	}
 
-	gl.Enable(gl.TEXTURE_2D)
-	gl.ClearColor(0.0, 0.0, 0.0, 0.0)
+	// For now, just TEXTURE_2D
+	defaultTextureType = gl.TEXTURE_2D
+
+	gl.PixelStorei(gl.UNPACK_ALIGNMENT, 1)
+	gl.PixelStorei(gl.PACK_ALIGNMENT, 1)
+
+	gl.Disable(gl.TEXTURE_2D)
+	gl.Enable(defaultTextureType)
+	gl.Enable(gl.SCISSOR_TEST)
+	gl.Disable(gl.CULL_FACE)
+	gl.Disable(gl.LIGHTING)
+	gl.DepthFunc(gl.GEQUAL)
+
+	if zBuffer {
+		gl.Enable(gl.DEPTH_TEST)
+	} else {
+		gl.Disable(gl.DEPTH_TEST)
+	}
+
+	gl.Enable(gl.BLEND)
+	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
+	gl.Enable(gl.ALPHA_TEST)
+	gl.AlphaFunc(gl.GEQUAL, 1.0/255.0)
+
+	gl.TexEnvi(gl.TEXTURE_ENV, gl.TEXTURE_ENV_MODE, gl.MODULATE)
+
+	default_texture_filter()
+
+	// !!! FIXME: this isn't what HGE's Direct3D code does, but the game I'm working with
+	// !!! FIXME:  forces clamping outside of HGE, so I just wedged it in here.
+	// Apple says texture rectangle on ATI X1000 chips only supports CLAMP_TO_EDGE.
+	// Texture rectangle only supports CLAMP* wrap modes anyhow.
+	// 	gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	// 	gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	// 	gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+
+	gl.Scissor(0, 0, width, height)
 	gl.Viewport(0, 0, width, height)
-	gl.MatrixMode(gl.PROJECTION)
+
+	// make sure the framebuffer is cleared and force to screen
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
+	setProjectionMatrix()
+	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
 
 	return nil
@@ -192,7 +234,7 @@ func (v *Vertex) Render() {
 func (q *Quad) Render() {
 	if q.Texture != nil {
 		q.Texture.bind()
-		q.Texture.filter()
+		default_texture_filter()
 	}
 	setBlendMode(q.Blend)
 

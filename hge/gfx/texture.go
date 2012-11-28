@@ -133,7 +133,7 @@ func (t *Texture) bind() {
 	gl.BindTexture(t.texType, t.tex)
 }
 
-func (t *Texture) filter() {
+func default_texture_filter() {
 	var filter gl.Int
 	if texFilter {
 		filter = gl.LINEAR
@@ -141,8 +141,8 @@ func (t *Texture) filter() {
 		filter = gl.NEAREST
 	}
 
-	gl.TexParameteri(t.texType, gl.TEXTURE_MIN_FILTER, filter)
-	gl.TexParameteri(t.texType, gl.TEXTURE_MAG_FILTER, filter)
+	gl.TexParameteri(defaultTextureType, gl.TEXTURE_MIN_FILTER, filter)
+	gl.TexParameteri(defaultTextureType, gl.TEXTURE_MAG_FILTER, filter)
 }
 
 func tex_coord(v Vertex) {
