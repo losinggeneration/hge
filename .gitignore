@@ -5,5 +5,7 @@
 
 # Ignore everything in the tutorial* subdirectories
 tutorials/tutorial*/*
+binding/tutorials/tutorial*/*
 # Except *.go files
 !tutorials/tutorial*/*.go
+!binding/tutorials/tutorial*/*.go
