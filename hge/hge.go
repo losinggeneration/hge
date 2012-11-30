@@ -262,6 +262,18 @@ func (h *HGE) SetState(a ...interface{}) {
 				h.setStateFunc(a[0].(FuncState), a[1].(func() int))
 				return
 			}
+		case func() bool:
+			h.setStateFunc(a[0].(FuncState), func() int {
+				if a[1].(func() bool)() {
+					return 1
+				}
+
+				return 0
+			})
+			return
+		default:
+			h.setStateFunc(a[0].(FuncState), nil)
+			return
 
 		case HwndState:
 			if hs, ok := a[1].(*Hwnd); ok {
