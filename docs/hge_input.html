@@ -1,0 +1,613 @@
+---
+title: hge_input
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/hge/input"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+For now we only build SDL, if we need to in the future we can use build tags
+such as: +build sdl
+</p>
+<p>
+For now we only build SDL, if we need to in the future we can use build tags
+such as: +build sdl
+</p>
+
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="#ClearQueue">func ClearQueue()</a></dd>
+			
+				
+				<dd><a href="#GetChar">func GetChar() uint8</a></dd>
+			
+				
+				<dd><a href="#Initialize">func Initialize() error</a></dd>
+			
+				
+				<dd><a href="#Process">func Process()</a></dd>
+			
+				
+				<dd><a href="#UpdateMouse">func UpdateMouse()</a></dd>
+			
+			
+				
+				<dd><a href="#Button">type Button</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Flag">type Flag</a></dd>
+				
+				
+			
+				
+				<dd><a href="#InputEvent">type InputEvent</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GetEvent">func GetEvent() (e InputEvent, b bool)</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Key">type Key</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GetKey">func GetKey() Key</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Key.Down">func (k Key) Down() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Key.Name">func (k Key) Name() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Key.State">func (k Key) State() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Key.Up">func (k Key) Up() bool</a></dd>
+				
+			
+				
+				<dd><a href="#Mouse">type Mouse</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New() *Mouse</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Mouse.IsOver">func (m *Mouse) IsOver() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Mouse.Pos">func (m *Mouse) Pos() (x, y float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Mouse.SetPos">func (m Mouse) SetPos(x, y float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Mouse.WheelMovement">func (m *Mouse) WheelMovement() int</a></dd>
+				
+			
+				
+				<dd><a href="#Type">type Type</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/sdl.go">sdl.go</a>
+			
+				<a href="/target/sdl_consts.go">sdl_consts.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+		
+		
+			
+			
+			<h2 id="ClearQueue">func <a href="/target/sdl.go?s=1920:1937#L71">ClearQueue</a></h2>
+			<pre>func ClearQueue()</pre>
+			<p>
+Clear the event queue
+Called automatically by hge.Run()
+</p>
+
+			
+		
+			
+			
+			<h2 id="GetChar">func <a href="/target/sdl.go?s=4092:4112#L168">GetChar</a></h2>
+			<pre>func GetChar() uint8</pre>
+			<p>
+Get the key character code
+</p>
+
+			
+		
+			
+			
+			<h2 id="Initialize">func <a href="/target/sdl.go?s=2346:2369#L95">Initialize</a></h2>
+			<pre>func Initialize() error</pre>
+			<p>
+Initialize the event structure
+Called automatically in hge.Initialize()
+</p>
+
+			
+		
+			
+			
+			<h2 id="Process">func <a href="/target/sdl.go?s=995:1009#L28">Process</a></h2>
+			<pre>func Process()</pre>
+			<p>
+Process events
+Called automatically by hge.Run()
+</p>
+
+			
+		
+			
+			
+			<h2 id="UpdateMouse">func <a href="/target/sdl.go?s=2161:2179#L84">UpdateMouse</a></h2>
+			<pre>func UpdateMouse()</pre>
+			<p>
+Update the internal mouse structure
+Called automatically by hge.Run()
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Button">type <a href="/target/sdl.go?s=343:358#L1">Button</a></h2>
+			<pre>type Button int <span class="comment">// A HGE Input Mouse button</span>
+</pre>
+			
+
+			
+				<pre>const (
+    M_LBUTTON Button = sdl.BUTTON_LEFT
+    M_RBUTTON Button = sdl.BUTTON_RIGHT
+    M_MBUTTON Button = sdl.BUTTON_MIDDLE
+)</pre>
+				<p>
+HGE Input Mouse buttons
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Flag">type <a href="/target/sdl.go?s=272:289#L1">Flag</a></h2>
+			<pre>type Flag sdl.Mod <span class="comment">// HGE Input Event flags (multiple ones may be OR&#39;d)</span>
+</pre>
+			
+
+			
+				<pre>const (
+    INP_SHIFT      Flag = sdl.KMOD_LSHIFT | sdl.KMOD_RSHIFT
+    INP_CTRL       Flag = sdl.KMOD_LCTRL | sdl.KMOD_RCTRL
+    INP_ALT        Flag = sdl.KMOD_LALT | sdl.KMOD_RALT
+    INP_CAPSLOCK   Flag = sdl.KMOD_CAPS
+    INP_SCROLLLOCK Flag = sdl.KMOD_MODE
+    INP_NUMLOCK    Flag = sdl.KMOD_NUM
+    INP_REPEAT     Flag = 0x20000
+)</pre>
+				<p>
+HGE Input Event flags
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="InputEvent">type <a href="/target/sdl.go?s=419:786#L4">InputEvent</a></h2>
+			<pre>type InputEvent struct {
+    Type   Type    <span class="comment">// event type</span>
+    Key    Key     <span class="comment">// key code</span>
+    Flags  Flag    <span class="comment">// event flags</span>
+    Chr    uint8   <span class="comment">// character code</span>
+    Button Button  <span class="comment">// Mouse Button</span>
+    Wheel  int     <span class="comment">// wheel shift</span>
+    X      float64 <span class="comment">// mouse cursor x-coordinate</span>
+    Y      float64 <span class="comment">// mouse cursor y-coordinate</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+HGE Input Event structure
+</p>
+
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="GetEvent">func <a href="/target/sdl.go?s=4211:4249#L173">GetEvent</a></h3>
+				<pre>func GetEvent() (e InputEvent, b bool)</pre>
+				<p>
+Get the event structure from the last time the events where updated
+</p>
+
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Key">type <a href="/target/sdl.go?s=228:240#L1">Key</a></h2>
+			<pre>type Key int <span class="comment">// A HGE Virtual-key code</span>
+</pre>
+			
+
+			
+				<pre>const (
+    K_ESCAPE    Key = sdl.K_ESCAPE
+    K_BACKSPACE Key = sdl.K_BACKSPACE
+    K_TAB       Key = sdl.K_TAB
+    K_ENTER     Key = sdl.K_RETURN
+    K_SPACE     Key = sdl.K_SPACE
+
+    K_SHIFT Key = sdl.K_RSHIFT | sdl.K_LSHIFT
+    K_CTRL  Key = sdl.K_RCTRL | sdl.K_LCTRL
+    K_ALT   Key = sdl.K_RALT | sdl.K_LALT
+
+    K_LWIN Key = sdl.K_LSUPER
+    K_RWIN Key = sdl.K_RSUPER
+    K_APPS Key = iota + key_offset
+
+    K_PAUSE      Key = sdl.K_PAUSE
+    K_CAPSLOCK   Key = sdl.K_CAPSLOCK
+    K_NUMLOCK    Key = sdl.K_NUMLOCK
+    K_SCROLLLOCK Key = sdl.K_SCROLLOCK
+
+    K_PGUP   Key = sdl.K_PAGEUP
+    K_PGDN   Key = sdl.K_PAGEDOWN
+    K_HOME   Key = sdl.K_HOME
+    K_END    Key = sdl.K_END
+    K_INSERT Key = sdl.K_INSERT
+    K_DELETE Key = sdl.K_DELETE
+
+    K_LEFT  Key = sdl.K_LEFT
+    K_UP    Key = sdl.K_UP
+    K_RIGHT Key = sdl.K_RIGHT
+    K_DOWN  Key = sdl.K_DOWN
+
+    K_0 Key = sdl.K_0
+    K_1 Key = sdl.K_1
+    K_2 Key = sdl.K_2
+    K_3 Key = sdl.K_3
+    K_4 Key = sdl.K_4
+    K_5 Key = sdl.K_5
+    K_6 Key = sdl.K_6
+    K_7 Key = sdl.K_7
+    K_8 Key = sdl.K_8
+    K_9 Key = sdl.K_9
+
+    K_A Key = sdl.K_a
+    K_B Key = sdl.K_b
+    K_C Key = sdl.K_c
+    K_D Key = sdl.K_d
+    K_E Key = sdl.K_e
+    K_F Key = sdl.K_f
+    K_G Key = sdl.K_g
+    K_H Key = sdl.K_h
+    K_I Key = sdl.K_i
+    K_J Key = sdl.K_j
+    K_K Key = sdl.K_k
+    K_L Key = sdl.K_l
+    K_M Key = sdl.K_m
+    K_N Key = sdl.K_n
+    K_O Key = sdl.K_o
+    K_P Key = sdl.K_p
+    K_Q Key = sdl.K_q
+    K_R Key = sdl.K_r
+    K_S Key = sdl.K_s
+    K_T Key = sdl.K_t
+    K_U Key = sdl.K_u
+    K_V Key = sdl.K_v
+    K_W Key = sdl.K_w
+    K_X Key = sdl.K_x
+    K_Y Key = sdl.K_y
+    K_Z Key = sdl.K_z
+
+    K_GRAVE      Key = sdl.K_BACKQUOTE
+    K_MINUS      Key = sdl.K_MINUS
+    K_EQUALS     Key = sdl.K_EQUALS
+    K_BACKSLASH  Key = sdl.K_BACKSLASH
+    K_LBRACKET   Key = sdl.K_LEFTBRACKET
+    K_RBRACKET   Key = sdl.K_RIGHTBRACKET
+    K_SEMICOLON  Key = sdl.K_SEMICOLON
+    K_APOSTROPHE Key = sdl.K_QUOTE
+    K_COMMA      Key = sdl.K_COMMA
+    K_PERIOD     Key = sdl.K_PERIOD
+    K_SLASH      Key = sdl.K_SLASH
+
+    K_NUMPAD0 Key = sdl.K_KP0
+    K_NUMPAD1 Key = sdl.K_KP1
+    K_NUMPAD2 Key = sdl.K_KP2
+    K_NUMPAD3 Key = sdl.K_KP3
+    K_NUMPAD4 Key = sdl.K_KP4
+    K_NUMPAD5 Key = sdl.K_KP5
+    K_NUMPAD6 Key = sdl.K_KP6
+    K_NUMPAD7 Key = sdl.K_KP7
+    K_NUMPAD8 Key = sdl.K_KP8
+    K_NUMPAD9 Key = sdl.K_KP9
+
+    K_MULTIPLY Key = sdl.K_KP_MULTIPLY
+    K_DIVIDE   Key = sdl.K_KP_DIVIDE
+    K_ADD      Key = sdl.K_KP_PLUS
+    K_SUBTRACT Key = sdl.K_KP_MINUS
+    K_DECIMAL  Key = sdl.K_KP_PERIOD
+
+    K_F1  Key = sdl.K_F1
+    K_F2  Key = sdl.K_F2
+    K_F3  Key = sdl.K_F3
+    K_F4  Key = sdl.K_F4
+    K_F5  Key = sdl.K_F5
+    K_F6  Key = sdl.K_F6
+    K_F7  Key = sdl.K_F7
+    K_F8  Key = sdl.K_F8
+    K_F9  Key = sdl.K_F9
+    K_F10 Key = sdl.K_F10
+    K_F11 Key = sdl.K_F11
+    K_F12 Key = sdl.K_F12
+)</pre>
+				<p>
+HGE Virtual-key codes
+</p>
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="GetKey">func <a href="/target/sdl.go?s=4024:4041#L163">GetKey</a></h3>
+				<pre>func GetKey() Key</pre>
+				<p>
+Get the last polled key
+</p>
+
+				
+			
+
+			
+				
+				<h3 id="Key.Down">func (Key) <a href="/target/sdl.go?s=3527:3551#L140">Down</a></h3>
+				<pre>func (k Key) Down() bool</pre>
+				<p>
+Returns true if there&#39;s been a key pressed down since the last time the
+events were updated
+</p>
+
+				
+				
+			
+				
+				<h3 id="Key.Name">func (Key) <a href="/target/sdl.go?s=3930:3956#L158">Name</a></h3>
+				<pre>func (k Key) Name() string</pre>
+				<p>
+Return the key name
+</p>
+
+				
+				
+			
+				
+				<h3 id="Key.State">func (Key) <a href="/target/sdl.go?s=3832:3857#L152">State</a></h3>
+				<pre>func (k Key) State() bool</pre>
+				<p>
+The current state of the button
+Returns true if the key is currently pressed, false otherwise
+</p>
+
+				
+				
+			
+				
+				<h3 id="Key.Up">func (Key) <a href="/target/sdl.go?s=3679:3701#L146">Up</a></h3>
+				<pre>func (k Key) Up() bool</pre>
+				<p>
+Returns true if there&#39;s been a key pressed down since the last time the
+events were updated
+</p>
+
+				
+				
+			
+		
+			
+			
+			<h2 id="Mouse">type <a href="/target/sdl.go?s=2401:2619#L100">Mouse</a></h2>
+			<pre>type Mouse struct {
+    X, Y  float64 <span class="comment">// The position of the mouse relative to the top left corner</span>
+    Wheel int     <span class="comment">// The scroll wheel movement: negative down/positive up</span>
+    Over  bool    <span class="comment">// If the mouse is over the window</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="New">func <a href="/target/sdl.go?s=2621:2638#L106">New</a></h3>
+				<pre>func New() *Mouse</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="Mouse.IsOver">func (*Mouse) <a href="/target/sdl.go?s=3380:3409#L134">IsOver</a></h3>
+				<pre>func (m *Mouse) IsOver() bool</pre>
+				<p>
+Returns if the mouse is currently over the window
+Always true when in fullscreen mode
+TODO Currently unimplemented
+</p>
+
+				
+				
+			
+				
+				<h3 id="Mouse.Pos">func (*Mouse) <a href="/target/sdl.go?s=2741:2777#L111">Pos</a></h3>
+				<pre>func (m *Mouse) Pos() (x, y float64)</pre>
+				<p>
+Returns the last known position of the mouse relative to the top-left corner
+</p>
+
+				
+				
+			
+				
+				<h3 id="Mouse.SetPos">func (Mouse) <a href="/target/sdl.go?s=2835:2870#L116">SetPos</a></h3>
+				<pre>func (m Mouse) SetPos(x, y float64)</pre>
+				<p>
+Set the mouse position to (x,y)
+</p>
+
+				
+				
+			
+				
+				<h3 id="Mouse.WheelMovement">func (*Mouse) <a href="/target/sdl.go?s=3199:3234#L127">WheelMovement</a></h3>
+				<pre>func (m *Mouse) WheelMovement() int</pre>
+				<p>
+Returns the movement if there&#39;s been any mouse movement since the last time
+the events were updated.
+Returns a positive value is returned if the wheel is scrolled up
+Returns a negative value if it&#39;s scrolled down
+Returns zero on no movement
+</p>
+
+				
+				
+			
+		
+			
+			
+			<h2 id="Type">type <a href="/target/sdl.go?s=174:187#L1">Type</a></h2>
+			<pre>type Type int <span class="comment">// A HGE Input Event type constants</span>
+</pre>
+			
+
+			
+				<pre>const (
+    INPUT_KEYDOWN     Type = sdl.KEYDOWN
+    INPUT_KEYUP       Type = sdl.KEYUP
+    INPUT_MBUTTONDOWN Type = sdl.MOUSEBUTTONDOWN
+    INPUT_MBUTTONUP   Type = sdl.MOUSEBUTTONUP
+    INPUT_MOUSEMOVE   Type = sdl.MOUSEMOTION
+    INPUT_MOUSEWHEEL  Type = sdl.NUMEVENTS + iota
+)</pre>
+				<p>
+HGE Input Event type constants
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+

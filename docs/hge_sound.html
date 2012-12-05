@@ -1,0 +1,553 @@
+---
+title: hge_sound
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/hge/sound"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+For now we only build SDL, if we need to in the future we can use build tags
+such as: +build sdl
+I doubt there will ever bee the need for anything like: +build sdl,openal
+but it&#39;s an option
+</p>
+
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="#Initialize">func Initialize() error</a></dd>
+			
+				
+				<dd><a href="#PauseAll">func PauseAll()</a></dd>
+			
+				
+				<dd><a href="#ResumeAll">func ResumeAll()</a></dd>
+			
+				
+				<dd><a href="#StopAll">func StopAll()</a></dd>
+			
+			
+				
+				<dd><a href="#Channel">type Channel</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.IsPlaying">func (c Channel) IsPlaying() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.IsSliding">func (c Channel) IsSliding() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.Len">func (c Channel) Len() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.Pause">func (c Channel) Pause()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.Pos">func (c Channel) Pos() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.Resume">func (c Channel) Resume()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.SetPanning">func (c Channel) SetPanning(pan int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.SetPitch">func (c Channel) SetPitch(pitch float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.SetPos">func (c Channel) SetPos(seconds float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.SetVolume">func (c Channel) SetVolume(volume int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.SlideTo">func (c Channel) SlideTo(time float64, a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Channel.Stop">func (c Channel) Stop()</a></dd>
+				
+			
+				
+				<dd><a href="#Effect">type Effect</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewEffect">func NewEffect(filename string, a ...interface{}) *Effect</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Effect.Free">func (e *Effect) Free()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Effect.Play">func (e *Effect) Play() Channel</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Effect.PlayEx">func (e *Effect) PlayEx(a ...interface{}) Channel</a></dd>
+				
+			
+				
+				<dd><a href="#Music">type Music</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewMusic">func NewMusic(filename string, size uint32) *Music</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.Amplification">func (m *Music) Amplification() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.ChannelVolume">func (m *Music) ChannelVolume(channel int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.Free">func (m *Music) Free()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.InstrVolume">func (m *Music) InstrVolume(instr int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.Len">func (m *Music) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.Play">func (m *Music) Play(loop bool, a ...interface{}) Channel</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.Pos">func (m *Music) Pos() (order, row int, ok bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.SetAmplification">func (m *Music) SetAmplification(ampl int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.SetChannelVolume">func (m *Music) SetChannelVolume(channel, volume int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.SetInstrVolume">func (m *Music) SetInstrVolume(instr int, volume int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Music.SetPos">func (m *Music) SetPos(order, row int)</a></dd>
+				
+			
+				
+				<dd><a href="#Stream">type Stream</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewStream">func NewStream(filename string, size uint32) *Stream</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Stream.Free">func (s *Stream) Free()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Stream.Play">func (s *Stream) Play(loop bool, a ...interface{}) Channel</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/sdl.go">sdl.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+		
+		
+			
+			
+			<h2 id="Initialize">func <a href="/target/sdl.go?s=231:254#L1">Initialize</a></h2>
+			<pre>func Initialize() error</pre>
+			
+			
+		
+			
+			
+			<h2 id="PauseAll">func <a href="/target/sdl.go?s=958:973#L47">PauseAll</a></h2>
+			<pre>func PauseAll()</pre>
+			<p>
+Pause all sounds on all channels
+</p>
+
+			
+		
+			
+			
+			<h2 id="ResumeAll">func <a href="/target/sdl.go?s=1016:1032#L51">ResumeAll</a></h2>
+			<pre>func ResumeAll()</pre>
+			<p>
+Resume all sounds on all channels
+</p>
+
+			
+		
+			
+			
+			<h2 id="StopAll">func <a href="/target/sdl.go?s=1073:1087#L55">StopAll</a></h2>
+			<pre>func StopAll()</pre>
+			<p>
+Stop all sounds on all channels
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Channel">type <a href="/target/sdl.go?s=654:698#L24">Channel</a></h2>
+			<pre>type Channel struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+HGE Handle type
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="Channel.IsPlaying">func (Channel) <a href="/target/sdl.go?s=1093:1126#L58">IsPlaying</a></h3>
+				<pre>func (c Channel) IsPlaying() bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.IsSliding">func (Channel) <a href="/target/sdl.go?s=1346:1379#L76">IsSliding</a></h3>
+				<pre>func (c Channel) IsSliding() bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.Len">func (Channel) <a href="/target/sdl.go?s=1146:1176#L62">Len</a></h3>
+				<pre>func (c Channel) Len() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.Pause">func (Channel) <a href="/target/sdl.go?s=832:856#L37">Pause</a></h3>
+				<pre>func (c Channel) Pause()</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.Pos">func (Channel) <a href="/target/sdl.go?s=1192:1222#L66">Pos</a></h3>
+				<pre>func (c Channel) Pos() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.Resume">func (Channel) <a href="/target/sdl.go?s=862:887#L40">Resume</a></h3>
+				<pre>func (c Channel) Resume()</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.SetPanning">func (Channel) <a href="/target/sdl.go?s=700:736#L28">SetPanning</a></h3>
+				<pre>func (c Channel) SetPanning(pan int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.SetPitch">func (Channel) <a href="/target/sdl.go?s=786:826#L34">SetPitch</a></h3>
+				<pre>func (c Channel) SetPitch(pitch float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.SetPos">func (Channel) <a href="/target/sdl.go?s=1238:1278#L70">SetPos</a></h3>
+				<pre>func (c Channel) SetPos(seconds float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.SetVolume">func (Channel) <a href="/target/sdl.go?s=742:780#L31">SetVolume</a></h3>
+				<pre>func (c Channel) SetVolume(volume int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.SlideTo">func (Channel) <a href="/target/sdl.go?s=1284:1340#L73">SlideTo</a></h3>
+				<pre>func (c Channel) SlideTo(time float64, a ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="Channel.Stop">func (Channel) <a href="/target/sdl.go?s=893:916#L43">Stop</a></h3>
+				<pre>func (c Channel) Stop()</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Effect">type <a href="/target/sdl.go?s=334:376#L4">Effect</a></h2>
+			<pre>type Effect struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+HGE Handle type
+</p>
+
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="NewEffect">func <a href="/target/sdl.go?s=378:435#L8">NewEffect</a></h3>
+				<pre>func NewEffect(filename string, a ...interface{}) *Effect</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="Effect.Free">func (*Effect) <a href="/target/sdl.go?s=459:482#L12">Free</a></h3>
+				<pre>func (e *Effect) Free()</pre>
+				
+				
+				
+			
+				
+				<h3 id="Effect.Play">func (*Effect) <a href="/target/sdl.go?s=488:519#L15">Play</a></h3>
+				<pre>func (e *Effect) Play() Channel</pre>
+				
+				
+				
+			
+				
+				<h3 id="Effect.PlayEx">func (*Effect) <a href="/target/sdl.go?s=562:611#L19">PlayEx</a></h3>
+				<pre>func (e *Effect) PlayEx(a ...interface{}) Channel</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Music">type <a href="/target/sdl.go?s=1417:1457#L81">Music</a></h2>
+			<pre>type Music struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+HGE Handle type
+</p>
+
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="NewMusic">func <a href="/target/sdl.go?s=1459:1509#L85">NewMusic</a></h3>
+				<pre>func NewMusic(filename string, size uint32) *Music</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="Music.Amplification">func (*Music) <a href="/target/sdl.go?s=1684:1719#L99">Amplification</a></h3>
+				<pre>func (m *Music) Amplification() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.ChannelVolume">func (*Music) <a href="/target/sdl.go?s=2069:2115#L124">ChannelVolume</a></h3>
+				<pre>func (m *Music) ChannelVolume(channel int) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.Free">func (*Music) <a href="/target/sdl.go?s=1527:1549#L89">Free</a></h3>
+				<pre>func (m *Music) Free()</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.InstrVolume">func (*Music) <a href="/target/sdl.go?s=1952:1994#L117">InstrVolume</a></h3>
+				<pre>func (m *Music) InstrVolume(instr int) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.Len">func (*Music) <a href="/target/sdl.go?s=1735:1760#L103">Len</a></h3>
+				<pre>func (m *Music) Len() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.Play">func (*Music) <a href="/target/sdl.go?s=1555:1612#L92">Play</a></h3>
+				<pre>func (m *Music) Play(loop bool, a ...interface{}) Channel</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.Pos">func (*Music) <a href="/target/sdl.go?s=1820:1867#L110">Pos</a></h3>
+				<pre>func (m *Music) Pos() (order, row int, ok bool)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.SetAmplification">func (*Music) <a href="/target/sdl.go?s=1636:1678#L96">SetAmplification</a></h3>
+				<pre>func (m *Music) SetAmplification(ampl int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.SetChannelVolume">func (*Music) <a href="/target/sdl.go?s=2010:2063#L121">SetChannelVolume</a></h3>
+				<pre>func (m *Music) SetChannelVolume(channel, volume int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.SetInstrVolume">func (*Music) <a href="/target/sdl.go?s=1893:1946#L114">SetInstrVolume</a></h3>
+				<pre>func (m *Music) SetInstrVolume(instr int, volume int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Music.SetPos">func (*Music) <a href="/target/sdl.go?s=1776:1814#L107">SetPos</a></h3>
+				<pre>func (m *Music) SetPos(order, row int)</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Stream">type <a href="/target/sdl.go?s=2150:2192#L129">Stream</a></h2>
+			<pre>type Stream struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+HGE Handle type
+</p>
+
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="NewStream">func <a href="/target/sdl.go?s=2194:2246#L133">NewStream</a></h3>
+				<pre>func NewStream(filename string, size uint32) *Stream</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="Stream.Free">func (*Stream) <a href="/target/sdl.go?s=2264:2287#L137">Free</a></h3>
+				<pre>func (s *Stream) Free()</pre>
+				
+				
+				
+			
+				
+				<h3 id="Stream.Play">func (*Stream) <a href="/target/sdl.go?s=2293:2351#L140">Play</a></h3>
+				<pre>func (s *Stream) Play(loop bool, a ...interface{}) Channel</pre>
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+

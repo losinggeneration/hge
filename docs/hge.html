@@ -1,0 +1,634 @@
+---
+title: hge
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/hge"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+This is mostly a convenience/utility package. It can easily change the
+sub-package states, such as how many frames-per-second should be rendered in
+the gfx package. It also provides some utilities like a main loop and logging
+to a file.
+</p>
+<p>
+For now we only build SDL, if we need to in the future we can use build tags
+such as: +build sdl
+</p>
+
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="#BoolState">type BoolState</a></dd>
+				
+				
+			
+				
+				<dd><a href="#FuncState">type FuncState</a></dd>
+				
+				
+			
+				
+				<dd><a href="#HGE">type HGE</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(a ...interface{}) *HGE</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Shared">func Shared(a ...interface{}) *HGE</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.GetErrorMessage">func (h *HGE) GetErrorMessage() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.GetState">func (h *HGE) GetState(a ...interface{}) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Initialize">func (h *HGE) Initialize() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Initiate">func (h *HGE) Initiate() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Launch">func (h *HGE) Launch(url string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Log">func (h *HGE) Log(format string, v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Run">func (h *HGE) Run() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.SetState">func (h *HGE) SetState(a ...interface{}) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Shutdown">func (h *HGE) Shutdown()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Snapshot">func (h *HGE) Snapshot(a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Start">func (h *HGE) Start() error</a></dd>
+				
+			
+				
+				<dd><a href="#Hwnd">type Hwnd</a></dd>
+				
+				
+			
+				
+				<dd><a href="#HwndState">type HwndState</a></dd>
+				
+				
+			
+				
+				<dd><a href="#IntState">type IntState</a></dd>
+				
+				
+			
+				
+				<dd><a href="#StateFunc">type StateFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="#StringState">type StringState</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/compatibility.go">compatibility.go</a>
+			
+				<a href="/target/hge.go">hge.go</a>
+			
+				<a href="/target/sdl.go">sdl.go</a>
+			
+				<a href="/target/setup_states.go">setup_states.go</a>
+			
+				<a href="/target/states.go">states.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    Pi     = math.Pi
+    Pi_2   = math.Pi / 2
+    Pi_4   = math.Pi / 4
+    One_Pi = 1 / math.Pi
+    Two_Pi = 2 / math.Pi
+)</pre>
+				<p>
+Common math constants
+</p>
+
+			
+				<pre>const (
+    PWR_AC          = -1
+    PWR_UNSUPPORTED = -2
+)</pre>
+				<p>
+POWERSTATUS system state special constants
+</p>
+
+			
+				<pre>const (
+    FPS_UNLIMITED = 0
+    FPS_VSYNC     = -1
+)</pre>
+				<p>
+FPS system state special constants
+</p>
+
+			
+				<pre>const (
+    VERSION = 0x181
+)</pre>
+				<p>
+The current version of this package
+</p>
+
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="BoolState">type <a href="/target/states.go?s=2684:2699#L58">BoolState</a></h2>
+			<pre>type BoolState int</pre>
+			
+
+			
+				<pre>const (
+    WINDOWED      BoolState = iota <span class="comment">// bool run in window? (default: true)</span>
+    ZBUFFER       BoolState = iota <span class="comment">// bool use z-buffer? (default: false)</span>
+    TEXTUREFILTER BoolState = iota <span class="comment">// bool texture filtering? (default: true)</span>
+
+    USESOUND BoolState = iota <span class="comment">// bool use sound? (default: true)</span>
+
+    DONTSUSPEND BoolState = iota <span class="comment">// bool focus lost:suspend? (default: false)</span>
+    HIDEMOUSE   BoolState = iota <span class="comment">// bool hide system cursor? (default: true)</span>
+
+    SHOWSPLASH BoolState = iota <span class="comment">// bool show splash? (default: true)</span>
+
+)</pre>
+				<p>
+HGE System state constants
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FuncState">type <a href="/target/states.go?s=2701:2716#L59">FuncState</a></h2>
+			<pre>type FuncState int</pre>
+			
+
+			
+				<pre>const (
+    FRAMEFUNC      FuncState = iota <span class="comment">// func() bool frame function (default: nil) (you MUST set this)</span>
+    RENDERFUNC     FuncState = iota <span class="comment">// func() bool render function (default: nil)</span>
+    FOCUSLOSTFUNC  FuncState = iota <span class="comment">// func() bool focus lost function (default: nil)</span>
+    FOCUSGAINFUNC  FuncState = iota <span class="comment">// func() bool focus gain function (default: nil)</span>
+    GFXRESTOREFUNC FuncState = iota <span class="comment">// func() bool gfx restore function (default: nil)</span>
+    EXITFUNC       FuncState = iota <span class="comment">// func() bool exit function (default: nil)</span>
+
+)</pre>
+				<p>
+When any of these return true, it indicates to stop the main loop from
+continuing to run.
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HGE">type <a href="/target/hge.go?s=1139:1196#L46">HGE</a></h2>
+			<pre>type HGE struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+HGE struct
+</p>
+
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="New">func <a href="/target/hge.go?s=1244:1275#L52">New</a></h3>
+				<pre>func New(a ...interface{}) *HGE</pre>
+				<p>
+Creates a new instance of an HGE structure
+</p>
+
+				
+			
+				
+				<h3 id="Shared">func <a href="/target/hge.go?s=1554:1588#L72">Shared</a></h3>
+				<pre>func Shared(a ...interface{}) *HGE</pre>
+				<p>
+This will create a shared instance of an HGE structure.
+It&#39;s basically a singleton interface.
+</p>
+
+				
+			
+
+			
+				
+				<h3 id="HGE.GetErrorMessage">func (*HGE) <a href="/target/hge.go?s=4490:4528#L200">GetErrorMessage</a></h3>
+				<pre>func (h *HGE) GetErrorMessage() string</pre>
+				<p>
+Returns last occurred HGE error description.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.GetState">func (*HGE) <a href="/target/states.go?s=7090:7142#L222">GetState</a></h3>
+				<pre>func (h *HGE) GetState(a ...interface{}) interface{}</pre>
+				<p>
+Returns internal system state values.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Initialize">func (*HGE) <a href="/target/hge.go?s=1722:1754#L81">Initialize</a></h3>
+				<pre>func (h *HGE) Initialize() error</pre>
+				<p>
+Initializes hardware and software needed to run engine.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Initiate">func (*HGE) <a href="/target/compatibility.go?s=13:43#L1">Initiate</a></h3>
+				<pre>func (h *HGE) Initiate() error</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Launch">func (*HGE) <a href="/target/hge.go?s=5257:5294#L230">Launch</a></h3>
+				<pre>func (h *HGE) Launch(url string) bool</pre>
+				<p>
+Launches an URL or external executable/data file.
+TODO
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Log">func (*HGE) <a href="/target/hge.go?s=4989:5039#L219">Log</a></h3>
+				<pre>func (h *HGE) Log(format string, v ...interface{})</pre>
+				<p>
+Writes a formatted message to the log file.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Run">func (*HGE) <a href="/target/hge.go?s=3253:3278#L143">Run</a></h3>
+				<pre>func (h *HGE) Run() error</pre>
+				<p>
+This is the main game loop. It does things like updates the graphics, handles
+user input, and all. The user supplied functions are run if defined as well.
+The frame function must be defined before calling Run.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.SetState">func (*HGE) <a href="/target/states.go?s=4508:4554#L119">SetState</a></h3>
+				<pre>func (h *HGE) SetState(a ...interface{}) error</pre>
+				<p>
+Sets internal system states.
+First param should be one of: BoolState, IntState, StringState, FuncState, HwndState
+Second parameter must be of the matching type, bool, int, string, StateFunc/func (h *HGE)() int, *Hwnd
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Shutdown">func (*HGE) <a href="/target/hge.go?s=2924:2948#L132">Shutdown</a></h3>
+				<pre>func (h *HGE) Shutdown()</pre>
+				<p>
+Shuts all subsystems down (if needed)
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Snapshot">func (*HGE) <a href="/target/hge.go?s=5367:5407#L236">Snapshot</a></h3>
+				<pre>func (h *HGE) Snapshot(a ...interface{})</pre>
+				<p>
+Saves current screen snapshot into a file.
+TODO
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Start">func (*HGE) <a href="/target/compatibility.go?s=72:99#L1">Start</a></h3>
+				<pre>func (h *HGE) Start() error</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Hwnd">type <a href="/target/sdl.go?s=168:189#L1">Hwnd</a></h2>
+			<pre>type Hwnd sdl.Surface</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HwndState">type <a href="/target/states.go?s=2718:2733#L60">HwndState</a></h2>
+			<pre>type HwndState int</pre>
+			
+
+			
+				<pre>const (
+    HWND       HwndState = iota <span class="comment">// int		window handle: read only</span>
+    HWNDPARENT HwndState = iota <span class="comment">// int		parent win handle	(default: 0)</span>
+
+)</pre>
+				
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IntState">type <a href="/target/states.go?s=2735:2750#L61">IntState</a></h2>
+			<pre>type IntState int</pre>
+			
+
+			
+				<pre>const (
+    SCREENWIDTH      IntState = iota <span class="comment">// int screen width (default: 800)</span>
+    SCREENHEIGHT     IntState = iota <span class="comment">// int screen height (default: 600)</span>
+    SCREENBPP        IntState = iota <span class="comment">// int screen bitdepth (default: 32) (desktop bpp in windowed mode)</span>
+    ORIGSCREENWIDTH  IntState = iota <span class="comment">// int original screen width (default: 800 ... not valid until hge.System_Initiate()!)</span>
+    ORIGSCREENHEIGHT IntState = iota <span class="comment">// int original screen height (default: 600 ... not valid until hge.System_Initiate()!))</span>
+    FPS              IntState = iota <span class="comment">// int fixed fps (default: hge.FPS_UNLIMITED)</span>
+
+    SAMPLERATE   IntState = iota <span class="comment">// int sample rate (default: 44100)</span>
+    FXVOLUME     IntState = iota <span class="comment">// int global fx volume (default: 100)</span>
+    MUSVOLUME    IntState = iota <span class="comment">// int global music volume (default: 100)</span>
+    STREAMVOLUME IntState = iota <span class="comment">// int stream music volume (default: 100)</span>
+
+    POWERSTATUS IntState = iota <span class="comment">// int battery life percent + status</span>
+
+)</pre>
+				
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StateFunc">type <a href="/target/states.go?s=2771:2797#L65">StateFunc</a></h2>
+			<pre>type StateFunc func() bool</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StringState">type <a href="/target/states.go?s=2752:2767#L62">StringState</a></h2>
+			<pre>type StringState int</pre>
+			
+
+			
+				<pre>const (
+    ICON  StringState = iota <span class="comment">// string icon resource (default: nil)</span>
+    TITLE StringState = iota <span class="comment">// string window title (default: &#34;HGE&#34;)</span>
+
+    INIFILE StringState = iota <span class="comment">// string ini file (default: nil) (meaning no file)</span>
+    LOGFILE StringState = iota <span class="comment">// string log file (default: nil) (meaning no file)</span>
+
+)</pre>
+				
+			
+
+			
+
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	<table class="dir">
+	<tr>
+	<th>Name</th>
+	<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+	<th style="text-align: left; width: auto">Synopsis</th>
+	</tr>
+	
+		<tr>
+		<td><a href="..">..</a></td>
+		</tr>
+	
+	
+		
+			<tr>
+			<td class="name"><a href="gfx/">gfx</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+		
+			<tr>
+			<td class="name"><a href="ini/">ini</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+		
+			<tr>
+			<td class="name"><a href="input/">input</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+		
+			<tr>
+			<td class="name"><a href="rand/">rand</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+		
+			<tr>
+			<td class="name"><a href="resource/">resource</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+		
+			<tr>
+			<td class="name"><a href="sound/">sound</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+		
+			<tr>
+			<td class="name"><a href="timer/">timer</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+	</table>
+	
+
+
+

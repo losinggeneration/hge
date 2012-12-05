@@ -1,0 +1,343 @@
+---
+title: helpers/sprite
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/helpers/sprite"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="#Sprite">type Sprite</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(texture *gfx.Texture, texx, texy, w, h float64) Sprite</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.BlendMode">func (sprite *Sprite) BlendMode() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.BoundingBox">func (sprite *Sprite) BoundingBox(x, y float64) *rect.Rect</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.BoundingBoxEx">func (sprite *Sprite) BoundingBoxEx(x, y, rot, hscale, vscale float64) *rect.Rect</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.Color">func (sprite *Sprite) Color(arg ...interface{}) uint32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.Flip">func (sprite *Sprite) Flip() (x, y bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.Height">func (sprite *Sprite) Height() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.HotSpot">func (sprite *Sprite) HotSpot() (x, y float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.Render">func (sprite *Sprite) Render(x, y float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.Render4V">func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.RenderEx">func (sprite *Sprite) RenderEx(x, y float64, rot float64, arg ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.RenderStretch">func (sprite *Sprite) RenderStretch(x1, y1, x2, y2 float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.SetBlendMode">func (sprite *Sprite) SetBlendMode(blend int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.SetColor">func (sprite *Sprite) SetColor(col uint32, arg ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.SetFlip">func (sprite *Sprite) SetFlip(x, y, hotSpot bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.SetHotSpot">func (sprite *Sprite) SetHotSpot(x, y float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.SetTexture">func (sprite *Sprite) SetTexture(tex *gfx.Texture)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.SetTextureRect">func (sprite *Sprite) SetTextureRect(x, y, w, h float64, a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.SetZ">func (sprite *Sprite) SetZ(z float64, arg ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.Texture">func (sprite *Sprite) Texture() *gfx.Texture</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.TextureRect">func (sprite *Sprite) TextureRect() (x, y, w, h float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.Width">func (sprite *Sprite) Width() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sprite.Z">func (sprite *Sprite) Z(arg ...interface{}) float64</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/sprite.go">sprite.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+		
+		
+		
+			
+			
+			<h2 id="Sprite">type <a href="/target/sprite.go?s=133:282#L1">Sprite</a></h2>
+			<pre>type Sprite struct {
+    gfx.Quad
+    TX, TY, W, H         float64
+    TexW, TexH           float64
+    HotX, HotY           float64
+    XFlip, YFlip, HSFlip bool
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="New">func <a href="/target/sprite.go?s=284:347#L7">New</a></h3>
+				<pre>func New(texture *gfx.Texture, texx, texy, w, h float64) Sprite</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="Sprite.BlendMode">func (*Sprite) <a href="/target/sprite.go?s=8481:8518#L330">BlendMode</a></h3>
+				<pre>func (sprite *Sprite) BlendMode() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.BoundingBox">func (*Sprite) <a href="/target/sprite.go?s=8853:8911#L352">BoundingBox</a></h3>
+				<pre>func (sprite *Sprite) BoundingBox(x, y float64) *rect.Rect</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.BoundingBoxEx">func (*Sprite) <a href="/target/sprite.go?s=9012:9093#L356">BoundingBoxEx</a></h3>
+				<pre>func (sprite *Sprite) BoundingBoxEx(x, y, rot, hscale, vscale float64) *rect.Rect</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.Color">func (*Sprite) <a href="/target/sprite.go?s=8137:8191#L308">Color</a></h3>
+				<pre>func (sprite *Sprite) Color(arg ...interface{}) uint32</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.Flip">func (*Sprite) <a href="/target/sprite.go?s=8643:8683#L339">Flip</a></h3>
+				<pre>func (sprite *Sprite) Flip() (x, y bool)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.Height">func (*Sprite) <a href="/target/sprite.go?s=8792:8830#L348">Height</a></h3>
+				<pre>func (sprite *Sprite) Height() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.HotSpot">func (*Sprite) <a href="/target/sprite.go?s=8550:8596#L334">HotSpot</a></h3>
+				<pre>func (sprite *Sprite) HotSpot() (x, y float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.Render">func (*Sprite) <a href="/target/sprite.go?s=1365:1407#L48">Render</a></h3>
+				<pre>func (sprite *Sprite) Render(x, y float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.Render4V">func (*Sprite) <a href="/target/sprite.go?s=3633:3703#L128">Render4V</a></h3>
+				<pre>func (sprite *Sprite) Render4V(x0, y0, x1, y1, x2, y2, x3, y3 float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.RenderEx">func (*Sprite) <a href="/target/sprite.go?s=1867:1944#L62">RenderEx</a></h3>
+				<pre>func (sprite *Sprite) RenderEx(x, y float64, rot float64, arg ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.RenderStretch">func (*Sprite) <a href="/target/sprite.go?s=3277:3336#L119">RenderStretch</a></h3>
+				<pre>func (sprite *Sprite) RenderStretch(x1, y1, x2, y2 float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.SetBlendMode">func (*Sprite) <a href="/target/sprite.go?s=6322:6367#L238">SetBlendMode</a></h3>
+				<pre>func (sprite *Sprite) SetBlendMode(blend int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.SetColor">func (*Sprite) <a href="/target/sprite.go?s=5648:5710#L200">SetColor</a></h3>
+				<pre>func (sprite *Sprite) SetColor(col uint32, arg ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.SetFlip">func (*Sprite) <a href="/target/sprite.go?s=6485:6534#L246">SetFlip</a></h3>
+				<pre>func (sprite *Sprite) SetFlip(x, y, hotSpot bool)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.SetHotSpot">func (*Sprite) <a href="/target/sprite.go?s=6400:6446#L242">SetHotSpot</a></h3>
+				<pre>func (sprite *Sprite) SetHotSpot(x, y float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.SetTexture">func (*Sprite) <a href="/target/sprite.go?s=4000:4050#L137">SetTexture</a></h3>
+				<pre>func (sprite *Sprite) SetTexture(tex *gfx.Texture)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.SetTextureRect">func (*Sprite) <a href="/target/sprite.go?s=4844:4918#L169">SetTextureRect</a></h3>
+				<pre>func (sprite *Sprite) SetTextureRect(x, y, w, h float64, a ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.SetZ">func (*Sprite) <a href="/target/sprite.go?s=5980:6037#L219">SetZ</a></h3>
+				<pre>func (sprite *Sprite) SetZ(z float64, arg ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.Texture">func (*Sprite) <a href="/target/sprite.go?s=7948:7992#L300">Texture</a></h3>
+				<pre>func (sprite *Sprite) Texture() *gfx.Texture</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.TextureRect">func (*Sprite) <a href="/target/sprite.go?s=8026:8082#L304">TextureRect</a></h3>
+				<pre>func (sprite *Sprite) TextureRect() (x, y, w, h float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.Width">func (*Sprite) <a href="/target/sprite.go?s=8732:8769#L344">Width</a></h3>
+				<pre>func (sprite *Sprite) Width() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Sprite.Z">func (*Sprite) <a href="/target/sprite.go?s=8308:8359#L319">Z</a></h3>
+				<pre>func (sprite *Sprite) Z(arg ...interface{}) float64</pre>
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+

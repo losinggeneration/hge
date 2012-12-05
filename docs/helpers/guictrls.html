@@ -1,0 +1,427 @@
+---
+title: helpers/guictrls
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/helpers/guictrls"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="#GUIButton">type GUIButton</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewGUIButton">func NewGUIButton(id int, x, y, w, h float64, tex *gfx.Texture, tx, ty float64) *GUIButton</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIButton.SetMode">func (b *GUIButton) SetMode(trigger bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIButton.SetState">func (b *GUIButton) SetState(pressed bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIButton.State">func (b GUIButton) State() bool</a></dd>
+				
+			
+				
+				<dd><a href="#GUIListBox">type GUIListBox</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewGUIListBox">func NewGUIListBox(id int, x, y, w, h float64, fnt *font.Font, color, highlightColor, spriteHighlightColor uint32) *GUIListBox</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.Add">func (l *GUIListBox) Add(item string) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.Clear">func (l *GUIListBox) Clear()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.NumItems">func (l *GUIListBox) NumItems() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.NumRows">func (l *GUIListBox) NumRows() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.Remove">func (l *GUIListBox) Remove(n int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.Selected">func (l *GUIListBox) Selected() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.SetSelected">func (l *GUIListBox) SetSelected(n int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.SetTop">func (l *GUIListBox) SetTop(n int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.Text">func (l *GUIListBox) Text(n int) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIListBox.Top">func (l *GUIListBox) Top() int</a></dd>
+				
+			
+				
+				<dd><a href="#GUISlider">type GUISlider</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewGUISlider">func NewGUISlider(id int, x, y, w, h float64, tex *gfx.Texture, tx, ty, sw, sh float64, a ...interface{}) *GUISlider</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUISlider.SetMode">func (s *GUISlider) SetMode(min, max float64, mode int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUISlider.SetValue">func (s *GUISlider) SetValue(val float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUISlider.Value">func (s *GUISlider) Value() float64</a></dd>
+				
+			
+				
+				<dd><a href="#GUIText">type GUIText</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewGUIText">func NewGUIText(id int, x, y, w, h float64, fnt *font.Font) *GUIText</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIText.Printf">func (t *GUIText) Printf(format string, a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIText.SetMode">func (t *GUIText) SetMode(align int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIText.SetText">func (t *GUIText) SetText(text string)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/guictrls.go">guictrls.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    SLIDER_BAR         = 0
+    SLIDER_BARRELATIVE = 1
+    SLIDER_SLIDER      = 2
+)</pre>
+				
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="GUIButton">type <a href="/target/guictrls.go?s=1078:1194#L47">GUIButton</a></h2>
+			<pre>type GUIButton struct {
+    gui.GUIObject
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="NewGUIButton">func <a href="/target/guictrls.go?s=1196:1286#L54">NewGUIButton</a></h3>
+				<pre>func NewGUIButton(id int, x, y, w, h float64, tex *gfx.Texture, tx, ty float64) *GUIButton</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="GUIButton.SetMode">func (*GUIButton) <a href="/target/guictrls.go?s=1960:2001#L94">SetMode</a></h3>
+				<pre>func (b *GUIButton) SetMode(trigger bool)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIButton.SetState">func (*GUIButton) <a href="/target/guictrls.go?s=2028:2070#L98">SetState</a></h3>
+				<pre>func (b *GUIButton) SetState(pressed bool)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIButton.State">func (GUIButton) <a href="/target/guictrls.go?s=2097:2128#L102">State</a></h3>
+				<pre>func (b GUIButton) State() bool</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GUIListBox">type <a href="/target/guictrls.go?s=5245:5445#L250">GUIListBox</a></h2>
+			<pre>type GUIListBox struct {
+    gui.GUIObject
+
+    *font.Font
+
+    *list.List
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="NewGUIListBox">func <a href="/target/guictrls.go?s=5447:5573#L261">NewGUIListBox</a></h3>
+				<pre>func NewGUIListBox(id int, x, y, w, h float64, fnt *font.Font, color, highlightColor, spriteHighlightColor uint32) *GUIListBox</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="GUIListBox.Add">func (*GUIListBox) <a href="/target/guictrls.go?s=7542:7583#L360">Add</a></h3>
+				<pre>func (l *GUIListBox) Add(item string) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIListBox.Clear">func (*GUIListBox) <a href="/target/guictrls.go?s=8605:8633#L428">Clear</a></h3>
+				<pre>func (l *GUIListBox) Clear()</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIListBox.NumItems">func (*GUIListBox) <a href="/target/guictrls.go?s=8428:8463#L419">NumItems</a></h3>
+				<pre>func (l *GUIListBox) NumItems() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIListBox.NumRows">func (*GUIListBox) <a href="/target/guictrls.go?s=8485:8519#L423">NumRows</a></h3>
+				<pre>func (l *GUIListBox) NumRows() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIListBox.Remove">func (*GUIListBox) <a href="/target/guictrls.go?s=7701:7735#L370">Remove</a></h3>
+				<pre>func (l *GUIListBox) Remove(n int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIListBox.Selected">func (*GUIListBox) <a href="/target/guictrls.go?s=7891:7926#L385">Selected</a></h3>
+				<pre>func (l *GUIListBox) Selected() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIListBox.SetSelected">func (*GUIListBox) <a href="/target/guictrls.go?s=7955:7994#L389">SetSelected</a></h3>
+				<pre>func (l *GUIListBox) SetSelected(n int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIListBox.SetTop">func (*GUIListBox) <a href="/target/guictrls.go?s=8106:8140#L399">SetTop</a></h3>
+				<pre>func (l *GUIListBox) SetTop(n int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIListBox.Text">func (*GUIListBox) <a href="/target/guictrls.go?s=8206:8245#L405">Text</a></h3>
+				<pre>func (l *GUIListBox) Text(n int) string</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIListBox.Top">func (*GUIListBox) <a href="/target/guictrls.go?s=8052:8082#L395">Top</a></h3>
+				<pre>func (l *GUIListBox) Top() int</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GUISlider">type <a href="/target/guictrls.go?s=2235:2391#L112">GUISlider</a></h2>
+			<pre>type GUISlider struct {
+    gui.GUIObject
+
+    sprite.Sprite
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="NewGUISlider">func <a href="/target/guictrls.go?s=2393:2509#L121">NewGUISlider</a></h3>
+				<pre>func NewGUISlider(id int, x, y, w, h float64, tex *gfx.Texture, tx, ty, sw, sh float64, a ...interface{}) *GUISlider</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="GUISlider.SetMode">func (*GUISlider) <a href="/target/guictrls.go?s=4896:4951#L228">SetMode</a></h3>
+				<pre>func (s *GUISlider) SetMode(min, max float64, mode int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUISlider.SetValue">func (*GUISlider) <a href="/target/guictrls.go?s=4996:5037#L232">SetValue</a></h3>
+				<pre>func (s *GUISlider) SetValue(val float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUISlider.Value">func (*GUISlider) <a href="/target/guictrls.go?s=5145:5180#L242">Value</a></h3>
+				<pre>func (s *GUISlider) Value() float64</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GUIText">type <a href="/target/guictrls.go?s=303:404#L3">GUIText</a></h2>
+			<pre>type GUIText struct {
+    gui.GUIObject
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="NewGUIText">func <a href="/target/guictrls.go?s=406:474#L12">NewGUIText</a></h3>
+				<pre>func NewGUIText(id int, x, y, w, h float64, fnt *font.Font) *GUIText</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="GUIText.Printf">func (*GUIText) <a href="/target/guictrls.go?s=979:1036#L43">Printf</a></h3>
+				<pre>func (t *GUIText) Printf(format string, a ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIText.SetMode">func (*GUIText) <a href="/target/guictrls.go?s=861:897#L35">SetMode</a></h3>
+				<pre>func (t *GUIText) SetMode(align int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUIText.SetText">func (*GUIText) <a href="/target/guictrls.go?s=920:958#L39">SetText</a></h3>
+				<pre>func (t *GUIText) SetText(text string)</pre>
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+

@@ -1,0 +1,357 @@
+---
+title: helpers/gui
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/helpers/gui"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="#GUI">type GUI</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New() GUI</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.AddCtrl">func (g *GUI) AddCtrl(ctrl *GUIObject)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.DelCtrl">func (g *GUI) DelCtrl(id int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.EnableCtrl">func (g *GUI) EnableCtrl(id int, enabled bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.Enter">func (g *GUI) Enter()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.GetCtrl">func (g GUI) GetCtrl(id int) *GUIObject</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.GetFocus">func (g GUI) GetFocus() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.Leave">func (g *GUI) Leave()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.Move">func (g *GUI) Move(dx, dy float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.MoveCtrl">func (g *GUI) MoveCtrl(id int, x, y float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.Render">func (g *GUI) Render()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.Reset">func (g *GUI) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.SetColor">func (g *GUI) SetColor(color uint32)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.SetCursor">func (g *GUI) SetCursor(spr *sprite.Sprite)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.SetFocus">func (g *GUI) SetFocus(id int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.SetNavMode">func (g *GUI) SetNavMode(mode int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.ShowCtrl">func (g *GUI) ShowCtrl(id int, visible bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUI.Update">func (g *GUI) Update(dt float64) int</a></dd>
+				
+			
+				
+				<dd><a href="#GUIObject">type GUIObject</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GUIObject.Initialize">func (gobj *GUIObject) Initialize()</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/gui.go">gui.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    GUI_NONAVKEYS = 0
+    GUI_LEFTRIGHT = 1
+    GUI_UPDOWN    = 2
+    GUI_CYCLED    = 4
+)</pre>
+				
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="GUI">type <a href="/target/gui.go?s=1492:1821#L54">GUI</a></h2>
+			<pre>type GUI struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="New">func <a href="/target/gui.go?s=1823:1837#L63">New</a></h3>
+				<pre>func New() GUI</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="GUI.AddCtrl">func (*GUI) <a href="/target/gui.go?s=2110:2148#L84">AddCtrl</a></h3>
+				<pre>func (g *GUI) AddCtrl(ctrl *GUIObject)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.DelCtrl">func (*GUI) <a href="/target/gui.go?s=2269:2298#L95">DelCtrl</a></h3>
+				<pre>func (g *GUI) DelCtrl(id int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.EnableCtrl">func (*GUI) <a href="/target/gui.go?s=2926:2972#L134">EnableCtrl</a></h3>
+				<pre>func (g *GUI) EnableCtrl(id int, enabled bool)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.Enter">func (*GUI) <a href="/target/gui.go?s=3829:3850#L185">Enter</a></h3>
+				<pre>func (g *GUI) Enter()</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.GetCtrl">func (GUI) <a href="/target/gui.go?s=2374:2413#L103">GetCtrl</a></h3>
+				<pre>func (g GUI) GetCtrl(id int) *GUIObject</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.GetFocus">func (GUI) <a href="/target/gui.go?s=3733:3760#L177">GetFocus</a></h3>
+				<pre>func (g GUI) GetFocus() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.Leave">func (*GUI) <a href="/target/gui.go?s=3961:3982#L193">Leave</a></h3>
+				<pre>func (g *GUI) Leave()</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.Move">func (*GUI) <a href="/target/gui.go?s=4313:4347#L210">Move</a></h3>
+				<pre>func (g *GUI) Move(dx, dy float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.MoveCtrl">func (*GUI) <a href="/target/gui.go?s=2560:2604#L114">MoveCtrl</a></h3>
+				<pre>func (g *GUI) MoveCtrl(id int, x, y float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.Render">func (*GUI) <a href="/target/gui.go?s=7867:7889#L385">Render</a></h3>
+				<pre>func (g *GUI) Render()</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.Reset">func (*GUI) <a href="/target/gui.go?s=4146:4167#L202">Reset</a></h3>
+				<pre>func (g *GUI) Reset()</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.SetColor">func (*GUI) <a href="/target/gui.go?s=3178:3214#L150">SetColor</a></h3>
+				<pre>func (g *GUI) SetColor(color uint32)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.SetCursor">func (*GUI) <a href="/target/gui.go?s=3113:3156#L146">SetCursor</a></h3>
+				<pre>func (g *GUI) SetCursor(spr *sprite.Sprite)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.SetFocus">func (*GUI) <a href="/target/gui.go?s=3314:3344#L156">SetFocus</a></h3>
+				<pre>func (g *GUI) SetFocus(id int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.SetNavMode">func (*GUI) <a href="/target/gui.go?s=3055:3089#L142">SetNavMode</a></h3>
+				<pre>func (g *GUI) SetNavMode(mode int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.ShowCtrl">func (*GUI) <a href="/target/gui.go?s=2799:2843#L126">ShowCtrl</a></h3>
+				<pre>func (g *GUI) ShowCtrl(id int, visible bool)</pre>
+				
+				
+				
+			
+				
+				<h3 id="GUI.Update">func (*GUI) <a href="/target/gui.go?s=4523:4559#L220">Update</a></h3>
+				<pre>func (g *GUI) Update(dt float64) int</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GUIObject">type <a href="/target/gui.go?s=324:841#L8">GUIObject</a></h2>
+			<pre>type GUIObject struct {
+    Id                       int
+    Static, Visible, Enabled bool
+    rect.Rect
+    Color uint32
+    *GUI
+
+    Render func()
+    Update func(dt float64)
+
+    Enter     func()
+    Leave     func()
+    Reset     func()
+    IsDone    func() bool
+    Focus     func(focused bool)
+    MouseOver func(over bool)
+
+    MouseMove    func(x, y float64) bool
+    MouseLButton func(down bool) bool
+    MouseRButton func(down bool) bool
+    MouseWheel   func(notches int) bool
+    KeyClick     func(key input.Key, chr int) bool
+
+    SetColor func(color uint32)
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="GUIObject.Initialize">func (*GUIObject) <a href="/target/gui.go?s=843:878#L34">Initialize</a></h3>
+				<pre>func (gobj *GUIObject) Initialize()</pre>
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+

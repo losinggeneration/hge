@@ -1,0 +1,285 @@
+---
+title: helpers/animation
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/helpers/animation"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="#Animation">type Animation</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(tex *gfx.Texture, frames int, fps, x, y, w, h float64) Animation</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.Frame">func (a Animation) Frame() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.Frames">func (a Animation) Frames() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.IsPlaying">func (a Animation) IsPlaying() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.Mode">func (a Animation) Mode() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.Play">func (a *Animation) Play()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.Resume">func (a *Animation) Resume()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.SetFrame">func (a *Animation) SetFrame(n int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.SetFrames">func (a *Animation) SetFrames(n int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.SetMode">func (a *Animation) SetMode(mode int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.SetSpeed">func (a *Animation) SetSpeed(fps float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.SetTexture">func (a *Animation) SetTexture(tex *gfx.Texture)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.SetTextureRect">func (a *Animation) SetTextureRect(x1, y1, x2, y2 float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.Speed">func (a Animation) Speed() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.Stop">func (a *Animation) Stop()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Animation.Update">func (a *Animation) Update(deltaTime float64)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/animation.go">animation.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    FWD        = 0
+    REV        = 1
+    PINGPONG   = 2
+    NOPINGPONG = 0
+    LOOP       = 4
+    NOLOOP     = 0
+)</pre>
+				
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="Animation">type <a href="/target/animation.go?s=237:422#L7">Animation</a></h2>
+			<pre>type Animation struct {
+    sprite.Sprite
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="New">func <a href="/target/animation.go?s=424:497#L15">New</a></h3>
+				<pre>func New(tex *gfx.Texture, frames int, fps, x, y, w, h float64) Animation</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="Animation.Frame">func (Animation) <a href="/target/animation.go?s=3390:3420#L183">Frame</a></h3>
+				<pre>func (a Animation) Frame() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.Frames">func (Animation) <a href="/target/animation.go?s=3445:3476#L187">Frames</a></h3>
+				<pre>func (a Animation) Frames() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.IsPlaying">func (Animation) <a href="/target/animation.go?s=1758:1793#L97">IsPlaying</a></h3>
+				<pre>func (a Animation) IsPlaying() bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.Mode">func (Animation) <a href="/target/animation.go?s=3278:3307#L175">Mode</a></h3>
+				<pre>func (a Animation) Mode() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.Play">func (*Animation) <a href="/target/animation.go?s=720:746#L33">Play</a></h3>
+				<pre>func (a *Animation) Play()</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.Resume">func (*Animation) <a href="/target/animation.go?s=955:983#L49">Resume</a></h3>
+				<pre>func (a *Animation) Resume()</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.SetFrame">func (*Animation) <a href="/target/animation.go?s=2291:2326#L127">SetFrame</a></h3>
+				<pre>func (a *Animation) SetFrame(n int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.SetFrames">func (*Animation) <a href="/target/animation.go?s=3222:3258#L171">SetFrames</a></h3>
+				<pre>func (a *Animation) SetFrames(n int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.SetMode">func (*Animation) <a href="/target/animation.go?s=2057:2094#L111">SetMode</a></h3>
+				<pre>func (a *Animation) SetMode(mode int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.SetSpeed">func (*Animation) <a href="/target/animation.go?s=2223:2264#L123">SetSpeed</a></h3>
+				<pre>func (a *Animation) SetSpeed(fps float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.SetTexture">func (*Animation) <a href="/target/animation.go?s=1817:1865#L101">SetTexture</a></h3>
+				<pre>func (a *Animation) SetTexture(tex *gfx.Texture)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.SetTextureRect">func (*Animation) <a href="/target/animation.go?s=1928:1986#L106">SetTextureRect</a></h3>
+				<pre>func (a *Animation) SetTextureRect(x1, y1, x2, y2 float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.Speed">func (Animation) <a href="/target/animation.go?s=3328:3362#L179">Speed</a></h3>
+				<pre>func (a Animation) Speed() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.Stop">func (*Animation) <a href="/target/animation.go?s=904:930#L45">Stop</a></h3>
+				<pre>func (a *Animation) Stop()</pre>
+				
+				
+				
+			
+				
+				<h3 id="Animation.Update">func (*Animation) <a href="/target/animation.go?s=1007:1052#L53">Update</a></h3>
+				<pre>func (a *Animation) Update(deltaTime float64)</pre>
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+

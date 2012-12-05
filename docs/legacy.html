@@ -1,0 +1,1687 @@
+---
+title: legacy
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/legacy"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="#BoolState">type BoolState</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Button">type Button</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Flag">type Flag</a></dd>
+				
+				
+			
+				
+				<dd><a href="#FuncState">type FuncState</a></dd>
+				
+				
+			
+				
+				<dd><a href="#HGE">type HGE</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Create">func Create(ver int) *HGE</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_GetLength">func (h *HGE) Channel_GetLength(chn sound.Channel) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_GetPos">func (h *HGE) Channel_GetPos(chn sound.Channel) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_IsPlaying">func (h *HGE) Channel_IsPlaying(chn sound.Channel) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_IsSliding">func (h *HGE) Channel_IsSliding(chn sound.Channel) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_Pause">func (h *HGE) Channel_Pause(chn sound.Channel)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_PauseAll">func (h *HGE) Channel_PauseAll()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_Resume">func (h *HGE) Channel_Resume(chn sound.Channel)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_ResumeAll">func (h *HGE) Channel_ResumeAll()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_SetPanning">func (h *HGE) Channel_SetPanning(chn sound.Channel, pan int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_SetPitch">func (h *HGE) Channel_SetPitch(chn sound.Channel, pitch float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_SetPos">func (h *HGE) Channel_SetPos(chn sound.Channel, seconds float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_SetVolume">func (h *HGE) Channel_SetVolume(chn sound.Channel, volume int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_SlideTo">func (h *HGE) Channel_SlideTo(chn sound.Channel, time float64, a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_Stop">func (h *HGE) Channel_Stop(chn sound.Channel)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Channel_StopAll">func (h *HGE) Channel_StopAll()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Effect_Free">func (h *HGE) Effect_Free(eff *sound.Effect)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Effect_Load">func (h *HGE) Effect_Load(filename string, a ...interface{}) *sound.Effect</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Effect_Play">func (h *HGE) Effect_Play(eff *sound.Effect) sound.Channel</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Effect_PlayEx">func (h *HGE) Effect_PlayEx(eff *sound.Effect, a ...interface{}) sound.Channel</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_BeginScene">func (h *HGE) Gfx_BeginScene(a ...interface{}) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_Clear">func (h *HGE) Gfx_Clear(color uint32)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_EndScene">func (h *HGE) Gfx_EndScene()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_FinishBatch">func (h *HGE) Gfx_FinishBatch(prim int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_RenderLine">func (h *HGE) Gfx_RenderLine(x1, y1, x2, y2 float64, a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_RenderQuad">func (h *HGE) Gfx_RenderQuad(quad *gfx.Quad)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_RenderTriple">func (h *HGE) Gfx_RenderTriple(triple *gfx.Triple)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_SetClipping">func (h *HGE) Gfx_SetClipping(a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_SetTransform">func (h *HGE) Gfx_SetTransform(a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Gfx_StartBatch">func (h *HGE) Gfx_StartBatch(prim_type int, tex *gfx.Texture, blend int) (ver *gfx.Vertex, max_prim int, ok bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Ini_GetFloat">func (h *HGE) Ini_GetFloat(section, name string, def_val float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Ini_GetInt">func (h *HGE) Ini_GetInt(section, name string, def_val int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Ini_GetString">func (h *HGE) Ini_GetString(section, name, def_val string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Ini_SetFloat">func (h *HGE) Ini_SetFloat(section, name string, value float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Ini_SetInt">func (h *HGE) Ini_SetInt(section, name string, value int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Ini_SetString">func (h *HGE) Ini_SetString(section, name, value string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_GetChar">func (h *HGE) Input_GetChar() uint8</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_GetEvent">func (h *HGE) Input_GetEvent(event *input.InputEvent) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_GetKey">func (h *HGE) Input_GetKey() Key</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_GetKeyName">func (h *HGE) Input_GetKeyName(key Key) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_GetKeyState">func (h *HGE) Input_GetKeyState(key Key) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_GetMousePos">func (h *HGE) Input_GetMousePos() (x, y float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_GetMouseWheel">func (h *HGE) Input_GetMouseWheel() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_IsMouseOver">func (h *HGE) Input_IsMouseOver() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_KeyDown">func (h *HGE) Input_KeyDown(key Key) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_KeyUp">func (h *HGE) Input_KeyUp(key Key) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Input_SetMousePos">func (h *HGE) Input_SetMousePos(x, y float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_Free">func (h *HGE) Music_Free(music *sound.Music)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_GetAmplification">func (h *HGE) Music_GetAmplification(music *sound.Music) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_GetChannelVolume">func (h *HGE) Music_GetChannelVolume(music *sound.Music, channel int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_GetInstrVolume">func (h *HGE) Music_GetInstrVolume(music *sound.Music, instr int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_GetLength">func (h *HGE) Music_GetLength(music *sound.Music) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_GetPos">func (h *HGE) Music_GetPos(music *sound.Music) (order, row int, ok bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_Load">func (h *HGE) Music_Load(filename string, size uint32) *sound.Music</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_Play">func (h *HGE) Music_Play(music *sound.Music, loop bool, a ...interface{}) sound.Channel</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_SetAmplification">func (h *HGE) Music_SetAmplification(music *sound.Music, ampl int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_SetChannelVolume">func (h *HGE) Music_SetChannelVolume(music *sound.Music, channel, volume int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_SetInstrVolume">func (h *HGE) Music_SetInstrVolume(music *sound.Music, instr int, volume int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Music_SetPos">func (h *HGE) Music_SetPos(music *sound.Music, order, row int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Random_Float">func (h *HGE) Random_Float(min, max float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Random_Int">func (h *HGE) Random_Int(min, max int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Random_Seed">func (h *HGE) Random_Seed(a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Release">func (h *HGE) Release()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.ResourceLoadBytes">func (h *HGE) ResourceLoadBytes(filename string) []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.ResourceLoadString">func (h *HGE) ResourceLoadString(filename string) *string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Resource_AttachPack">func (h *HGE) Resource_AttachPack(filename string, a ...interface{}) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Resource_EnumFiles">func (h *HGE) Resource_EnumFiles(a ...interface{}) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Resource_EnumFolders">func (h *HGE) Resource_EnumFolders(a ...interface{}) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Resource_Free">func (h *HGE) Resource_Free(res resource.Resource)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Resource_Load">func (h *HGE) Resource_Load(filename string) (*resource.Resource, uint32)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Resource_MakePath">func (h *HGE) Resource_MakePath(a ...interface{}) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Resource_RemoveAllPacks">func (h *HGE) Resource_RemoveAllPacks()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Resource_RemovePack">func (h *HGE) Resource_RemovePack(filename string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Stream_Free">func (h *HGE) Stream_Free(stream *sound.Stream)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Stream_Load">func (h *HGE) Stream_Load(filename string, size uint32) *sound.Stream</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Stream_Play">func (h *HGE) Stream_Play(stream *sound.Stream, loop bool, a ...interface{}) sound.Channel</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.System_GetErrorMessage">func (h *HGE) System_GetErrorMessage() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.System_GetState">func (h *HGE) System_GetState(a ...interface{}) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.System_Initiate">func (h *HGE) System_Initiate() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.System_Launch">func (h *HGE) System_Launch(url string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.System_Log">func (h *HGE) System_Log(format string, v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.System_SetState">func (h *HGE) System_SetState(a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.System_Shutdown">func (h *HGE) System_Shutdown()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.System_Snapshot">func (h *HGE) System_Snapshot(a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.System_Start">func (h *HGE) System_Start() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Target_Create">func (h *HGE) Target_Create(width, height int, zbuffer bool) *gfx.Target</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Target_Free">func (h *HGE) Target_Free(target *gfx.Target)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Target_GetTexture">func (h *HGE) Target_GetTexture(target gfx.Target) *gfx.Texture</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Texture_Create">func (h *HGE) Texture_Create(width, height int) *gfx.Texture</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Texture_Free">func (h *HGE) Texture_Free(tex *gfx.Texture)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Texture_GetHeight">func (h *HGE) Texture_GetHeight(tex gfx.Texture, a ...interface{}) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Texture_GetWidth">func (h *HGE) Texture_GetWidth(tex gfx.Texture, a ...interface{}) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Texture_Load">func (h *HGE) Texture_Load(filename string, a ...interface{}) *gfx.Texture</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Texture_Lock">func (h *HGE) Texture_Lock(tex gfx.Texture, a ...interface{}) *uint32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Texture_Unlock">func (h *HGE) Texture_Unlock(tex gfx.Texture)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Timer_GetDelta">func (h *HGE) Timer_GetDelta() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Timer_GetFPS">func (h *HGE) Timer_GetFPS() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#HGE.Timer_GetTime">func (h *HGE) Timer_GetTime() float64</a></dd>
+				
+			
+				
+				<dd><a href="#Hwnd">type Hwnd</a></dd>
+				
+				
+			
+				
+				<dd><a href="#HwndState">type HwndState</a></dd>
+				
+				
+			
+				
+				<dd><a href="#InputEvent">type InputEvent</a></dd>
+				
+				
+			
+				
+				<dd><a href="#IntState">type IntState</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Key">type Key</a></dd>
+				
+				
+			
+				
+				<dd><a href="#StateFunc">type StateFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="#StringState">type StringState</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Type">type Type</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/consts.go">consts.go</a>
+			
+				<a href="/target/hge.go">hge.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    Pi     = hge.Pi
+    Pi_2   = hge.Pi_2
+    Pi_4   = hge.Pi_4
+    One_Pi = hge.One_Pi
+    Two_Pi = hge.Two_Pi
+)</pre>
+				<p>
+Common math constants
+</p>
+
+			
+				<pre>const (
+    PWR_AC          = hge.PWR_AC
+    PWR_UNSUPPORTED = hge.PWR_UNSUPPORTED
+)</pre>
+				<p>
+POWERSTATUS system state special constants
+</p>
+
+			
+				<pre>const (
+    FPS_UNLIMITED = hge.FPS_UNLIMITED
+    FPS_VSYNC     = hge.FPS_VSYNC
+)</pre>
+				<p>
+FPS system state special constants
+</p>
+
+			
+				<pre>const (
+    VERSION = hge.VERSION
+)</pre>
+				<p>
+The current version of this package
+</p>
+
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="BoolState">type <a href="/target/hge.go?s=472:497#L11">BoolState</a></h2>
+			<pre>type BoolState hge.BoolState</pre>
+			
+
+			
+				<pre>const (
+    WINDOWED      BoolState = BoolState(hge.WINDOWED)
+    ZBUFFER       BoolState = BoolState(hge.ZBUFFER)
+    TEXTUREFILTER BoolState = BoolState(hge.TEXTUREFILTER)
+
+    USESOUND BoolState = BoolState(hge.USESOUND)
+
+    DONTSUSPEND BoolState = BoolState(hge.DONTSUSPEND)
+    HIDEMOUSE   BoolState = BoolState(hge.HIDEMOUSE)
+
+    SHOWSPLASH BoolState = BoolState(hge.SHOWSPLASH)
+)</pre>
+				<p>
+HGE System state constants
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Button">type <a href="/target/hge.go?s=850:874#L25">Button</a></h2>
+			<pre>type Button input.Button <span class="comment">// A HGE Input Mouse button</span>
+</pre>
+			
+
+			
+				<pre>const (
+    M_LBUTTON Button = Button(input.M_LBUTTON)
+    M_RBUTTON Button = Button(input.M_RBUTTON)
+    M_MBUTTON Button = Button(input.M_MBUTTON)
+)</pre>
+				<p>
+HGE Input Mouse button
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Flag">type <a href="/target/hge.go?s=772:792#L24">Flag</a></h2>
+			<pre>type Flag input.Flag <span class="comment">// HGE Input Event flags (multiple ones may be OR&#39;d)</span>
+</pre>
+			
+
+			
+				<pre>const (
+    INP_SHIFT      Flag = Flag(input.INP_SHIFT)
+    INP_CTRL       Flag = Flag(input.INP_CTRL)
+    INP_ALT        Flag = Flag(input.INP_ALT)
+    INP_CAPSLOCK   Flag = Flag(input.INP_CAPSLOCK)
+    INP_SCROLLLOCK Flag = Flag(input.INP_SCROLLLOCK)
+    INP_NUMLOCK    Flag = Flag(input.INP_NUMLOCK)
+    INP_REPEAT     Flag = Flag(input.INP_REPEAT)
+)</pre>
+				<p>
+HGE Input Event flags
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FuncState">type <a href="/target/hge.go?s=499:524#L12">FuncState</a></h2>
+			<pre>type FuncState hge.FuncState</pre>
+			
+
+			
+				<pre>const (
+    FRAMEFUNC      FuncState = FuncState(hge.FRAMEFUNC)
+    RENDERFUNC     FuncState = FuncState(hge.RENDERFUNC)
+    FOCUSLOSTFUNC  FuncState = FuncState(hge.FOCUSLOSTFUNC)
+    FOCUSGAINFUNC  FuncState = FuncState(hge.FOCUSGAINFUNC)
+    GFXRESTOREFUNC FuncState = FuncState(hge.GFXRESTOREFUNC)
+    EXITFUNC       FuncState = FuncState(hge.EXITFUNC)
+)</pre>
+				<p>
+When any of these return true, it indicates to stop the main loop from
+continuing to run.
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HGE">type <a href="/target/hge.go?s=431:462#L6">HGE</a></h2>
+			<pre>type HGE struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+HGE struct
+</p>
+
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="Create">func <a href="/target/hge.go?s=1283:1308#L40">Create</a></h3>
+				<pre>func Create(ver int) *HGE</pre>
+				<p>
+Creates a new instance of an HGE structure
+</p>
+
+				
+			
+
+			
+				
+				<h3 id="HGE.Channel_GetLength">func (*HGE) <a href="/target/hge.go?s=9527:9585#L390">Channel_GetLength</a></h3>
+				<pre>func (h *HGE) Channel_GetLength(chn sound.Channel) float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_GetPos">func (*HGE) <a href="/target/hge.go?s=9609:9664#L394">Channel_GetPos</a></h3>
+				<pre>func (h *HGE) Channel_GetPos(chn sound.Channel) float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_IsPlaying">func (*HGE) <a href="/target/hge.go?s=9442:9497#L386">Channel_IsPlaying</a></h3>
+				<pre>func (h *HGE) Channel_IsPlaying(chn sound.Channel) bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_IsSliding">func (*HGE) <a href="/target/hge.go?s=9890:9945#L406">Channel_IsSliding</a></h3>
+				<pre>func (h *HGE) Channel_IsSliding(chn sound.Channel) bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_Pause">func (*HGE) <a href="/target/hge.go?s=9079:9125#L362">Channel_Pause</a></h3>
+				<pre>func (h *HGE) Channel_Pause(chn sound.Channel)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_PauseAll">func (*HGE) <a href="/target/hge.go?s=9274:9306#L374">Channel_PauseAll</a></h3>
+				<pre>func (h *HGE) Channel_PauseAll()</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_Resume">func (*HGE) <a href="/target/hge.go?s=9144:9191#L366">Channel_Resume</a></h3>
+				<pre>func (h *HGE) Channel_Resume(chn sound.Channel)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_ResumeAll">func (*HGE) <a href="/target/hge.go?s=9330:9363#L378">Channel_ResumeAll</a></h3>
+				<pre>func (h *HGE) Channel_ResumeAll()</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_SetPanning">func (*HGE) <a href="/target/hge.go?s=8810:8870#L350">Channel_SetPanning</a></h3>
+				<pre>func (h *HGE) Channel_SetPanning(chn sound.Channel, pan int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_SetPitch">func (*HGE) <a href="/target/hge.go?s=8988:9052#L358">Channel_SetPitch</a></h3>
+				<pre>func (h *HGE) Channel_SetPitch(chn sound.Channel, pitch float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_SetPos">func (*HGE) <a href="/target/hge.go?s=9688:9752#L398">Channel_SetPos</a></h3>
+				<pre>func (h *HGE) Channel_SetPos(chn sound.Channel, seconds float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_SetVolume">func (*HGE) <a href="/target/hge.go?s=8897:8959#L354">Channel_SetVolume</a></h3>
+				<pre>func (h *HGE) Channel_SetVolume(chn sound.Channel, volume int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_SlideTo">func (*HGE) <a href="/target/hge.go?s=9779:9859#L402">Channel_SlideTo</a></h3>
+				<pre>func (h *HGE) Channel_SlideTo(chn sound.Channel, time float64, a ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_Stop">func (*HGE) <a href="/target/hge.go?s=9211:9256#L370">Channel_Stop</a></h3>
+				<pre>func (h *HGE) Channel_Stop(chn sound.Channel)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Channel_StopAll">func (*HGE) <a href="/target/hge.go?s=9388:9419#L382">Channel_StopAll</a></h3>
+				<pre>func (h *HGE) Channel_StopAll()</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Effect_Free">func (*HGE) <a href="/target/hge.go?s=7008:7052#L278">Effect_Free</a></h3>
+				<pre>func (h *HGE) Effect_Free(eff *sound.Effect)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Effect_Load">func (*HGE) <a href="/target/hge.go?s=6888:6962#L274">Effect_Load</a></h3>
+				<pre>func (h *HGE) Effect_Load(filename string, a ...interface{}) *sound.Effect</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Effect_Play">func (*HGE) <a href="/target/hge.go?s=7070:7128#L282">Effect_Play</a></h3>
+				<pre>func (h *HGE) Effect_Play(eff *sound.Effect) sound.Channel</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Effect_PlayEx">func (*HGE) <a href="/target/hge.go?s=7153:7231#L286">Effect_PlayEx</a></h3>
+				<pre>func (h *HGE) Effect_PlayEx(eff *sound.Effect, a ...interface{}) sound.Channel</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_BeginScene">func (*HGE) <a href="/target/hge.go?s=10892:10943#L460">Gfx_BeginScene</a></h3>
+				<pre>func (h *HGE) Gfx_BeginScene(a ...interface{}) bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_Clear">func (*HGE) <a href="/target/hge.go?s=11028:11065#L468">Gfx_Clear</a></h3>
+				<pre>func (h *HGE) Gfx_Clear(color uint32)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_EndScene">func (*HGE) <a href="/target/hge.go?s=10978:11006#L464">Gfx_EndScene</a></h3>
+				<pre>func (h *HGE) Gfx_EndScene()</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_FinishBatch">func (*HGE) <a href="/target/hge.go?s=11529:11568#L488">Gfx_FinishBatch</a></h3>
+				<pre>func (h *HGE) Gfx_FinishBatch(prim int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_RenderLine">func (*HGE) <a href="/target/hge.go?s=11106:11176#L472">Gfx_RenderLine</a></h3>
+				<pre>func (h *HGE) Gfx_RenderLine(x1, y1, x2, y2 float64, a ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_RenderQuad">func (*HGE) <a href="/target/hge.go?s=11299:11343#L480">Gfx_RenderQuad</a></h3>
+				<pre>func (h *HGE) Gfx_RenderQuad(quad *gfx.Quad)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_RenderTriple">func (*HGE) <a href="/target/hge.go?s=11226:11276#L476">Gfx_RenderTriple</a></h3>
+				<pre>func (h *HGE) Gfx_RenderTriple(triple *gfx.Triple)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_SetClipping">func (*HGE) <a href="/target/hge.go?s=11597:11644#L492">Gfx_SetClipping</a></h3>
+				<pre>func (h *HGE) Gfx_SetClipping(a ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_SetTransform">func (*HGE) <a href="/target/hge.go?s=11673:11721#L496">Gfx_SetTransform</a></h3>
+				<pre>func (h *HGE) Gfx_SetTransform(a ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Gfx_StartBatch">func (*HGE) <a href="/target/hge.go?s=11364:11477#L484">Gfx_StartBatch</a></h3>
+				<pre>func (h *HGE) Gfx_StartBatch(prim_type int, tex *gfx.Texture, blend int) (ver *gfx.Vertex, max_prim int, ok bool)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Ini_GetFloat">func (*HGE) <a href="/target/hge.go?s=5922:5995#L225">Ini_GetFloat</a></h3>
+				<pre>func (h *HGE) Ini_GetFloat(section, name string, def_val float64) float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Ini_GetInt">func (*HGE) <a href="/target/hge.go?s=5697:5760#L217">Ini_GetInt</a></h3>
+				<pre>func (h *HGE) Ini_GetInt(section, name string, def_val int) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Ini_GetString">func (*HGE) <a href="/target/hge.go?s=6153:6218#L233">Ini_GetString</a></h3>
+				<pre>func (h *HGE) Ini_GetString(section, name, def_val string) string</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Ini_SetFloat">func (*HGE) <a href="/target/hge.go?s=5813:5876#L221">Ini_SetFloat</a></h3>
+				<pre>func (h *HGE) Ini_SetFloat(section, name string, value float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Ini_SetInt">func (*HGE) <a href="/target/hge.go?s=5596:5653#L213">Ini_SetInt</a></h3>
+				<pre>func (h *HGE) Ini_SetInt(section, name string, value int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Ini_SetString">func (*HGE) <a href="/target/hge.go?s=6050:6106#L229">Ini_SetString</a></h3>
+				<pre>func (h *HGE) Ini_SetString(section, name, value string)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_GetChar">func (*HGE) <a href="/target/hge.go?s=10715:10750#L450">Input_GetChar</a></h3>
+				<pre>func (h *HGE) Input_GetChar() uint8</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_GetEvent">func (*HGE) <a href="/target/hge.go?s=10780:10838#L454">Input_GetEvent</a></h3>
+				<pre>func (h *HGE) Input_GetEvent(event *input.InputEvent) bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_GetKey">func (*HGE) <a href="/target/hge.go?s=10649:10681#L446">Input_GetKey</a></h3>
+				<pre>func (h *HGE) Input_GetKey() Key</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_GetKeyName">func (*HGE) <a href="/target/hge.go?s=10570:10616#L442">Input_GetKeyName</a></h3>
+				<pre>func (h *HGE) Input_GetKeyName(key Key) string</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_GetKeyState">func (*HGE) <a href="/target/hge.go?s=10491:10536#L438">Input_GetKeyState</a></h3>
+				<pre>func (h *HGE) Input_GetKeyState(key Key) bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_GetMousePos">func (*HGE) <a href="/target/hge.go?s=9975:10023#L410">Input_GetMousePos</a></h3>
+				<pre>func (h *HGE) Input_GetMousePos() (x, y float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_GetMouseWheel">func (*HGE) <a href="/target/hge.go?s=10134:10173#L418">Input_GetMouseWheel</a></h3>
+				<pre>func (h *HGE) Input_GetMouseWheel() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_IsMouseOver">func (*HGE) <a href="/target/hge.go?s=10215:10253#L422">Input_IsMouseOver</a></h3>
+				<pre>func (h *HGE) Input_IsMouseOver() bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_KeyDown">func (*HGE) <a href="/target/hge.go?s=10347:10388#L430">Input_KeyDown</a></h3>
+				<pre>func (h *HGE) Input_KeyDown(key Key) bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_KeyUp">func (*HGE) <a href="/target/hge.go?s=10421:10460#L434">Input_KeyUp</a></h3>
+				<pre>func (h *HGE) Input_KeyUp(key Key) bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Input_SetMousePos">func (*HGE) <a href="/target/hge.go?s=10055:10100#L414">Input_SetMousePos</a></h3>
+				<pre>func (h *HGE) Input_SetMousePos(x, y float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_Free">func (*HGE) <a href="/target/hge.go?s=7374:7418#L294">Music_Free</a></h3>
+				<pre>func (h *HGE) Music_Free(music *sound.Music)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_GetAmplification">func (*HGE) <a href="/target/hge.go?s=7664:7724#L306">Music_GetAmplification</a></h3>
+				<pre>func (h *HGE) Music_GetAmplification(music *sound.Music) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_GetChannelVolume">func (*HGE) <a href="/target/hge.go?s=8383:8456#L334">Music_GetChannelVolume</a></h3>
+				<pre>func (h *HGE) Music_GetChannelVolume(music *sound.Music, channel int) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_GetInstrVolume">func (*HGE) <a href="/target/hge.go?s=8151:8220#L326">Music_GetInstrVolume</a></h3>
+				<pre>func (h *HGE) Music_GetInstrVolume(music *sound.Music, instr int) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_GetLength">func (*HGE) <a href="/target/hge.go?s=7760:7813#L310">Music_GetLength</a></h3>
+				<pre>func (h *HGE) Music_GetLength(music *sound.Music) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_GetPos">func (*HGE) <a href="/target/hge.go?s=7933:8005#L318">Music_GetPos</a></h3>
+				<pre>func (h *HGE) Music_GetPos(music *sound.Music) (order, row int, ok bool)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_Load">func (*HGE) <a href="/target/hge.go?s=7262:7329#L290">Music_Load</a></h3>
+				<pre>func (h *HGE) Music_Load(filename string, size uint32) *sound.Music</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_Play">func (*HGE) <a href="/target/hge.go?s=7438:7525#L298">Music_Play</a></h3>
+				<pre>func (h *HGE) Music_Play(music *sound.Music, loop bool, a ...interface{}) sound.Channel</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_SetAmplification">func (*HGE) <a href="/target/hge.go?s=7562:7628#L302">Music_SetAmplification</a></h3>
+				<pre>func (h *HGE) Music_SetAmplification(music *sound.Music, ampl int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_SetChannelVolume">func (*HGE) <a href="/target/hge.go?s=8259:8336#L330">Music_SetChannelVolume</a></h3>
+				<pre>func (h *HGE) Music_SetChannelVolume(music *sound.Music, channel, volume int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_SetInstrVolume">func (*HGE) <a href="/target/hge.go?s=8031:8108#L322">Music_SetInstrVolume</a></h3>
+				<pre>func (h *HGE) Music_SetInstrVolume(music *sound.Music, instr int, volume int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Music_SetPos">func (*HGE) <a href="/target/hge.go?s=7839:7901#L314">Music_SetPos</a></h3>
+				<pre>func (h *HGE) Music_SetPos(music *sound.Music, order, row int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Random_Float">func (*HGE) <a href="/target/hge.go?s=6609:6661#L258">Random_Float</a></h3>
+				<pre>func (h *HGE) Random_Float(min, max float64) float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Random_Int">func (*HGE) <a href="/target/hge.go?s=6532:6574#L254">Random_Int</a></h3>
+				<pre>func (h *HGE) Random_Int(min, max int) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Random_Seed">func (*HGE) <a href="/target/hge.go?s=6300:6343#L239">Random_Seed</a></h3>
+				<pre>func (h *HGE) Random_Seed(a ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Release">func (*HGE) <a href="/target/hge.go?s=1406:1429#L45">Release</a></h3>
+				<pre>func (h *HGE) Release()</pre>
+				<p>
+Releases the memory the C++ library allocated for the HGE struct
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.ResourceLoadBytes">func (*HGE) <a href="/target/hge.go?s=4452:4507#L166">ResourceLoadBytes</a></h3>
+				<pre>func (h *HGE) ResourceLoadBytes(filename string) []byte</pre>
+				<p>
+Loads a resource, puts the loaded data into a byte array, and frees the data.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.ResourceLoadString">func (*HGE) <a href="/target/hge.go?s=4662:4719#L175">ResourceLoadString</a></h3>
+				<pre>func (h *HGE) ResourceLoadString(filename string) *string</pre>
+				<p>
+Loads a resource, puts the data into a string, and frees the data.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Resource_AttachPack">func (*HGE) <a href="/target/hge.go?s=4835:4908#L184">Resource_AttachPack</a></h3>
+				<pre>func (h *HGE) Resource_AttachPack(filename string, a ...interface{}) bool</pre>
+				<p>
+Attaches a resource pack.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Resource_EnumFiles">func (*HGE) <a href="/target/hge.go?s=5359:5416#L204">Resource_EnumFiles</a></h3>
+				<pre>func (h *HGE) Resource_EnumFiles(a ...interface{}) string</pre>
+				<p>
+Enumerates files by given wildcard.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Resource_EnumFolders">func (*HGE) <a href="/target/hge.go?s=5496:5555#L209">Resource_EnumFolders</a></h3>
+				<pre>func (h *HGE) Resource_EnumFolders(a ...interface{}) string</pre>
+				<p>
+Enumerates folders by given wildcard.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Resource_Free">func (*HGE) <a href="/target/hge.go?s=4303:4353#L161">Resource_Free</a></h3>
+				<pre>func (h *HGE) Resource_Free(res resource.Resource)</pre>
+				<p>
+Deletes a previously loaded resource from memory.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Resource_Load">func (*HGE) <a href="/target/hge.go?s=4140:4213#L156">Resource_Load</a></h3>
+				<pre>func (h *HGE) Resource_Load(filename string) (*resource.Resource, uint32)</pre>
+				<p>
+Loads a resource into memory from disk.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Resource_MakePath">func (*HGE) <a href="/target/hge.go?s=5226:5282#L199">Resource_MakePath</a></h3>
+				<pre>func (h *HGE) Resource_MakePath(a ...interface{}) string</pre>
+				<p>
+Builds absolute file path.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Resource_RemoveAllPacks">func (*HGE) <a href="/target/hge.go?s=5124:5163#L194">Resource_RemoveAllPacks</a></h3>
+				<pre>func (h *HGE) Resource_RemoveAllPacks()</pre>
+				<p>
+Removes all resource packs previously attached.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Resource_RemovePack">func (*HGE) <a href="/target/hge.go?s=4986:5036#L189">Resource_RemovePack</a></h3>
+				<pre>func (h *HGE) Resource_RemovePack(filename string)</pre>
+				<p>
+Removes a resource pack.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Stream_Free">func (*HGE) <a href="/target/hge.go?s=8614:8661#L342">Stream_Free</a></h3>
+				<pre>func (h *HGE) Stream_Free(stream *sound.Stream)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Stream_Load">func (*HGE) <a href="/target/hge.go?s=8499:8568#L338">Stream_Load</a></h3>
+				<pre>func (h *HGE) Stream_Load(filename string, size uint32) *sound.Stream</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Stream_Play">func (*HGE) <a href="/target/hge.go?s=8682:8772#L346">Stream_Play</a></h3>
+				<pre>func (h *HGE) Stream_Play(stream *sound.Stream, loop bool, a ...interface{}) sound.Channel</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.System_GetErrorMessage">func (*HGE) <a href="/target/hge.go?s=1836:1881#L64">System_GetErrorMessage</a></h3>
+				<pre>func (h *HGE) System_GetErrorMessage() string</pre>
+				<p>
+Returns last occurred HGE error description.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.System_GetState">func (*HGE) <a href="/target/hge.go?s=3594:3653#L132">System_GetState</a></h3>
+				<pre>func (h *HGE) System_GetState(a ...interface{}) interface{}</pre>
+				<p>
+Returns internal system state values.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.System_Initiate">func (*HGE) <a href="/target/hge.go?s=1494:1530#L49">System_Initiate</a></h3>
+				<pre>func (h *HGE) System_Initiate() bool</pre>
+				<p>
+Initializes hardware and software needed to run engine.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.System_Launch">func (*HGE) <a href="/target/hge.go?s=2158:2202#L78">System_Launch</a></h3>
+				<pre>func (h *HGE) System_Launch(url string) bool</pre>
+				<p>
+Launches an URL or external executable/data file.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.System_Log">func (*HGE) <a href="/target/hge.go?s=2019:2076#L73">System_Log</a></h3>
+				<pre>func (h *HGE) System_Log(format string, v ...interface{})</pre>
+				<p>
+Writes a formatted message to the log file.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.System_SetState">func (*HGE) <a href="/target/hge.go?s=2569:2616#L90">System_SetState</a></h3>
+				<pre>func (h *HGE) System_SetState(a ...interface{})</pre>
+				<p>
+Sets internal system states.
+First param should be one of: BoolState, IntState, StringState, FuncState, HwndState
+Second parameter must be of the matching type, bool, int, string, StateFunc/func() int, *Hwnd
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.System_Shutdown">func (*HGE) <a href="/target/hge.go?s=1621:1652#L54">System_Shutdown</a></h3>
+				<pre>func (h *HGE) System_Shutdown()</pre>
+				<p>
+Restores video mode and frees allocated resources.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.System_Snapshot">func (*HGE) <a href="/target/hge.go?s=2279:2326#L83">System_Snapshot</a></h3>
+				<pre>func (h *HGE) System_Snapshot(a ...interface{})</pre>
+				<p>
+Saves current screen snapshot into a file.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.System_Start">func (*HGE) <a href="/target/hge.go?s=1721:1754#L59">System_Start</a></h3>
+				<pre>func (h *HGE) System_Start() bool</pre>
+				<p>
+Starts running user defined frame function.
+</p>
+
+				
+				
+			
+				
+				<h3 id="HGE.Target_Create">func (*HGE) <a href="/target/hge.go?s=11751:11823#L500">Target_Create</a></h3>
+				<pre>func (h *HGE) Target_Create(width, height int, zbuffer bool) *gfx.Target</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Target_Free">func (*HGE) <a href="/target/hge.go?s=11875:11920#L504">Target_Free</a></h3>
+				<pre>func (h *HGE) Target_Free(target *gfx.Target)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Target_GetTexture">func (*HGE) <a href="/target/hge.go?s=11941:12004#L508">Target_GetTexture</a></h3>
+				<pre>func (h *HGE) Target_GetTexture(target gfx.Target) *gfx.Texture</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Texture_Create">func (*HGE) <a href="/target/hge.go?s=12035:12095#L512">Texture_Create</a></h3>
+				<pre>func (h *HGE) Texture_Create(width, height int) *gfx.Texture</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Texture_Free">func (*HGE) <a href="/target/hge.go?s=12334:12378#L526">Texture_Free</a></h3>
+				<pre>func (h *HGE) Texture_Free(tex *gfx.Texture)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Texture_GetHeight">func (*HGE) <a href="/target/hge.go?s=12483:12553#L533">Texture_GetHeight</a></h3>
+				<pre>func (h *HGE) Texture_GetHeight(tex gfx.Texture, a ...interface{}) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Texture_GetWidth">func (*HGE) <a href="/target/hge.go?s=12384:12453#L529">Texture_GetWidth</a></h3>
+				<pre>func (h *HGE) Texture_GetWidth(tex gfx.Texture, a ...interface{}) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Texture_Load">func (*HGE) <a href="/target/hge.go?s=12139:12213#L516">Texture_Load</a></h3>
+				<pre>func (h *HGE) Texture_Load(filename string, a ...interface{}) *gfx.Texture</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Texture_Lock">func (*HGE) <a href="/target/hge.go?s=12584:12653#L537">Texture_Lock</a></h3>
+				<pre>func (h *HGE) Texture_Lock(tex gfx.Texture, a ...interface{}) *uint32</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Texture_Unlock">func (*HGE) <a href="/target/hge.go?s=12682:12727#L541">Texture_Unlock</a></h3>
+				<pre>func (h *HGE) Texture_Unlock(tex gfx.Texture)</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Timer_GetDelta">func (*HGE) <a href="/target/hge.go?s=6764:6802#L266">Timer_GetDelta</a></h3>
+				<pre>func (h *HGE) Timer_GetDelta() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Timer_GetFPS">func (*HGE) <a href="/target/hge.go?s=6830:6862#L270">Timer_GetFPS</a></h3>
+				<pre>func (h *HGE) Timer_GetFPS() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="HGE.Timer_GetTime">func (*HGE) <a href="/target/hge.go?s=6700:6737#L262">Timer_GetTime</a></h3>
+				<pre>func (h *HGE) Timer_GetTime() float64</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Hwnd">type <a href="/target/hge.go?s=640:658#L20">Hwnd</a></h2>
+			<pre>type Hwnd hge.Hwnd</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HwndState">type <a href="/target/hge.go?s=526:551#L13">HwndState</a></h2>
+			<pre>type HwndState hge.HwndState</pre>
+			
+
+			
+				<pre>const (
+    HWND       HwndState = HwndState(hge.HWND)
+    HWNDPARENT HwndState = HwndState(hge.HWNDPARENT)
+)</pre>
+				
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="InputEvent">type <a href="/target/hge.go?s=933:1235#L28">InputEvent</a></h2>
+			<pre>type InputEvent struct {
+    Type   Type    <span class="comment">// event type</span>
+    Key    Key     <span class="comment">// key code</span>
+    Flags  Flag    <span class="comment">// event flags</span>
+    Chr    uint8   <span class="comment">// character code</span>
+    Button Button  <span class="comment">// Mouse Button</span>
+    Wheel  int     <span class="comment">// wheel shift</span>
+    X      float64 <span class="comment">// mouse cursor x-coordinate</span>
+    Y      float64 <span class="comment">// mouse cursor y-coordinate</span>
+}</pre>
+			<p>
+HGE Input Event structure
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IntState">type <a href="/target/hge.go?s=553:577#L14">IntState</a></h2>
+			<pre>type IntState hge.IntState</pre>
+			
+
+			
+				<pre>const (
+    SCREENWIDTH      IntState = IntState(hge.SCREENWIDTH)
+    SCREENHEIGHT     IntState = IntState(hge.SCREENHEIGHT)
+    SCREENBPP        IntState = IntState(hge.SCREENBPP)
+    ORIGSCREENWIDTH  IntState = IntState(hge.ORIGSCREENWIDTH)
+    ORIGSCREENHEIGHT IntState = IntState(hge.ORIGSCREENHEIGHT)
+    FPS              IntState = IntState(hge.FPS)
+
+    SAMPLERATE   IntState = IntState(hge.SAMPLERATE)
+    FXVOLUME     IntState = IntState(hge.FXVOLUME)
+    MUSVOLUME    IntState = IntState(hge.MUSVOLUME)
+    STREAMVOLUME IntState = IntState(hge.STREAMVOLUME)
+
+    POWERSTATUS IntState = IntState(hge.POWERSTATUS)
+)</pre>
+				
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Key">type <a href="/target/hge.go?s=721:739#L23">Key</a></h2>
+			<pre>type Key input.Key <span class="comment">// A HGE Virtual-key code</span>
+</pre>
+			
+
+			
+				<pre>const (
+    K_ESCAPE    Key = Key(input.K_ESCAPE)
+    K_BACKSPACE Key = Key(input.K_BACKSPACE)
+    K_TAB       Key = Key(input.K_TAB)
+    K_ENTER     Key = Key(input.K_ENTER)
+    K_SPACE     Key = Key(input.K_SPACE)
+
+    K_SHIFT Key = Key(input.K_SHIFT)
+    K_CTRL  Key = Key(input.K_CTRL)
+    K_ALT   Key = Key(input.K_ALT)
+
+    K_LWIN Key = Key(input.K_LWIN)
+    K_RWIN Key = Key(input.K_RWIN)
+    K_APPS Key = Key(input.K_APPS)
+
+    K_PAUSE      Key = Key(input.K_PAUSE)
+    K_CAPSLOCK   Key = Key(input.K_CAPSLOCK)
+    K_NUMLOCK    Key = Key(input.K_NUMLOCK)
+    K_SCROLLLOCK Key = Key(input.K_SCROLLLOCK)
+
+    K_PGUP   Key = Key(input.K_PGUP)
+    K_PGDN   Key = Key(input.K_PGDN)
+    K_HOME   Key = Key(input.K_HOME)
+    K_END    Key = Key(input.K_END)
+    K_INSERT Key = Key(input.K_INSERT)
+    K_DELETE Key = Key(input.K_DELETE)
+
+    K_LEFT  Key = Key(input.K_LEFT)
+    K_UP    Key = Key(input.K_UP)
+    K_RIGHT Key = Key(input.K_RIGHT)
+    K_DOWN  Key = Key(input.K_DOWN)
+
+    K_0 Key = Key(input.K_0)
+    K_1 Key = Key(input.K_1)
+    K_2 Key = Key(input.K_2)
+    K_3 Key = Key(input.K_3)
+    K_4 Key = Key(input.K_4)
+    K_5 Key = Key(input.K_5)
+    K_6 Key = Key(input.K_6)
+    K_7 Key = Key(input.K_7)
+    K_8 Key = Key(input.K_8)
+    K_9 Key = Key(input.K_9)
+
+    K_A Key = Key(input.K_A)
+    K_B Key = Key(input.K_B)
+    K_C Key = Key(input.K_C)
+    K_D Key = Key(input.K_D)
+    K_E Key = Key(input.K_E)
+    K_F Key = Key(input.K_F)
+    K_G Key = Key(input.K_G)
+    K_H Key = Key(input.K_H)
+    K_I Key = Key(input.K_I)
+    K_J Key = Key(input.K_J)
+    K_K Key = Key(input.K_K)
+    K_L Key = Key(input.K_L)
+    K_M Key = Key(input.K_M)
+    K_N Key = Key(input.K_N)
+    K_O Key = Key(input.K_O)
+    K_P Key = Key(input.K_P)
+    K_Q Key = Key(input.K_Q)
+    K_R Key = Key(input.K_R)
+    K_S Key = Key(input.K_S)
+    K_T Key = Key(input.K_T)
+    K_U Key = Key(input.K_U)
+    K_V Key = Key(input.K_V)
+    K_W Key = Key(input.K_W)
+    K_X Key = Key(input.K_X)
+    K_Y Key = Key(input.K_Y)
+    K_Z Key = Key(input.K_Z)
+
+    K_GRAVE      Key = Key(input.K_GRAVE)
+    K_MINUS      Key = Key(input.K_MINUS)
+    K_EQUALS     Key = Key(input.K_EQUALS)
+    K_BACKSLASH  Key = Key(input.K_BACKSLASH)
+    K_LBRACKET   Key = Key(input.K_LBRACKET)
+    K_RBRACKET   Key = Key(input.K_RBRACKET)
+    K_SEMICOLON  Key = Key(input.K_SEMICOLON)
+    K_APOSTROPHE Key = Key(input.K_APOSTROPHE)
+    K_COMMA      Key = Key(input.K_COMMA)
+    K_PERIOD     Key = Key(input.K_PERIOD)
+    K_SLASH      Key = Key(input.K_SLASH)
+
+    K_NUMPAD0 Key = Key(input.K_NUMPAD0)
+    K_NUMPAD1 Key = Key(input.K_NUMPAD1)
+    K_NUMPAD2 Key = Key(input.K_NUMPAD2)
+    K_NUMPAD3 Key = Key(input.K_NUMPAD3)
+    K_NUMPAD4 Key = Key(input.K_NUMPAD4)
+    K_NUMPAD5 Key = Key(input.K_NUMPAD5)
+    K_NUMPAD6 Key = Key(input.K_NUMPAD6)
+    K_NUMPAD7 Key = Key(input.K_NUMPAD7)
+    K_NUMPAD8 Key = Key(input.K_NUMPAD8)
+    K_NUMPAD9 Key = Key(input.K_NUMPAD9)
+
+    K_MULTIPLY Key = Key(input.K_MULTIPLY)
+    K_DIVIDE   Key = Key(input.K_DIVIDE)
+    K_ADD      Key = Key(input.K_ADD)
+    K_SUBTRACT Key = Key(input.K_SUBTRACT)
+    K_DECIMAL  Key = Key(input.K_DECIMAL)
+
+    K_F1  Key = Key(input.K_F1)
+    K_F2  Key = Key(input.K_F2)
+    K_F3  Key = Key(input.K_F3)
+    K_F4  Key = Key(input.K_F4)
+    K_F5  Key = Key(input.K_F5)
+    K_F6  Key = Key(input.K_F6)
+    K_F7  Key = Key(input.K_F7)
+    K_F8  Key = Key(input.K_F8)
+    K_F9  Key = Key(input.K_F9)
+    K_F10 Key = Key(input.K_F10)
+    K_F11 Key = Key(input.K_F11)
+    K_F12 Key = Key(input.K_F12)
+)</pre>
+				<p>
+HGE Virtual-key codes
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StateFunc">type <a href="/target/hge.go?s=610:638#L18">StateFunc</a></h2>
+			<pre>type StateFunc hge.StateFunc</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StringState">type <a href="/target/hge.go?s=579:606#L15">StringState</a></h2>
+			<pre>type StringState hge.StringState</pre>
+			
+
+			
+				<pre>const (
+    ICON  StringState = StringState(hge.ICON)
+    TITLE StringState = StringState(hge.TITLE)
+
+    INIFILE StringState = StringState(hge.INIFILE)
+    LOGFILE StringState = StringState(hge.LOGFILE)
+)</pre>
+				
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Type">type <a href="/target/hge.go?s=660:680#L22">Type</a></h2>
+			<pre>type Type input.Type <span class="comment">// A HGE Input Event type constants</span>
+</pre>
+			
+
+			
+				<pre>const (
+    INPUT_KEYDOWN     Type = Type(input.INPUT_KEYDOWN)
+    INPUT_KEYUP       Type = Type(input.INPUT_KEYUP)
+    INPUT_MBUTTONDOWN Type = Type(input.INPUT_MBUTTONDOWN)
+    INPUT_MBUTTONUP   Type = Type(input.INPUT_MBUTTONUP)
+    INPUT_MOUSEMOVE   Type = Type(input.INPUT_MOUSEMOVE)
+    INPUT_MOUSEWHEEL  Type = Type(input.INPUT_MOUSEWHEEL)
+)</pre>
+				<p>
+HGE Input Event type constants
+</p>
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+

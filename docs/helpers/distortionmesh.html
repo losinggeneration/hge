@@ -1,0 +1,295 @@
+---
+title: helpers/distortionmesh
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/helpers/distortionmesh"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="#DistortionMesh">type DistortionMesh</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(cols, rows int) DistortionMesh</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.BlendMode">func (dm DistortionMesh) BlendMode() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.Clear">func (dm *DistortionMesh) Clear(a ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.Color">func (dm DistortionMesh) Color(col, row int) uint32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.Cols">func (dm DistortionMesh) Cols() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.Displacement">func (dm DistortionMesh) Displacement(col, row, ref int) (dx, dy float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.Render">func (dm *DistortionMesh) Render(x, y float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.Rows">func (dm DistortionMesh) Rows() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.SetBlendMode">func (dm *DistortionMesh) SetBlendMode(blend int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.SetColor">func (dm *DistortionMesh) SetColor(col, row int, color uint32)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.SetDisplacement">func (dm *DistortionMesh) SetDisplacement(col, row int, dx, dy float64, ref int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.SetTexture">func (dm *DistortionMesh) SetTexture(tex *gfx.Texture)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.SetTextureRect">func (dm *DistortionMesh) SetTextureRect(x, y, w, h float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.SetZ">func (dm *DistortionMesh) SetZ(col, row int, z float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.Texture">func (dm DistortionMesh) Texture() *gfx.Texture</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.TextureRect">func (dm DistortionMesh) TextureRect() (x, y, w, h float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistortionMesh.Z">func (dm DistortionMesh) Z(col, row int) float64</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/distortionmesh.go">distortionmesh.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    DISP_NODE    = 0
+    DISP_TOPLEFT = 1
+    DISP_CENTER  = 2
+)</pre>
+				
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="DistortionMesh">type <a href="/target/distortionmesh.go?s=147:312#L3">DistortionMesh</a></h2>
+			<pre>type DistortionMesh struct {
+    gfx.Quad
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="New">func <a href="/target/distortionmesh.go?s=314:353#L11">New</a></h3>
+				<pre>func New(cols, rows int) DistortionMesh</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="DistortionMesh.BlendMode">func (DistortionMesh) <a href="/target/distortionmesh.go?s=4404:4444#L173">BlendMode</a></h3>
+				<pre>func (dm DistortionMesh) BlendMode() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.Clear">func (*DistortionMesh) <a href="/target/distortionmesh.go?s=1956:2005#L68">Clear</a></h3>
+				<pre>func (dm *DistortionMesh) Clear(a ...interface{})</pre>
+				<p>
+DWORD col=0xFFFFFFFF, float z=0.5f);
+</p>
+
+				
+				
+			
+				
+				<h3 id="DistortionMesh.Color">func (DistortionMesh) <a href="/target/distortionmesh.go?s=4623:4674#L184">Color</a></h3>
+				<pre>func (dm DistortionMesh) Color(col, row int) uint32</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.Cols">func (DistortionMesh) <a href="/target/distortionmesh.go?s=5454:5489#L216">Cols</a></h3>
+				<pre>func (dm DistortionMesh) Cols() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.Displacement">func (DistortionMesh) <a href="/target/distortionmesh.go?s=4776:4849#L192">Displacement</a></h3>
+				<pre>func (dm DistortionMesh) Displacement(col, row, ref int) (dx, dy float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.Render">func (*DistortionMesh) <a href="/target/distortionmesh.go?s=647:693#L27">Render</a></h3>
+				<pre>func (dm *DistortionMesh) Render(x, y float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.Rows">func (DistortionMesh) <a href="/target/distortionmesh.go?s=5397:5432#L212">Rows</a></h3>
+				<pre>func (dm DistortionMesh) Rows() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.SetBlendMode">func (*DistortionMesh) <a href="/target/distortionmesh.go?s=3392:3441#L132">SetBlendMode</a></h3>
+				<pre>func (dm *DistortionMesh) SetBlendMode(blend int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.SetColor">func (*DistortionMesh) <a href="/target/distortionmesh.go?s=3613:3675#L142">SetColor</a></h3>
+				<pre>func (dm *DistortionMesh) SetColor(col, row int, color uint32)</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.SetDisplacement">func (*DistortionMesh) <a href="/target/distortionmesh.go?s=3767:3847#L148">SetDisplacement</a></h3>
+				<pre>func (dm *DistortionMesh) SetDisplacement(col, row int, dx, dy float64, ref int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.SetTexture">func (*DistortionMesh) <a href="/target/distortionmesh.go?s=2589:2643#L98">SetTexture</a></h3>
+				<pre>func (dm *DistortionMesh) SetTexture(tex *gfx.Texture)</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.SetTextureRect">func (*DistortionMesh) <a href="/target/distortionmesh.go?s=2672:2732#L102">SetTextureRect</a></h3>
+				<pre>func (dm *DistortionMesh) SetTextureRect(x, y, w, h float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.SetZ">func (*DistortionMesh) <a href="/target/distortionmesh.go?s=3465:3520#L136">SetZ</a></h3>
+				<pre>func (dm *DistortionMesh) SetZ(col, row int, z float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.Texture">func (DistortionMesh) <a href="/target/distortionmesh.go?s=4220:4267#L165">Texture</a></h3>
+				<pre>func (dm DistortionMesh) Texture() *gfx.Texture</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.TextureRect">func (DistortionMesh) <a href="/target/distortionmesh.go?s=4297:4356#L169">TextureRect</a></h3>
+				<pre>func (dm DistortionMesh) TextureRect() (x, y, w, h float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="DistortionMesh.Z">func (DistortionMesh) <a href="/target/distortionmesh.go?s=4467:4515#L177">Z</a></h3>
+				<pre>func (dm DistortionMesh) Z(col, row int) float64</pre>
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+

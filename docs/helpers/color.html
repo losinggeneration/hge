@@ -1,0 +1,434 @@
+---
+title: helpers/color
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/helpers/color"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="#Color">type Color</a></dd>
+				
+				
+			
+				
+				<dd><a href="#ColorHSV">type ColorHSV</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewHSV">func NewHSV(h, s, v, a float64) ColorHSV</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewHSVCol">func NewHSVCol(col uint32) ColorHSV</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.Add">func (c ColorHSV) Add(c2 ColorHSV) ColorHSV</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.AddEqual">func (c *ColorHSV) AddEqual(c2 ColorHSV) *ColorHSV</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.Clamp">func (c *ColorHSV) Clamp()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.DivScalar">func (c ColorHSV) DivScalar(scalar float64) ColorHSV</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.Eq">func (c ColorHSV) Eq(c2 ColorHSV) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.HWColor">func (c ColorHSV) HWColor() uint32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.Mul">func (c ColorHSV) Mul(c2 ColorHSV) ColorHSV</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.MulScalar">func (c ColorHSV) MulScalar(scalar float64) ColorHSV</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.MulScalarEqual">func (c *ColorHSV) MulScalarEqual(scalar float64) *ColorHSV</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.SetHWColor">func (c *ColorHSV) SetHWColor(col uint32)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.Sub">func (c ColorHSV) Sub(c2 ColorHSV) ColorHSV</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorHSV.SubEqual">func (c *ColorHSV) SubEqual(c2 ColorHSV) *ColorHSV</a></dd>
+				
+			
+				
+				<dd><a href="#ColorRGB">type ColorRGB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewRGB">func NewRGB(r, g, b, a float64) ColorRGB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewRGBCol">func NewRGBCol(col uint32) ColorRGB</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.Add">func (c ColorRGB) Add(c2 ColorRGB) ColorRGB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.AddEqual">func (c *ColorRGB) AddEqual(c2 ColorRGB) *ColorRGB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.Clamp">func (c *ColorRGB) Clamp()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.DivScalar">func (c ColorRGB) DivScalar(scalar float64) ColorRGB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.Eq">func (c ColorRGB) Eq(c2 ColorRGB) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.HWColor">func (c ColorRGB) HWColor() uint32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.Mul">func (c ColorRGB) Mul(c2 ColorRGB) ColorRGB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.MulScalar">func (c ColorRGB) MulScalar(scalar float64) ColorRGB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.MulScalarEqual">func (c *ColorRGB) MulScalarEqual(scalar float64) *ColorRGB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.SetHWColor">func (c *ColorRGB) SetHWColor(col uint32)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.Sub">func (c ColorRGB) Sub(c2 ColorRGB) ColorRGB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ColorRGB.SubEqual">func (c *ColorRGB) SubEqual(c2 ColorRGB) *ColorRGB</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/color.go">color.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+		
+		
+		
+			
+			
+			<h2 id="Color">type <a href="/target/color.go?s=172:250#L10">Color</a></h2>
+			<pre>type Color interface {
+    Clamp()
+    SetHWColor(col uint32)
+    GetHWColor() uint32
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ColorHSV">type <a href="/target/color.go?s=1894:1938#L97">ColorHSV</a></h2>
+			<pre>type ColorHSV struct {
+    H, S, V, A float64
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="NewHSV">func <a href="/target/color.go?s=1940:1980#L101">NewHSV</a></h3>
+				<pre>func NewHSV(h, s, v, a float64) ColorHSV</pre>
+				
+				
+			
+				
+				<h3 id="NewHSVCol">func <a href="/target/color.go?s=2015:2050#L105">NewHSVCol</a></h3>
+				<pre>func NewHSVCol(col uint32) ColorHSV</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="ColorHSV.Add">func (ColorHSV) <a href="/target/color.go?s=2207:2250#L117">Add</a></h3>
+				<pre>func (c ColorHSV) Add(c2 ColorHSV) ColorHSV</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.AddEqual">func (*ColorHSV) <a href="/target/color.go?s=2534:2584#L134">AddEqual</a></h3>
+				<pre>func (c *ColorHSV) AddEqual(c2 ColorHSV) *ColorHSV</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.Clamp">func (*ColorHSV) <a href="/target/color.go?s=3140:3166#L164">Clamp</a></h3>
+				<pre>func (c *ColorHSV) Clamp()</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.DivScalar">func (ColorHSV) <a href="/target/color.go?s=2762:2814#L147">DivScalar</a></h3>
+				<pre>func (c ColorHSV) DivScalar(scalar float64) ColorHSV</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.Eq">func (ColorHSV) <a href="/target/color.go?s=2653:2691#L143">Eq</a></h3>
+				<pre>func (c ColorHSV) Eq(c2 ColorHSV) bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.HWColor">func (ColorHSV) <a href="/target/color.go?s=3996:4030#L208">HWColor</a></h3>
+				<pre>func (c ColorHSV) HWColor() uint32</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.Mul">func (ColorHSV) <a href="/target/color.go?s=2311:2354#L121">Mul</a></h3>
+				<pre>func (c ColorHSV) Mul(c2 ColorHSV) ColorHSV</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.MulScalar">func (ColorHSV) <a href="/target/color.go?s=2883:2935#L151">MulScalar</a></h3>
+				<pre>func (c ColorHSV) MulScalar(scalar float64) ColorHSV</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.MulScalarEqual">func (*ColorHSV) <a href="/target/color.go?s=3004:3063#L155">MulScalarEqual</a></h3>
+				<pre>func (c *ColorHSV) MulScalarEqual(scalar float64) *ColorHSV</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.SetHWColor">func (*ColorHSV) <a href="/target/color.go?s=3244:3285#L171">SetHWColor</a></h3>
+				<pre>func (c *ColorHSV) SetHWColor(col uint32)</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.Sub">func (ColorHSV) <a href="/target/color.go?s=2103:2146#L113">Sub</a></h3>
+				<pre>func (c ColorHSV) Sub(c2 ColorHSV) ColorHSV</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorHSV.SubEqual">func (*ColorHSV) <a href="/target/color.go?s=2415:2465#L125">SubEqual</a></h3>
+				<pre>func (c *ColorHSV) SubEqual(c2 ColorHSV) *ColorHSV</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ColorRGB">type <a href="/target/color.go?s=126:170#L6">ColorRGB</a></h2>
+			<pre>type ColorRGB struct {
+    R, G, B, A float64
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="NewRGB">func <a href="/target/color.go?s=252:292#L16">NewRGB</a></h3>
+				<pre>func NewRGB(r, g, b, a float64) ColorRGB</pre>
+				
+				
+			
+				
+				<h3 id="NewRGBCol">func <a href="/target/color.go?s=327:362#L20">NewRGBCol</a></h3>
+				<pre>func NewRGBCol(col uint32) ColorRGB</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="ColorRGB.Add">func (ColorRGB) <a href="/target/color.go?s=519:562#L32">Add</a></h3>
+				<pre>func (c ColorRGB) Add(c2 ColorRGB) ColorRGB</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.AddEqual">func (*ColorRGB) <a href="/target/color.go?s=846:896#L49">AddEqual</a></h3>
+				<pre>func (c *ColorRGB) AddEqual(c2 ColorRGB) *ColorRGB</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.Clamp">func (*ColorRGB) <a href="/target/color.go?s=1452:1478#L79">Clamp</a></h3>
+				<pre>func (c *ColorRGB) Clamp()</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.DivScalar">func (ColorRGB) <a href="/target/color.go?s=1074:1126#L62">DivScalar</a></h3>
+				<pre>func (c ColorRGB) DivScalar(scalar float64) ColorRGB</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.Eq">func (ColorRGB) <a href="/target/color.go?s=965:1003#L58">Eq</a></h3>
+				<pre>func (c ColorRGB) Eq(c2 ColorRGB) bool</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.HWColor">func (ColorRGB) <a href="/target/color.go?s=1745:1779#L93">HWColor</a></h3>
+				<pre>func (c ColorRGB) HWColor() uint32</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.Mul">func (ColorRGB) <a href="/target/color.go?s=623:666#L36">Mul</a></h3>
+				<pre>func (c ColorRGB) Mul(c2 ColorRGB) ColorRGB</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.MulScalar">func (ColorRGB) <a href="/target/color.go?s=1195:1247#L66">MulScalar</a></h3>
+				<pre>func (c ColorRGB) MulScalar(scalar float64) ColorRGB</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.MulScalarEqual">func (*ColorRGB) <a href="/target/color.go?s=1316:1375#L70">MulScalarEqual</a></h3>
+				<pre>func (c *ColorRGB) MulScalarEqual(scalar float64) *ColorRGB</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.SetHWColor">func (*ColorRGB) <a href="/target/color.go?s=1556:1597#L86">SetHWColor</a></h3>
+				<pre>func (c *ColorRGB) SetHWColor(col uint32)</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.Sub">func (ColorRGB) <a href="/target/color.go?s=415:458#L28">Sub</a></h3>
+				<pre>func (c ColorRGB) Sub(c2 ColorRGB) ColorRGB</pre>
+				
+				
+				
+			
+				
+				<h3 id="ColorRGB.SubEqual">func (*ColorRGB) <a href="/target/color.go?s=727:777#L40">SubEqual</a></h3>
+				<pre>func (c *ColorRGB) SubEqual(c2 ColorRGB) *ColorRGB</pre>
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+

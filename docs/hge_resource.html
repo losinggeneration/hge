@@ -1,0 +1,260 @@
+---
+title: hge_resource
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/hge/resource"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="#AttachPack">func AttachPack(filename string, a ...interface{}) bool</a></dd>
+			
+				
+				<dd><a href="#EnumFiles">func EnumFiles(a ...interface{}) string</a></dd>
+			
+				
+				<dd><a href="#EnumFolders">func EnumFolders(a ...interface{}) string</a></dd>
+			
+				
+				<dd><a href="#LoadBytes">func LoadBytes(filename string) ([]byte, error)</a></dd>
+			
+				
+				<dd><a href="#LoadString">func LoadString(filename string) (string, error)</a></dd>
+			
+				
+				<dd><a href="#MakePath">func MakePath(a ...interface{}) string</a></dd>
+			
+				
+				<dd><a href="#RemoveAllPacks">func RemoveAllPacks()</a></dd>
+			
+				
+				<dd><a href="#RemovePack">func RemovePack(filename string)</a></dd>
+			
+			
+				
+				<dd><a href="#Pointer">type Pointer</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Resource">type Resource</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(filename string) (*Resource, uint32)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Resource.Free">func (r *Resource) Free()</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/resource.go">resource.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+		
+		
+			
+			
+			<h2 id="AttachPack">func <a href="/target/resource.go?s=688:743#L21">AttachPack</a></h2>
+			<pre>func AttachPack(filename string, a ...interface{}) bool</pre>
+			<p>
+Attaches a resource pack.
+</p>
+
+			
+		
+			
+			
+			<h2 id="EnumFiles">func <a href="/target/resource.go?s=1031:1070#L39">EnumFiles</a></h2>
+			<pre>func EnumFiles(a ...interface{}) string</pre>
+			<p>
+Enumerates files by given wildcard.
+</p>
+
+			
+		
+			
+			
+			<h2 id="EnumFolders">func <a href="/target/resource.go?s=1128:1169#L44">EnumFolders</a></h2>
+			<pre>func EnumFolders(a ...interface{}) string</pre>
+			<p>
+Enumerates folders by given wildcard.
+</p>
+
+			
+		
+			
+			
+			<h2 id="LoadBytes">func <a href="/target/resource.go?s=371:418#L11">LoadBytes</a></h2>
+			<pre>func LoadBytes(filename string) ([]byte, error)</pre>
+			<p>
+Loads a resource, puts the loaded data into a byte array, and frees the data.
+</p>
+
+			
+		
+			
+			
+			<h2 id="LoadString">func <a href="/target/resource.go?s=552:600#L16">LoadString</a></h2>
+			<pre>func LoadString(filename string) (string, error)</pre>
+			<p>
+Loads a resource, puts the data into a string, and frees the data.
+</p>
+
+			
+		
+			
+			
+			<h2 id="MakePath">func <a href="/target/resource.go?s=937:975#L34">MakePath</a></h2>
+			<pre>func MakePath(a ...interface{}) string</pre>
+			<p>
+Builds absolute file path.
+</p>
+
+			
+		
+			
+			
+			<h2 id="RemoveAllPacks">func <a href="/target/resource.go?s=880:901#L30">RemoveAllPacks</a></h2>
+			<pre>func RemoveAllPacks()</pre>
+			<p>
+Removes all resource packs previously attached.
+</p>
+
+			
+		
+			
+			
+			<h2 id="RemovePack">func <a href="/target/resource.go?s=791:823#L26">RemovePack</a></h2>
+			<pre>func RemovePack(filename string)</pre>
+			<p>
+Removes a resource pack.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Pointer">type <a href="/target/resource.go?s=32:52#L1">Pointer</a></h2>
+			<pre>type Pointer uintptr</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Resource">type <a href="/target/resource.go?s=54:87#L1">Resource</a></h2>
+			<pre>type Resource struct {
+    Pointer
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="New">func <a href="/target/resource.go?s=132:177#L2">New</a></h3>
+				<pre>func New(filename string) (*Resource, uint32)</pre>
+				<p>
+Loads a resource into memory from disk.
+</p>
+
+				
+			
+
+			
+				
+				<h3 id="Resource.Free">func (*Resource) <a href="/target/resource.go?s=259:284#L7">Free</a></h3>
+				<pre>func (r *Resource) Free()</pre>
+				<p>
+Deletes a previously loaded resource from memory.
+</p>
+
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+

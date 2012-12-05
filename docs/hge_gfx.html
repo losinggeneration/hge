@@ -1,0 +1,373 @@
+---
+title: hge_gfx
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/hge/gfx"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+				
+				<dd><a href="#SetTextureFilter">func SetTextureFilter(filter bool)</a></dd>
+			
+			
+				
+				<dd><a href="#Color">type Color</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ARGBToColor">func ARGBToColor(c uint32) Color</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RGBAToColor">func RGBAToColor(c uint32) Color</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Line">type Line</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Quad">type Quad</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Texture">type Texture</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LoadTexture">func LoadTexture(filename string, a ...interface{}) (*Texture, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewTexture">func NewTexture(width, height int) *Texture</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Texture.Height">func (t *Texture) Height(a ...interface{}) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Texture.Lock">func (t *Texture) Lock(a ...interface{}) *uint32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Texture.Unlock">func (t *Texture) Unlock()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Texture.Width">func (t *Texture) Width(a ...interface{}) int</a></dd>
+				
+			
+				
+				<dd><a href="#Triple">type Triple</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Vertex">type Vertex</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/generic_funcs.go">generic_funcs.go</a>
+			
+				<a href="/target/generic_types.go">generic_types.go</a>
+			
+				<a href="/target/texture.go">texture.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    BLEND_COLORADD   = 1
+    BLEND_COLORMUL   = 0
+    BLEND_ALPHABLEND = 2
+    BLEND_ALPHAADD   = 0
+    BLEND_ZWRITE     = 4
+    BLEND_NOZWRITE   = 0
+
+    BLEND_DEFAULT   = (BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE)
+    BLEND_DEFAULT_Z = (BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_ZWRITE)
+)</pre>
+				<p>
+HGE Blending constants
+</p>
+
+			
+				<pre>const (
+    PRIM_LINES   = iota
+    PRIM_TRIPLES = iota
+    PRIM_QUADS   = iota
+)</pre>
+				<p>
+HGE Primitive type constants
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="SetTextureFilter">func <a href="/target/texture.go?s=205:239#L12">SetTextureFilter</a></h2>
+			<pre>func SetTextureFilter(filter bool)</pre>
+			
+			
+		
+		
+			
+			
+			<h2 id="Color">type <a href="/target/generic_types.go?s=431:471#L13">Color</a></h2>
+			<pre>type Color struct {
+    R, G, B, A uint32
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="ARGBToColor">func <a href="/target/generic_funcs.go?s=226:258#L1">ARGBToColor</a></h3>
+				<pre>func ARGBToColor(c uint32) Color</pre>
+				<p>
+Converts an ARGB uint32 to a Color structure
+</p>
+
+				
+			
+				
+				<h3 id="RGBAToColor">func <a href="/target/generic_funcs.go?s=60:92#L1">RGBAToColor</a></h3>
+				<pre>func RGBAToColor(c uint32) Color</pre>
+				<p>
+Converts a RGBA uint32 to a Color structure
+</p>
+
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Line">type <a href="/target/generic_types.go?s=659:749#L25">Line</a></h2>
+			<pre>type Line struct {
+    X1, Y1, X2, Y2 float64
+    Z              float64
+    Color          Color
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Quad">type <a href="/target/generic_types.go?s=855:909#L39">Quad</a></h2>
+			<pre>type Quad struct {
+    V [4]Vertex
+    *Texture
+    Blend int
+}</pre>
+			<p>
+HGE Quad structure
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Texture">type <a href="/target/texture.go?s=1159:1234#L61">Texture</a></h2>
+			<pre>type Texture struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+HGE Handle type
+</p>
+
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="LoadTexture">func <a href="/target/texture.go?s=1460:1529#L79">LoadTexture</a></h3>
+				<pre>func LoadTexture(filename string, a ...interface{}) (*Texture, error)</pre>
+				
+				
+			
+				
+				<h3 id="NewTexture">func <a href="/target/texture.go?s=1236:1279#L67">NewTexture</a></h3>
+				<pre>func NewTexture(width, height int) *Texture</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="Texture.Height">func (*Texture) <a href="/target/texture.go?s=3126:3172#L146">Height</a></h3>
+				<pre>func (t *Texture) Height(a ...interface{}) int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Texture.Lock">func (*Texture) <a href="/target/texture.go?s=3195:3243#L150">Lock</a></h3>
+				<pre>func (t *Texture) Lock(a ...interface{}) *uint32</pre>
+				
+				
+				
+			
+				
+				<h3 id="Texture.Unlock">func (*Texture) <a href="/target/texture.go?s=3261:3287#L154">Unlock</a></h3>
+				<pre>func (t *Texture) Unlock()</pre>
+				
+				
+				
+			
+				
+				<h3 id="Texture.Width">func (*Texture) <a href="/target/texture.go?s=3058:3103#L142">Width</a></h3>
+				<pre>func (t *Texture) Width(a ...interface{}) int</pre>
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Triple">type <a href="/target/generic_types.go?s=775:831#L32">Triple</a></h2>
+			<pre>type Triple struct {
+    V [3]Vertex
+    *Texture
+    Blend int
+}</pre>
+			<p>
+HGE Triple structure
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Vertex">type <a href="/target/generic_types.go?s=497:657#L18">Vertex</a></h2>
+			<pre>type Vertex struct {
+    X, Y   float32 <span class="comment">// screen position</span>
+    Z      float32 <span class="comment">// Z-buffer depth 0..1</span>
+    Color  Color   <span class="comment">// color</span>
+    TX, TY float32 <span class="comment">// texture coordinates</span>
+}</pre>
+			<p>
+HGE Vertex structure
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+

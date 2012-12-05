@@ -1,0 +1,380 @@
+---
+title: helpers/font
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/helpers/font"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="#Font">type Font</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(filename string, arg ...interface{}) *Font</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetBlendMode">func (f Font) GetBlendMode() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetColor">func (f Font) GetColor() uint32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetHeight">func (f Font) GetHeight() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetPostWidth">func (f Font) GetPostWidth(chr byte) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetPreWidth">func (f Font) GetPreWidth(chr byte) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetProportion">func (f Font) GetProportion() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetRotation">func (f Font) GetRotation() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetScale">func (f Font) GetScale() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetSpacing">func (f Font) GetSpacing() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetSprite">func (f Font) GetSprite(chr byte) *sprite.Sprite</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetStringWidth">func (f Font) GetStringWidth(str string, arg ...interface{}) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetTracking">func (f Font) GetTracking() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.GetZ">func (f Font) GetZ() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.Printf">func (f *Font) Printf(x, y float64, align int, format string, arg ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.Printfb">func (f *Font) Printfb(x, y, w, h float64, align int, format string, arg ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.Render">func (f *Font) Render(x, y float64, align int, str string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.SetBlendMode">func (f *Font) SetBlendMode(blend int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.SetColor">func (f *Font) SetColor(color uint32)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.SetProportion">func (f *Font) SetProportion(prop float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.SetRotation">func (f *Font) SetRotation(rot float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.SetScale">func (f *Font) SetScale(scale float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.SetSpacing">func (f *Font) SetSpacing(spacing float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.SetTracking">func (f *Font) SetTracking(tracking float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Font.SetZ">func (f *Font) SetZ(z float64)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/font.go">font.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    TEXT_LEFT     = 0
+    TEXT_RIGHT    = 1
+    TEXT_CENTER   = 2
+    TEXT_HORZMASK = 0x03
+
+    TEXT_TOP      = 0
+    TEXT_BOTTOM   = 4
+    TEXT_MIDDLE   = 8
+    TEXT_VERTMASK = 0x0C
+)</pre>
+				
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="Font">type <a href="/target/font.go?s=541:829#L26">Font</a></h2>
+			<pre>type Font struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+* Font struct
+</p>
+
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="New">func <a href="/target/font.go?s=1860:1911#L94">New</a></h3>
+				<pre>func New(filename string, arg ...interface{}) *Font</pre>
+				
+				
+			
+
+			
+				
+				<h3 id="Font.GetBlendMode">func (Font) <a href="/target/font.go?s=5016:5048#L259">GetBlendMode</a></h3>
+				<pre>func (f Font) GetBlendMode() int</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetColor">func (Font) <a href="/target/font.go?s=4917:4948#L251">GetColor</a></h3>
+				<pre>func (f Font) GetColor() uint32</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetHeight">func (Font) <a href="/target/font.go?s=5576:5609#L295">GetHeight</a></h3>
+				<pre>func (f Font) GetHeight() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetPostWidth">func (Font) <a href="/target/font.go?s=5506:5550#L291">GetPostWidth</a></h3>
+				<pre>func (f Font) GetPostWidth(chr byte) float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetPreWidth">func (Font) <a href="/target/font.go?s=5438:5481#L287">GetPreWidth</a></h3>
+				<pre>func (f Font) GetPreWidth(chr byte) float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetProportion">func (Font) <a href="/target/font.go?s=5124:5161#L267">GetProportion</a></h3>
+				<pre>func (f Font) GetProportion() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetRotation">func (Font) <a href="/target/font.go?s=5188:5223#L271">GetRotation</a></h3>
+				<pre>func (f Font) GetRotation() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetScale">func (Font) <a href="/target/font.go?s=5070:5102#L263">GetScale</a></h3>
+				<pre>func (f Font) GetScale() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetSpacing">func (Font) <a href="/target/font.go?s=5303:5337#L279">GetSpacing</a></h3>
+				<pre>func (f Font) GetSpacing() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetSprite">func (Font) <a href="/target/font.go?s=5361:5409#L283">GetSprite</a></h3>
+				<pre>func (f Font) GetSprite(chr byte) *sprite.Sprite</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetStringWidth">func (Font) <a href="/target/font.go?s=5632:5700#L299">GetStringWidth</a></h3>
+				<pre>func (f Font) GetStringWidth(str string, arg ...interface{}) float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetTracking">func (Font) <a href="/target/font.go?s=5243:5278#L275">GetTracking</a></h3>
+				<pre>func (f Font) GetTracking() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.GetZ">func (Font) <a href="/target/font.go?s=4970:4998#L255">GetZ</a></h3>
+				<pre>func (f Font) GetZ() float64</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.Printf">func (*Font) <a href="/target/font.go?s=3907:3988#L194">Printf</a></h3>
+				<pre>func (f *Font) Printf(x, y float64, align int, format string, arg ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.Printfb">func (*Font) <a href="/target/font.go?s=4046:4134#L198">Printfb</a></h3>
+				<pre>func (f *Font) Printfb(x, y, w, h float64, align int, format string, arg ...interface{})</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.Render">func (*Font) <a href="/target/font.go?s=3090:3148#L158">Render</a></h3>
+				<pre>func (f *Font) Render(x, y float64, align int, str string)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.SetBlendMode">func (*Font) <a href="/target/font.go?s=4427:4465#L221">SetBlendMode</a></h3>
+				<pre>func (f *Font) SetBlendMode(blend int)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.SetColor">func (*Font) <a href="/target/font.go?s=4140:4177#L201">SetColor</a></h3>
+				<pre>func (f *Font) SetColor(color uint32)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.SetProportion">func (*Font) <a href="/target/font.go?s=4648:4690#L235">SetProportion</a></h3>
+				<pre>func (f *Font) SetProportion(prop float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.SetRotation">func (*Font) <a href="/target/font.go?s=4717:4756#L239">SetRotation</a></h3>
+				<pre>func (f *Font) SetRotation(rot float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.SetScale">func (*Font) <a href="/target/font.go?s=4587:4625#L231">SetScale</a></h3>
+				<pre>func (f *Font) SetScale(scale float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.SetSpacing">func (*Font) <a href="/target/font.go?s=4848:4890#L247">SetSpacing</a></h3>
+				<pre>func (f *Font) SetSpacing(spacing float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.SetTracking">func (*Font) <a href="/target/font.go?s=4775:4819#L243">SetTracking</a></h3>
+				<pre>func (f *Font) SetTracking(tracking float64)</pre>
+				
+				
+				
+			
+				
+				<h3 id="Font.SetZ">func (*Font) <a href="/target/font.go?s=4295:4325#L211">SetZ</a></h3>
+				<pre>func (f *Font) SetZ(z float64)</pre>
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+

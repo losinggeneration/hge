@@ -1,0 +1,236 @@
+---
+title: hge_rand
+layout: godocs
+---
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/losinggeneration/hge-go/hge/rand"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Functions to give  random numbers over exclusive ranges.
+</p>
+
+			</div>
+		</div>
+		
+
+		
+	
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="#Float32">func Float32(min, max float32) float32</a></dd>
+			
+				
+				<dd><a href="#Float64">func Float64(min, max float64) float64</a></dd>
+			
+				
+				<dd><a href="#Int">func Int(min, max int) int</a></dd>
+			
+				
+				<dd><a href="#Seed">func Seed(a ...interface{})</a></dd>
+			
+			
+				
+				<dd><a href="#Rand">type Rand</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(seed int64) *Rand</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Rand.Float32">func (r *Rand) Float32(min, max float32) float32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Rand.Float64">func (r *Rand) Float64(min, max float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Rand.Int">func (r *Rand) Int(min, max int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Rand.Seed">func (r *Rand) Seed()</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/rand.go">rand.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+	
+		
+		
+		
+			
+			
+			<h2 id="Float32">func <a href="/target/rand.go?s=705:743#L25">Float32</a></h2>
+			<pre>func Float32(min, max float32) float32</pre>
+			<p>
+Returns a pseudo-random number in (min, max). It panics if max-min &lt;= 0.
+</p>
+
+			
+		
+			
+			
+			<h2 id="Float64">func <a href="/target/rand.go?s=855:893#L30">Float64</a></h2>
+			<pre>func Float64(min, max float64) float64</pre>
+			<p>
+Returns a pseudo-random number in (min, max). It panics if max-min &lt;= 0.
+</p>
+
+			
+		
+			
+			
+			<h2 id="Int">func <a href="/target/rand.go?s=571:597#L20">Int</a></h2>
+			<pre>func Int(min, max int) int</pre>
+			<p>
+Returns a pseudo-random number in (min, max). It panics if max-min &lt;= 0.
+</p>
+
+			
+		
+			
+			
+			<h2 id="Seed">func <a href="/target/rand.go?s=289:316#L4">Seed</a></h2>
+			<pre>func Seed(a ...interface{})</pre>
+			<p>
+Seed uses the provided seed value to initialize the generator to a
+deterministic state. If Seed is not called, the generator behaves as if
+seeded by Seed(1).
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Rand">type <a href="/target/rand.go?s=970:1019#L35">Rand</a></h2>
+			<pre>type Rand struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Rand is a source of random numbers.
+</p>
+
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="New">func <a href="/target/rand.go?s=1130:1156#L42">New</a></h3>
+				<pre>func New(seed int64) *Rand</pre>
+				<p>
+New returns a new Rand that uses random values from the seeded number to
+generate other random values.
+</p>
+
+				
+			
+
+			
+				
+				<h3 id="Rand.Float32">func (*Rand) <a href="/target/rand.go?s=1593:1641#L60">Float32</a></h3>
+				<pre>func (r *Rand) Float32(min, max float32) float32</pre>
+				<p>
+Returns a pseudo-random number in (min, max). It panics if max-min &lt;= 0.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Rand.Float64">func (*Rand) <a href="/target/rand.go?s=1778:1826#L65">Float64</a></h3>
+				<pre>func (r *Rand) Float64(min, max float64) float64</pre>
+				<p>
+Returns a pseudo-random number in (min, max). It panics if max-min &lt;= 0.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Rand.Int">func (*Rand) <a href="/target/rand.go?s=1443:1479#L55">Int</a></h3>
+				<pre>func (r *Rand) Int(min, max int) int</pre>
+				<p>
+Returns a pseudo-random number in (min, max). It panics if max-min &lt;= 0.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Rand.Seed">func (*Rand) <a href="/target/rand.go?s=1322:1343#L50">Seed</a></h3>
+				<pre>func (r *Rand) Seed()</pre>
+				<p>
+Seed uses the provided seed value to initialize the generator to a
+deterministic state.
+</p>
+
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
