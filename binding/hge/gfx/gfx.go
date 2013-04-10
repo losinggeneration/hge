@@ -80,7 +80,7 @@ type cQuad struct {
 }
 
 func boolToCInt(b bool) C.BOOL {
-	return C.BOOL(hge.BoolToCInt(b))
+	return C.BOOL(hge.BoolToCInt[b])
 }
 
 var gfxHGE *hge.HGE

@@ -14,7 +14,7 @@ import (
 )
 
 func boolToCInt(b bool) C.BOOL {
-	return C.BOOL(hge.BoolToCInt(b))
+	return C.BOOL(hge.BoolToCInt[b])
 }
 
 // HGE Handle type

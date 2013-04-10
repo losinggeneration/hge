@@ -115,12 +115,9 @@ const (
 	PWR_UNSUPPORTED = C.HGE_PWR_UNSUPPORTED
 )
 
-func BoolToCInt(b bool) C.BOOL {
-	if b {
-		return 1
-	}
-
-	return 0
+var BoolToCInt = map[bool]C.BOOL{
+	false: 0,
+	true:  1,
 }
 
 // HGE struct from C
@@ -285,7 +282,7 @@ func (h *HGE) SetState(a ...interface{}) {
 }
 
 func (h *HGE) setStateBool(state BoolState, value bool) {
-	C.HGE_System_SetStateBool(h.HGE, C.HGE_BoolState_t(state), BoolToCInt(value))
+	C.HGE_System_SetStateBool(h.HGE, C.HGE_BoolState_t(state), BoolToCInt[value])
 }
 
 func (h *HGE) setStateFunc(state FuncState, value StateFunc) {
