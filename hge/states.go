@@ -43,6 +43,7 @@ const (
 	ORIGSCREENWIDTH  IntState = iota // int original screen width (default: 800 ... not valid until hge.System_Initiate()!)
 	ORIGSCREENHEIGHT IntState = iota // int original screen height (default: 600 ... not valid until hge.System_Initiate()!))
 	FPS              IntState = iota // int fixed fps (default: hge.FPS_UNLIMITED)
+	MINDELTATIME     IntState = iota // int minimum delta time in miliseconds between frames (default: 1000)
 
 	SAMPLERATE   IntState = iota // int sample rate (default: 44100)
 	FXVOLUME     IntState = iota // int global fx volume (default: 100)
@@ -110,6 +111,7 @@ func init() {
 	setupInts[ORIGSCREENWIDTH] = setupOrigScreenWidth
 	setupInts[ORIGSCREENHEIGHT] = setupOrigScreenHeight
 	setupInts[FPS] = setupFPS
+	setupInts[MINDELTATIME] = setupMinDeltaTime
 	setupInts[SAMPLERATE] = setupSampleRate
 	setupInts[FXVOLUME] = setupFxVolume
 	setupInts[MUSVOLUME] = setupMusVolume
@@ -311,14 +313,15 @@ func (h *HGE) setDefaultStates() {
 	h.SetState(HWNDPARENT, nil)      // int		parent win handle	(default: 0)
 
 	// Int states
-	h.SetState(SCREENWIDTH, 800)    // int screen width (default: 800)
-	h.SetState(SCREENHEIGHT, 600)   // int screen height (default: 600)
-	h.SetState(SCREENBPP, 32)       // int screen bitdepth (default: 32) (desktop bpp in windowed mode)
-	h.SetState(SAMPLERATE, 44100)   // int sample rate (default: 44100)
-	h.SetState(FXVOLUME, 100)       // int global fx volume (default: 100)
-	h.SetState(MUSVOLUME, 100)      // int global music volume (default: 100)
-	h.SetState(STREAMVOLUME, 100)   // int stream music volume (default: 100)
-	h.SetState(FPS, FPS_UNLIMITED)  // int fixed fps (default: hge.FPS_UNLIMITED)
+	h.SetState(SCREENWIDTH, 800)   // int screen width (default: 800)
+	h.SetState(SCREENHEIGHT, 600)  // int screen height (default: 600)
+	h.SetState(SCREENBPP, 32)      // int screen bitdepth (default: 32) (desktop bpp in windowed mode)
+	h.SetState(SAMPLERATE, 44100)  // int sample rate (default: 44100)
+	h.SetState(FXVOLUME, 100)      // int global fx volume (default: 100)
+	h.SetState(MUSVOLUME, 100)     // int global music volume (default: 100)
+	h.SetState(STREAMVOLUME, 100)  // int stream music volume (default: 100)
+	h.SetState(FPS, FPS_UNLIMITED) // int fixed fps (default: hge.FPS_UNLIMITED)
+	h.SetState(MINDELTATIME, 1000)
 	h.SetState(POWERSTATUS, 0)      // int battery life percent + status
 	h.SetState(ORIGSCREENWIDTH, 0)  // int original screen width (default: 800 ... not valid until hge.System_Initiate()!)
 	h.SetState(ORIGSCREENHEIGHT, 0) // int original screen height (default: 600 ... not valid until hge.System_Initiate()!))

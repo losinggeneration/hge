@@ -76,6 +76,14 @@ func setupFPS(h *HGE) error {
 	return nil
 }
 
+func setupMinDeltaTime(h *HGE) error {
+	if stateInts[MINDELTATIME] < 1 {
+		stateInts[MINDELTATIME] = 1000
+		return h.logError("Error: State MINDELTATIME must not be less than 1. Setting to default: 1000")
+	}
+	return nil
+}
+
 func setupSampleRate(h *HGE) error {
 	return nil
 }

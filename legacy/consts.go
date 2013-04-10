@@ -75,6 +75,7 @@ const (
 	ORIGSCREENWIDTH  IntState = IntState(hge.ORIGSCREENWIDTH)
 	ORIGSCREENHEIGHT IntState = IntState(hge.ORIGSCREENHEIGHT)
 	FPS              IntState = IntState(hge.FPS)
+	MINDELTATIME     IntState = IntState(hge.MINDELTATIME)
 
 	SAMPLERATE   IntState = IntState(hge.SAMPLERATE)
 	FXVOLUME     IntState = IntState(hge.FXVOLUME)
