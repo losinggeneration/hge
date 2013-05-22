@@ -1,8 +1,5 @@
-// +build: opengl
-
 package gfx
 
-// import "fmt"
 import (
 	"errors"
 	gl "github.com/chsc/gogl/gl21"

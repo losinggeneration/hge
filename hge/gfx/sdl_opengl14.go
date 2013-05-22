@@ -1,19 +1,14 @@
 // For now we only build SDL, if we need to in the future we can use build tags
 // such as: +build sdl
-// I doubt there will ever bee the need for anything like: +build sdl,opengl
+// I doubt there will ever be the need for anything like: +build sdl,opengl
 // or: +build sdl,software
 // but it's an option
 
-// +build opengl,1_4
-
 package gfx
 
-// import "fmt"
 import (
 	"github.com/banthar/Go-SDL/sdl"
 	gl "github.com/chsc/gogl/gl21"
-
-// 	"runtime"
 )
 
 var (
