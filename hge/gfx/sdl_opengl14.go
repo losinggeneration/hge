@@ -18,6 +18,7 @@ var (
 	defaultTextureType gl.Enum
 )
 
+// States
 func SetWidth(w int) {
 	width = gl.Sizei(w)
 }
