@@ -23,10 +23,8 @@ var (
 
 	snd *sound.Effect
 
-	x  = 100.0
-	y  = 100.0
-	dx = 0.0
-	dy = 0.0
+	x, y   = 100.0, 100.0
+	dx, dy = 0.0, 0.0
 )
 
 const (
@@ -41,7 +39,7 @@ func boom() {
 }
 
 func FrameFunc() bool {
-	dt := float64(h.Timer_GetDelta())
+	dt := h.Timer_GetDelta() * 1000
 
 	// Process keys
 	if h.Input_GetKeyState(hge.K_ESCAPE) {
@@ -58,6 +56,7 @@ func FrameFunc() bool {
 	}
 	if h.Input_GetKeyState(hge.K_DOWN) {
 		dy += speed * dt
+		//fmt.Println(dy, speed, dt)
 	}
 
 	// Do some movement calculations and collision detection
@@ -95,15 +94,25 @@ func FrameFunc() bool {
 	quad.V[2].Y = float32(y + 16)
 	quad.V[3].X = float32(x - 16)
 	quad.V[3].Y = float32(y + 16)
+	line.X1 = x + 16
+	line.X2 = x - 16
+	line.Y1 = y + 16
+	line.Y2 = y - 16
 
 	// Continue execution
 	return false
 }
 
+var fps int
+
 // This function will be called by HGE when
 // the application window should be redrawn.
 // Put your rendering code here.
 func RenderFunc() bool {
+	if fps != h.Timer_GetFPS() {
+		fps = h.Timer_GetFPS()
+		fmt.Println(fps)
+	}
 	// Begin rendering quads.
 	// This function must be called
 	// before any actual rendering.
@@ -115,6 +124,7 @@ func RenderFunc() bool {
 	// Render quads here. This time just
 	// one of them will serve our needs.
 	h.Gfx_RenderQuad(&quad)
+
 	line.Render()
 	h.Gfx_RenderLine(100, 100, 150, 150, uint32(0xFFFFFFFF))
 
