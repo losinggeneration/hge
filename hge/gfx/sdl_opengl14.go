@@ -35,31 +35,16 @@ func Initialize() error {
 	if err := gl.InitVersion10(); err != nil {
 		return err
 	}
-	if err := gl.InitVersion10Deprecated(); err != nil {
-		return err
-	}
 	if err := gl.InitVersion11(); err != nil {
-		return err
-	}
-	if err := gl.InitVersion11Deprecated(); err != nil {
 		return err
 	}
 	if err := gl.InitVersion12(); err != nil {
 		return err
 	}
-	if err := gl.InitVersion12Deprecated(); err != nil {
-		return err
-	}
 	if err := gl.InitVersion13(); err != nil {
 		return err
 	}
-	if err := gl.InitVersion13Deprecated(); err != nil {
-		return err
-	}
 	if err := gl.InitVersion14(); err != nil {
-		return err
-	}
-	if err := gl.InitVersion14Deprecated(); err != nil {
 		return err
 	}
 
