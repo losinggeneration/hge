@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
+	"math"
 
-	. "github.com/losinggeneration/hge"
-	. "github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/gfx"
 	"github.com/losinggeneration/hge/helpers/font"
 	"github.com/losinggeneration/hge/helpers/sprite"
-	. "github.com/losinggeneration/hge/input"
 	hge "github.com/losinggeneration/hge/legacy"
 )
 
@@ -24,7 +23,7 @@ type Obj struct {
 	dx, dy       float64
 	scale, rot   float64
 	dscale, drot float64
-	color        Dword
+	color        uint32
 }
 
 var (
@@ -33,21 +32,21 @@ var (
 	h              *hge.HGE
 
 	// Resource handles
-	tex, bgtex *Texture
+	tex, bgtex *gfx.Texture
 	spr, bgspr sprite.Sprite
 	fnt        *font.Font
 )
 
 var (
-	sprBlend = [5]int{BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE,
-		BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_NOZWRITE,
-		BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE,
-		BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE,
-		BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE}
+	sprBlend = [5]int{gfx.BLEND_COLORMUL | gfx.BLEND_ALPHABLEND | gfx.BLEND_NOZWRITE,
+		gfx.BLEND_COLORADD | gfx.BLEND_ALPHABLEND | gfx.BLEND_NOZWRITE,
+		gfx.BLEND_COLORMUL | gfx.BLEND_ALPHABLEND | gfx.BLEND_NOZWRITE,
+		gfx.BLEND_COLORMUL | gfx.BLEND_ALPHAADD | gfx.BLEND_NOZWRITE,
+		gfx.BLEND_COLORMUL | gfx.BLEND_ALPHABLEND | gfx.BLEND_NOZWRITE}
 
-	fntColor = [5]Dword{0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF}
+	fntColor = [5]uint32{0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF}
 
-	sprColors = [5][5]Dword{{0xFFFFFFFF, 0xFFFFE080, 0xFF80A0FF, 0xFFA0FF80, 0xFFFF80A0},
+	sprColors = [5][5]uint32{{0xFFFFFFFF, 0xFFFFE080, 0xFF80A0FF, 0xFFA0FF80, 0xFFFF80A0},
 		{0xFF000000, 0xFF303000, 0xFF000060, 0xFF006000, 0xFF600000},
 		{0x80FFFFFF, 0x80FFE080, 0x8080A0FF, 0x80A0FF80, 0x80FF80A0},
 		{0x80FFFFFF, 0x80FFE080, 0x8080A0FF, 0x80A0FF80, 0x80FF80A0},
@@ -75,18 +74,18 @@ func frame() int {
 	//
 	// Process keys
 	switch h.Input_GetKey() {
-	case K_UP:
+	case hge.K_UP:
 		if objects < MAX_OBJECTS {
 			objects += 100
 		}
-	case K_DOWN:
+	case hge.K_DOWN:
 		if objects > MIN_OBJECTS {
 			objects -= 100
 		}
-	case K_SPACE:
+	case hge.K_SPACE:
 		blend++
 		setBlend(blend)
-	case K_ESCAPE:
+	case hge.K_ESCAPE:
 		return 1
 	}
 
@@ -127,19 +126,19 @@ func render() int {
 }
 
 func main() {
-	h = hge.Create(VERSION)
+	h = hge.Create(hge.VERSION)
 	defer h.Release()
 
 	// Set desired system states and initialize HGE
-	h.System_SetState(LOGFILE, "tutorial07.log")
-	h.System_SetState(FRAMEFUNC, frame)
-	h.System_SetState(RENDERFUNC, render)
-	h.System_SetState(TITLE, "HGE Tutorial 07 - Thousand of Hares")
-	h.System_SetState(USESOUND, false)
-	h.System_SetState(WINDOWED, true)
-	h.System_SetState(SCREENWIDTH, SCREEN_WIDTH)
-	h.System_SetState(SCREENHEIGHT, SCREEN_HEIGHT)
-	h.System_SetState(SCREENBPP, 32)
+	h.System_SetState(hge.LOGFILE, "tutorial07.log")
+	h.System_SetState(hge.FRAMEFUNC, frame)
+	h.System_SetState(hge.RENDERFUNC, render)
+	h.System_SetState(hge.TITLE, "HGE Tutorial 07 - Thousand of Hares")
+	h.System_SetState(hge.USESOUND, false)
+	h.System_SetState(hge.WINDOWED, true)
+	h.System_SetState(hge.SCREENWIDTH, SCREEN_WIDTH)
+	h.System_SetState(hge.SCREENHEIGHT, SCREEN_HEIGHT)
+	h.System_SetState(hge.SCREENBPP, 32)
 
 	if h.System_Initiate() {
 		defer h.System_Shutdown()
@@ -160,7 +159,7 @@ func main() {
 		spr.SetHotSpot(32, 32)
 
 		bgspr = sprite.New(bgtex, 0, 0, 800, 600)
-		bgspr.SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_NOZWRITE)
+		bgspr.SetBlendMode(gfx.BLEND_COLORADD | gfx.BLEND_ALPHABLEND | gfx.BLEND_NOZWRITE)
 		bgspr.SetColor(0xFF000000, 0)
 		bgspr.SetColor(0xFF000000, 1)
 		bgspr.SetColor(0xFF000040, 2)
@@ -176,7 +175,7 @@ func main() {
 			objs[i].dy = h.Random_Float(-200, 200)
 			objs[i].scale = h.Random_Float(0.5, 2.0)
 			objs[i].dscale = h.Random_Float(-1.0, 1.0)
-			objs[i].rot = h.Random_Float(0, Pi*2)
+			objs[i].rot = h.Random_Float(0, math.Pi*2)
 			objs[i].drot = h.Random_Float(-1.0, 1.0)
 		}
 

@@ -13,7 +13,7 @@ func FrameFunc() bool {
 		return true
 	}
 
-	m := input.New()
+	m := input.Mouse{}
 	// 	x, y := m.Pos()
 	// 	fmt.Println(x,y,m.WheelMovement())
 	fmt.Println(m.WheelMovement())

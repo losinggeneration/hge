@@ -10,6 +10,7 @@ import (
 	"github.com/losinggeneration/hge/helpers/gui"
 	"github.com/losinggeneration/hge/helpers/sprite"
 	"github.com/losinggeneration/hge/input"
+	"github.com/losinggeneration/hge/sound"
 	"github.com/losinggeneration/hge/timer"
 )
 
@@ -23,7 +24,7 @@ var lastId int = 0
 var t float64 = 0.0
 
 func frame() int {
-	dt := Delta()
+	dt := timer.Delta()
 
 	// If ESCAPE was pressed, tell the GUI to finish
 	if input.Key(input.K_ESCAPE).State() {
@@ -89,35 +90,33 @@ func main() {
 	} else {
 		defer h.Shutdown()
 
-		quad.Texture = LoadTexture("bg.png")
-
-		if quad.Texture == nil {
+		quad.Texture, err = gfx.LoadTexture("bg.png")
+		if quad.Texture == nil || err != nil {
 			fmt.Println("Error loading bg.png")
 			return
 		}
 
-		snd := NewEffect("menu.ogg")
+		snd := sound.NewEffect("menu.ogg")
 
 		if snd == nil {
 			fmt.Println("Error loading menu.ogg")
 			return
 		}
 
-		cursorTex := LoadTexture("cursor.png")
-
-		if cursorTex == nil {
+		cursorTex, err := gfx.LoadTexture("cursor.png")
+		if cursorTex == nil || err != nil {
 			fmt.Println("Error loading cursor.png")
 			return
 		}
 
 		// Set up the quad we will use for background animation
-		quad.Blend = BLEND_ALPHABLEND | BLEND_COLORMUL | BLEND_NOZWRITE
+		quad.Blend = gfx.BLEND_ALPHABLEND | gfx.BLEND_COLORMUL | gfx.BLEND_NOZWRITE
 
 		for i := 0; i < 4; i++ {
 			// Set up z-coordinate of vertices
 			quad.V[i].Z = 0.5
 			// Set up color. The format of DWORD col is 0xAARRGGBB
-			quad.V[i].Color = 0xFFFFFFFF
+			quad.V[i].Color = gfx.RGBAToColor(0xFFFFFFFF)
 		}
 
 		quad.V[0].X, quad.V[0].Y = 0, 0
