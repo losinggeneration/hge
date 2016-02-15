@@ -1,9 +1,10 @@
 package strings
 
 import (
-	"github.com/losinggeneration/hge-go/binding/hge"
-	. "github.com/losinggeneration/hge-go/binding/hge/resource"
 	"strings"
+
+	"github.com/losinggeneration/hge/binding/hge"
+	. "github.com/losinggeneration/hge/binding/hge/resource"
 )
 
 const (

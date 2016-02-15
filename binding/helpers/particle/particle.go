@@ -2,17 +2,18 @@ package particle
 
 import (
 	"C"
-	"github.com/losinggeneration/hge-go/binding/helpers/color"
-	"github.com/losinggeneration/hge-go/binding/helpers/rect"
-	"github.com/losinggeneration/hge-go/binding/helpers/sprite"
-	"github.com/losinggeneration/hge-go/binding/helpers/vector"
-	"github.com/losinggeneration/hge-go/binding/hge"
-	"github.com/losinggeneration/hge-go/binding/hge/rand"
-	"github.com/losinggeneration/hge-go/binding/hge/resource"
-	"github.com/losinggeneration/hge-go/binding/hge/timer"
 	"math"
 	"reflect"
 	"unsafe"
+
+	"github.com/losinggeneration/hge/binding/helpers/color"
+	"github.com/losinggeneration/hge/binding/helpers/rect"
+	"github.com/losinggeneration/hge/binding/helpers/sprite"
+	"github.com/losinggeneration/hge/binding/helpers/vector"
+	"github.com/losinggeneration/hge/binding/hge"
+	"github.com/losinggeneration/hge/binding/hge/rand"
+	"github.com/losinggeneration/hge/binding/hge/resource"
+	"github.com/losinggeneration/hge/binding/hge/timer"
 )
 
 const (

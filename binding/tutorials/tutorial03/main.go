@@ -2,16 +2,17 @@ package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/binding/helpers/font"
-	"github.com/losinggeneration/hge-go/binding/helpers/particle"
-	"github.com/losinggeneration/hge-go/binding/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/binding/hge"
-	. "github.com/losinggeneration/hge-go/binding/hge/gfx"
-	. "github.com/losinggeneration/hge-go/binding/hge/input"
-	. "github.com/losinggeneration/hge-go/binding/hge/sound"
-	. "github.com/losinggeneration/hge-go/binding/hge/timer"
 	"runtime"
 	"time"
+
+	"github.com/losinggeneration/hge/binding/helpers/font"
+	"github.com/losinggeneration/hge/binding/helpers/particle"
+	"github.com/losinggeneration/hge/binding/helpers/sprite"
+	. "github.com/losinggeneration/hge/binding/hge"
+	. "github.com/losinggeneration/hge/binding/hge/gfx"
+	. "github.com/losinggeneration/hge/binding/hge/input"
+	. "github.com/losinggeneration/hge/binding/hge/sound"
+	. "github.com/losinggeneration/hge/binding/hge/timer"
 )
 
 // An example of using closures

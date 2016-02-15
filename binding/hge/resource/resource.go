@@ -8,9 +8,10 @@ import "C"
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/binding/hge"
 	"runtime"
 	"unsafe"
+
+	"github.com/losinggeneration/hge/binding/hge"
 )
 
 type Pointer uintptr

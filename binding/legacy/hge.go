@@ -1,14 +1,14 @@
 package legacy
 
 import (
-	"github.com/losinggeneration/hge-go/binding/hge"
-	"github.com/losinggeneration/hge-go/binding/hge/gfx"
-	"github.com/losinggeneration/hge-go/binding/hge/ini"
-	"github.com/losinggeneration/hge-go/binding/hge/input"
-	"github.com/losinggeneration/hge-go/binding/hge/rand"
-	"github.com/losinggeneration/hge-go/binding/hge/resource"
-	"github.com/losinggeneration/hge-go/binding/hge/sound"
-	"github.com/losinggeneration/hge-go/binding/hge/timer"
+	"github.com/losinggeneration/hge/binding/hge"
+	"github.com/losinggeneration/hge/binding/hge/gfx"
+	"github.com/losinggeneration/hge/binding/hge/ini"
+	"github.com/losinggeneration/hge/binding/hge/input"
+	"github.com/losinggeneration/hge/binding/hge/rand"
+	"github.com/losinggeneration/hge/binding/hge/resource"
+	"github.com/losinggeneration/hge/binding/hge/sound"
+	"github.com/losinggeneration/hge/binding/hge/timer"
 )
 
 // HGE struct

@@ -1,8 +1,9 @@
 package color
 
 import (
-	. "github.com/losinggeneration/hge-go/binding/hge"
 	"math"
+
+	. "github.com/losinggeneration/hge/binding/hge"
 )
 
 func colorClamp(x *float64) {

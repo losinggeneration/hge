@@ -5,17 +5,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/binding/helpers/color"
-	dist "github.com/losinggeneration/hge-go/binding/helpers/distortionmesh"
-	"github.com/losinggeneration/hge-go/binding/helpers/font"
-	"github.com/losinggeneration/hge-go/binding/helpers/sprite"
-	"github.com/losinggeneration/hge-go/binding/hge"
-	. "github.com/losinggeneration/hge-go/binding/hge/gfx"
-	. "github.com/losinggeneration/hge-go/binding/hge/input"
-	. "github.com/losinggeneration/hge-go/binding/hge/rand"
-	. "github.com/losinggeneration/hge-go/binding/hge/timer"
 	"math"
 	"time"
+
+	"github.com/losinggeneration/hge/binding/helpers/color"
+	dist "github.com/losinggeneration/hge/binding/helpers/distortionmesh"
+	"github.com/losinggeneration/hge/binding/helpers/font"
+	"github.com/losinggeneration/hge/binding/helpers/sprite"
+	"github.com/losinggeneration/hge/binding/hge"
+	. "github.com/losinggeneration/hge/binding/hge/gfx"
+	. "github.com/losinggeneration/hge/binding/hge/input"
+	. "github.com/losinggeneration/hge/binding/hge/rand"
+	. "github.com/losinggeneration/hge/binding/hge/timer"
 )
 
 // Pointer to the HGE interface (helper classes require this to work)

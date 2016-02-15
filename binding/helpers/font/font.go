@@ -4,12 +4,13 @@ import (
 	"C"
 	"errors"
 	"fmt"
-	"github.com/losinggeneration/hge-go/binding/helpers/sprite"
-	"github.com/losinggeneration/hge-go/binding/hge"
-	"github.com/losinggeneration/hge-go/binding/hge/gfx"
-	"github.com/losinggeneration/hge-go/binding/hge/resource"
 	"strconv"
 	"strings"
+
+	"github.com/losinggeneration/hge/binding/helpers/sprite"
+	"github.com/losinggeneration/hge/binding/hge"
+	"github.com/losinggeneration/hge/binding/hge/gfx"
+	"github.com/losinggeneration/hge/binding/hge/resource"
 )
 
 const (

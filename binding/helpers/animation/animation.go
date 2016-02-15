@@ -1,8 +1,8 @@
 package animation
 
 import (
-	"github.com/losinggeneration/hge-go/binding/helpers/sprite"
-	"github.com/losinggeneration/hge-go/binding/hge/gfx"
+	"github.com/losinggeneration/hge/binding/helpers/sprite"
+	"github.com/losinggeneration/hge/binding/hge/gfx"
 )
 
 const (

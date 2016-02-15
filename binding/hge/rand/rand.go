@@ -6,7 +6,7 @@ package rand
 */
 import "C"
 
-import "github.com/losinggeneration/hge-go/binding/hge"
+import "github.com/losinggeneration/hge/binding/hge"
 
 func Seed(a ...interface{}) {
 	seed := 1
