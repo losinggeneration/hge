@@ -1,10 +1,11 @@
 package sprite
 
 import (
-	"github.com/losinggeneration/hge-go/helpers/rect"
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/gfx"
 	"math"
+
+	hge "github.com/losinggeneration/hge-go"
+	"github.com/losinggeneration/hge-go/gfx"
+	"github.com/losinggeneration/hge-go/helpers/rect"
 )
 
 type Sprite struct {

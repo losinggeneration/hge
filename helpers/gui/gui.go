@@ -2,10 +2,11 @@ package gui
 
 import (
 	"container/list"
+
+	hge "github.com/losinggeneration/hge-go"
 	"github.com/losinggeneration/hge-go/helpers/rect"
 	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/input"
+	"github.com/losinggeneration/hge-go/input"
 )
 
 const (

@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"math"
+
+	. "github.com/losinggeneration/hge-go"
+	. "github.com/losinggeneration/hge-go/gfx"
 	dist "github.com/losinggeneration/hge-go/helpers/distortionmesh"
 	"github.com/losinggeneration/hge-go/helpers/font"
-	. "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
-	. "github.com/losinggeneration/hge-go/hge/input"
-	. "github.com/losinggeneration/hge-go/hge/timer"
-	"math"
+	. "github.com/losinggeneration/hge-go/input"
+	. "github.com/losinggeneration/hge-go/timer"
 )
 
 var (

@@ -4,8 +4,8 @@ import (
 	Color "github.com/losinggeneration/hge-go/helpers/color"
 	Font "github.com/losinggeneration/hge-go/helpers/font"
 	"github.com/losinggeneration/hge-go/helpers/gui"
-	. "github.com/losinggeneration/hge-go/hge/input"
-	. "github.com/losinggeneration/hge-go/hge/sound"
+	. "github.com/losinggeneration/hge-go/input"
+	. "github.com/losinggeneration/hge-go/sound"
 )
 
 type GUIMenuItem struct {

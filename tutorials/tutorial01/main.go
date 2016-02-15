@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/input"
 	"os"
+
+	hge "github.com/losinggeneration/hge-go"
+	"github.com/losinggeneration/hge-go/input"
 )
 
 func FrameFunc() int {

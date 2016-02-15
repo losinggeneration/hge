@@ -7,8 +7,9 @@ package ini
 import "C"
 
 import (
-	"github.com/losinggeneration/hge-go/hge"
 	"unsafe"
+
+	hge "github.com/losinggeneration/hge-go"
 )
 
 type Ini struct {

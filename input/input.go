@@ -7,8 +7,9 @@ package input
 import "C"
 
 import (
-	"github.com/losinggeneration/hge-go/hge"
 	"unsafe"
+
+	hge "github.com/losinggeneration/hge-go"
 )
 
 type Key int

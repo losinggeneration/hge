@@ -1,9 +1,9 @@
 package legacy
 
 import (
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/gfx"
-	"github.com/losinggeneration/hge-go/hge/input"
+	hge "github.com/losinggeneration/hge-go"
+	"github.com/losinggeneration/hge-go/gfx"
+	"github.com/losinggeneration/hge-go/input"
 )
 
 // The current version of this package
