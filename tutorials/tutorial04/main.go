@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/particle"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
-	. "github.com/losinggeneration/hge-go/hge/input"
-	. "github.com/losinggeneration/hge-go/hge/sound"
-	. "github.com/losinggeneration/hge-go/hge/timer"
+
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/font"
+	"github.com/losinggeneration/hge/helpers/particle"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	"github.com/losinggeneration/hge/input"
+	"github.com/losinggeneration/hge/sound"
+	"github.com/losinggeneration/hge/timer"
 )
 
 var (
@@ -17,11 +18,11 @@ var (
 	fnt           *font.Font
 	par           *particle.ParticleSystem
 
-	tex *Texture
-	snd *Effect
+	tex *gfx.Texture
+	snd *sound.Effect
 
 	// HGE render target handle
-	target *Target
+	target *gfx.Target
 
 	x  = 100.0
 	y  = 100.0
@@ -53,22 +54,22 @@ func RestoreFunc() int {
 }
 
 func FrameFunc() int {
-	dt := Delta()
+	dt := timer.Delta()
 
 	// Process keys
-	if NewKey(K_ESCAPE).State() {
+	if input.K_ESCAPE.State() {
 		return 1
 	}
-	if NewKey(K_LEFT).State() {
+	if input.K_LEFT.State() {
 		dx -= speed * dt
 	}
-	if NewKey(K_RIGHT).State() {
+	if input.K_RIGHT.State() {
 		dx += speed * dt
 	}
-	if NewKey(K_UP).State() {
+	if input.K_UP.State() {
 		dy -= speed * dt
 	}
-	if NewKey(K_DOWN).State() {
+	if input.K_DOWN.State() {
 		dy += speed * dt
 	}
 
@@ -108,21 +109,21 @@ func FrameFunc() int {
 
 func RenderFunc() int {
 	// Render graphics to the texture
-	BeginScene(target)
-	Clear(0)
+	gfx.BeginScene(target)
+	gfx.Clear(gfx.RGBAToColor(0))
 	par.Render()
 	spr.Render(x, y)
-	EndScene()
+	gfx.EndScene()
 
 	// Now put several instances of the rendered texture to the screen
-	BeginScene()
-	Clear(0)
+	gfx.BeginScene()
+	gfx.Clear(gfx.RGBAToColor(0))
 	for i := 0.0; i < 6.0; i++ {
-		tar.SetColor(hge.Dword(0xFFFFFF | ((int)((5-i)*40+55) << 24)))
+		tar.SetColor(uint32(0xFFFFFF | ((int)((5-i)*40+55) << 24)))
 		tar.RenderEx(i*100.0, i*50.0, i*hge.Pi/8, 1.0-i*0.1)
 	}
-	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", Delta(), GetFPS())
-	EndScene()
+	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", timer.Delta(), timer.FPS())
+	gfx.EndScene()
 
 	return 0
 }
@@ -143,18 +144,14 @@ func main() {
 
 	if err := h.Initiate(); err == nil {
 		defer h.Shutdown()
-		snd = NewEffect("menu.ogg")
-		tex = LoadTexture("particles.png")
-		if snd == nil || tex == nil {
+		snd = sound.NewEffect("menu.ogg")
+		tex, err = gfx.LoadTexture("particles.png")
+		if snd == nil || tex == nil || err != nil {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
 			fmt.Printf("Error: Can't load one of the following files:\nmenu.ogg, particles.png, font1.fnt, font1.png, trail.psi\n")
 			return
 		}
-
-		// Delete created objects and free loaded resources
-		defer snd.Free()
-		defer tex.Free()
 
 		spr = sprite.New(tex, 96, 64, 32, 32)
 		spr.SetColor(0xFFFFA000)
@@ -168,7 +165,7 @@ func main() {
 		}
 
 		spt = sprite.New(tex, 32, 32, 32, 32)
-		spt.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
+		spt.SetBlendMode(gfx.BLEND_COLORMUL | gfx.BLEND_ALPHAADD | gfx.BLEND_NOZWRITE)
 		spt.SetHotSpot(16, 16)
 		par = particle.New("trail.psi", spt)
 
@@ -179,10 +176,10 @@ func main() {
 		par.Fire()
 
 		// Create a render target and a sprite for it
-		target = NewTarget(512, 512, false)
+		target = gfx.NewTarget(512, 512, false)
 		defer target.Free()
 		tar = sprite.New(target.Texture(), 0, 0, 512, 512)
-		tar.SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE)
+		tar.SetBlendMode(gfx.BLEND_COLORMUL | gfx.BLEND_ALPHAADD | gfx.BLEND_NOZWRITE)
 
 		// Let's rock now!
 		h.Start()

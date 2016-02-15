@@ -1,9 +1,10 @@
 package sprite
 
 import (
-	"github.com/losinggeneration/hge-go/helpers/rect"
-	"github.com/losinggeneration/hge-go/hge/gfx"
 	"math"
+
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/rect"
 )
 
 type Sprite struct {
@@ -45,10 +46,10 @@ func New(texture *gfx.Texture, texx, texy, w, h float64) Sprite {
 	sprite.Quad.V[2].Z = 0.5
 	sprite.Quad.V[3].Z = 0.5
 
-	sprite.Quad.V[0].Color = 0xffffffff
-	sprite.Quad.V[1].Color = 0xffffffff
-	sprite.Quad.V[2].Color = 0xffffffff
-	sprite.Quad.V[3].Color = 0xffffffff
+	sprite.Quad.V[0].Color = gfx.RGBAToColor(0xffffffff)
+	sprite.Quad.V[1].Color = gfx.RGBAToColor(0xffffffff)
+	sprite.Quad.V[2].Color = gfx.RGBAToColor(0xffffffff)
+	sprite.Quad.V[3].Color = gfx.RGBAToColor(0xffffffff)
 
 	sprite.Quad.Blend = gfx.BLEND_DEFAULT
 
@@ -217,12 +218,12 @@ func (sprite *Sprite) SetColor(col uint32, arg ...interface{}) {
 	}
 
 	if i != -1 {
-		sprite.Quad.V[i].Color = col
+		sprite.Quad.V[i].Color = gfx.RGBAToColor(col)
 	} else {
-		sprite.Quad.V[0].Color = col
-		sprite.Quad.V[1].Color = col
-		sprite.Quad.V[2].Color = col
-		sprite.Quad.V[3].Color = col
+		sprite.Quad.V[0].Color = gfx.RGBAToColor(col)
+		sprite.Quad.V[1].Color = gfx.RGBAToColor(col)
+		sprite.Quad.V[2].Color = gfx.RGBAToColor(col)
+		sprite.Quad.V[3].Color = gfx.RGBAToColor(col)
 	}
 }
 
@@ -323,7 +324,7 @@ func (sprite *Sprite) Color(arg ...interface{}) uint32 {
 		}
 	}
 
-	return sprite.Quad.V[i].Color
+	return sprite.Quad.V[i].Color.ToRGBA()
 }
 
 func (sprite *Sprite) Z(arg ...interface{}) float64 {

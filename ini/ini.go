@@ -1,7 +1,7 @@
 package ini
 
 import (
-	"github.com/losinggeneration/hge-go/hge"
+	"github.com/losinggeneration/hge"
 )
 
 type Ini struct {

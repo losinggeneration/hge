@@ -10,9 +10,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/hge/gfx"
-	"github.com/losinggeneration/hge-go/hge/sound"
-	hge "github.com/losinggeneration/hge-go/legacy"
+
+	"github.com/losinggeneration/hge/gfx"
+	hge "github.com/losinggeneration/hge/legacy"
+	"github.com/losinggeneration/hge/sound"
 )
 
 var (

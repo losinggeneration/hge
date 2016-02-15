@@ -1,15 +1,8 @@
 package legacy
 
 import (
-	"github.com/losinggeneration/hge-go/hge"
-	// 	"github.com/losinggeneration/hge-go/hge/gfx"
-	// 	"github.com/losinggeneration/hge-go/hge/ini"
-	"github.com/losinggeneration/hge-go/hge/input"
-
-// 	"github.com/losinggeneration/hge-go/hge/rand"
-// 	"github.com/losinggeneration/hge-go/hge/resource"
-// 	"github.com/losinggeneration/hge-go/hge/sound"
-// 	"github.com/losinggeneration/hge-go/hge/timer"
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/input"
 )
 
 // The current version of this package

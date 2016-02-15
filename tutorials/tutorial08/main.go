@@ -5,17 +5,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/helpers/color"
-	dist "github.com/losinggeneration/hge-go/helpers/distortionmesh"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
-	. "github.com/losinggeneration/hge-go/hge/input"
-	. "github.com/losinggeneration/hge-go/hge/rand"
-	. "github.com/losinggeneration/hge-go/hge/timer"
 	"math"
 	"time"
+
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/color"
+	dist "github.com/losinggeneration/hge/helpers/distortionmesh"
+	"github.com/losinggeneration/hge/helpers/font"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	"github.com/losinggeneration/hge/input"
+	"github.com/losinggeneration/hge/rand"
+	"github.com/losinggeneration/hge/timer"
 )
 
 // Pointer to the HGE interface (helper classes require this to work)
@@ -36,20 +37,20 @@ const (
 )
 
 var (
-	skyTopColors = []hge.Dword{0xFF15092A, 0xFF6C6480, 0xFF89B9D0}
-	skyBtmColors = []hge.Dword{0xFF303E57, 0xFFAC7963, 0xFFCAD7DB}
-	seaTopColors = []hge.Dword{0xFF3D546B, 0xFF927E76, 0xFF86A2AD}
-	seaBtmColors = []hge.Dword{0xFF1E394C, 0xFF2F4E64, 0xFF2F4E64}
+	skyTopColors = []uint32{0xFF15092A, 0xFF6C6480, 0xFF89B9D0}
+	skyBtmColors = []uint32{0xFF303E57, 0xFFAC7963, 0xFFCAD7DB}
+	seaTopColors = []uint32{0xFF3D546B, 0xFF927E76, 0xFF86A2AD}
+	seaBtmColors = []uint32{0xFF1E394C, 0xFF2F4E64, 0xFF2F4E64}
 	seq          = []int{0, 0, 1, 2, 2, 2, 1, 0, 0}
 )
 
 // Simulation resource handles
 var (
-	texObjects                          *Texture
+	texObjects                          *gfx.Texture
 	sky, sun, moon, glow, seaglow, star sprite.Sprite
 	sea                                 dist.DistortionMesh
 	colWhite                            color.ColorRGB
-	rand                                *Rand
+	random                              *rand.Rand
 )
 
 // Simulation state variables
@@ -78,28 +79,28 @@ var (
 ///////////////////////// Implementation ///////////////////////////
 func frame() int {
 	// Process keys
-	switch GetKey() {
-	case K_0:
+	switch input.GetKey() {
+	case input.K_0:
 		speed = 0.0
-	case K_1:
+	case input.K_1:
 		speed = 0.1
-	case K_2:
+	case input.K_2:
 		speed = 0.2
-	case K_3:
+	case input.K_3:
 		speed = 0.4
-	case K_4:
+	case input.K_4:
 		speed = 0.8
-	case K_5:
+	case input.K_5:
 		speed = 1.6
-	case K_6:
+	case input.K_6:
 		speed = 3.2
-	case K_7:
+	case input.K_7:
 		speed = 6.4
-	case K_8:
+	case input.K_8:
 		speed = 12.8
-	case K_9:
+	case input.K_9:
 		speed = 25.6
-	case K_ESCAPE:
+	case input.K_ESCAPE:
 		return 1
 	}
 
@@ -120,11 +121,11 @@ func render() int {
 	secs := int(math.Floor((tmp - float64(mins)) * 60.0))
 
 	// Render scene
-	BeginScene()
+	gfx.BeginScene()
 	RenderSimulation()
-	fnt.Printf(7, 7, font.TEXT_LEFT, "Keys 1-9 to adjust simulation speed, 0 - real time\nFPS: %d", GetFPS())
+	fnt.Printf(7, 7, font.TEXT_LEFT, "Keys 1-9 to adjust simulation speed, 0 - real time\nFPS: %d", timer.FPS())
 	fnt.Printf(SCREEN_WIDTH-50, 7, font.TEXT_LEFT, "%02d:%02d:%02d", hrs, mins, secs)
-	EndScene()
+	gfx.EndScene()
 
 	return 0
 }
@@ -170,13 +171,14 @@ func GetTime() float64 {
 }
 
 func InitSimulation() bool {
+	var err error
 	// Load texture
-	texObjects = LoadTexture("objects.png")
-	if texObjects == nil {
+	texObjects, err = gfx.LoadTexture("objects.png")
+	if texObjects == nil || err != nil {
 		return false
 	}
 
-	rand = New(0)
+	random = rand.New(0)
 
 	// Create sprites
 	sky = sprite.New(nil, 0, 0, SCREEN_WIDTH, SKY_HEIGHT)
@@ -192,10 +194,10 @@ func InitSimulation() bool {
 
 	glow = sprite.New(texObjects, 128, 128, 128, 128)
 	glow.SetHotSpot(64, 64)
-	glow.SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_NOZWRITE)
+	glow.SetBlendMode(gfx.BLEND_COLORADD | gfx.BLEND_ALPHABLEND | gfx.BLEND_NOZWRITE)
 	seaglow = sprite.New(texObjects, 128, 224, 128, 32)
 	seaglow.SetHotSpot(64, 0)
-	seaglow.SetBlendMode(BLEND_COLORADD | BLEND_ALPHAADD | BLEND_NOZWRITE)
+	seaglow.SetBlendMode(gfx.BLEND_COLORADD | gfx.BLEND_ALPHAADD | gfx.BLEND_NOZWRITE)
 
 	// Initialize simulation state
 	colWhite.SetHWColor(0xFFFFFFFF)
@@ -203,13 +205,13 @@ func InitSimulation() bool {
 	speed = 0.0
 
 	for i := 0; i < NUM_STARS; i++ { // star positions
-		starX[i] = rand.Float64(0, SCREEN_WIDTH)
-		starY[i] = rand.Float64(0, STARS_HEIGHT)
-		starS[i] = rand.Float64(0.1, 0.7)
+		starX[i] = random.Float64(0, SCREEN_WIDTH)
+		starY[i] = random.Float64(0, STARS_HEIGHT)
+		starS[i] = random.Float64(0.1, 0.7)
 	}
 
 	for i := 0; i < SEA_SUBDIVISION; i++ { // sea waves phase shifts
-		seaP[i] = float64(i) + rand.Float64(-15.0, 15.0)
+		seaP[i] = float64(i) + random.Float64(-15.0, 15.0)
 	}
 
 	// Systems are ready now!
@@ -225,7 +227,7 @@ func UpdateSimulation() {
 	if speed == 0.0 {
 		timet = GetTime()
 	} else {
-		timet += Delta() * speed
+		timet += timer.Delta() * speed
 		if timet >= 24.0 {
 			timet -= 24.0
 		}
@@ -257,7 +259,7 @@ func UpdateSimulation() {
 	if seq_id >= 6 || seq_id < 2 {
 		for i := 0; i < NUM_STARS; i++ {
 			a = 1.0 - starY[i]/STARS_HEIGHT
-			a *= rand.Float64(0.6, 1.0)
+			a *= random.Float64(0.6, 1.0)
 			if seq_id >= 6 {
 				a *= math.Sin((timet - 18.0) / 6.0 * hge.Pi_2)
 			} else {
@@ -342,13 +344,13 @@ func UpdateSimulation() {
 		colSeaGlow.A = 0.0
 	}
 
-	var dwCol1 hge.Dword
+	var dwCol1 uint32
 	// Move waves and update sea color
 	for i := 1; i < SEA_SUBDIVISION-1; i++ {
 		a = float64(i) / (SEA_SUBDIVISION - 1)
 		col1 = colSeaTop.MulScalar(1 - a).Add(colSeaBtm.MulScalar(a))
 		dwCol1 = col1.HWColor()
-		fTime := 2.0 * Time()
+		fTime := 2.0 * timer.Time()
 		a *= 20
 
 		for j := 0; j < SEA_SUBDIVISION; j++ {
@@ -431,7 +433,7 @@ func RenderSimulation() {
 	// Render stars
 	if seq_id >= 6 || seq_id < 2 {
 		for i := 0; i < NUM_STARS; i++ {
-			star.SetColor((hge.Dword(starA[i]*255.0) << 24) | 0xFFFFFF)
+			star.SetColor((uint32(starA[i]*255.0) << 24) | 0xFFFFFF)
 			star.RenderEx(starX[i], starY[i], 0.0, starS[i])
 		}
 	}

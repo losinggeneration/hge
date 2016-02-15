@@ -1,7 +1,7 @@
 package distortionmesh
 
 import (
-	"github.com/losinggeneration/hge-go/hge/gfx"
+	"github.com/losinggeneration/hge/gfx"
 )
 
 const (
@@ -28,7 +28,7 @@ func New(cols, rows int) DistortionMesh {
 
 	for i := 0; i < rows*cols; i++ {
 		dm.dispArray[i].Z = 0.5
-		dm.dispArray[i].Color = 0xFFFFFFFF
+		dm.dispArray[i].Color = gfx.RGBAToColor(0xFFFFFFFF)
 	}
 
 	return dm
@@ -98,7 +98,7 @@ func (dm *DistortionMesh) Clear(a ...interface{}) {
 		for i := 0.0; i < cols; i++ {
 			dm.dispArray[int(j*cols+i)].X = float32(i * dm.cellw)
 			dm.dispArray[int(j*cols+i)].Y = float32(j * dm.cellh)
-			dm.dispArray[int(j*cols+i)].Color = col
+			dm.dispArray[int(j*cols+i)].Color = gfx.RGBAToColor(col)
 			dm.dispArray[int(j*cols+i)].Z = float32(z)
 		}
 
@@ -151,7 +151,7 @@ func (dm *DistortionMesh) SetZ(col, row int, z float64) {
 
 func (dm *DistortionMesh) SetColor(col, row int, color uint32) {
 	if row < dm.rows && col < dm.cols {
-		dm.dispArray[row*dm.cols+col].Color = color
+		dm.dispArray[row*dm.cols+col].Color = gfx.RGBAToColor(color)
 	}
 }
 
@@ -193,7 +193,7 @@ func (dm DistortionMesh) Z(col, row int) float64 {
 
 func (dm DistortionMesh) Color(col, row int) uint32 {
 	if row < dm.rows && col < dm.cols {
-		return dm.dispArray[row*dm.cols+col].Color
+		return dm.dispArray[row*dm.cols+col].Color.ToRGBA()
 	}
 
 	return 0

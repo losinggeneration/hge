@@ -4,12 +4,13 @@ import (
 	"C"
 	"errors"
 	"fmt"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/gfx"
-	"github.com/losinggeneration/hge-go/hge/resource"
 	"strconv"
 	"strings"
+
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	"github.com/losinggeneration/hge/resource"
 )
 
 const (
@@ -149,7 +150,11 @@ func New(filename string, arg ...interface{}) *Font {
 		}
 
 		if option == fntBITMAPTAG {
-			f.texture = gfx.LoadTexture(value, 0, mipmap)
+			f.texture, err = gfx.LoadTexture(value, 0, mipmap)
+			if err != nil {
+				h.Log("Unreadable font texture: %s", value)
+				continue
+			}
 		} else if option == fntCHARTAG {
 			chr, x, y, w, h, a, c := tokenizeChar(value)
 

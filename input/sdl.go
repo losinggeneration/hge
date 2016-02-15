@@ -2,7 +2,6 @@
 // such as: +build sdl
 package input
 
-// import "fmt"
 import "github.com/banthar/Go-SDL/sdl"
 
 type Type int     // A HGE Input Event type constants
@@ -27,7 +26,7 @@ var (
 	keys       [last_key]bool
 	keySym     Key
 	lastKeySym Key
-	mb         [4]bool
+	mb         [3]bool
 	mm         Mouse
 	event      InputEvent
 	lastEvent  InputEvent
@@ -69,7 +68,14 @@ func Process() {
 			event.Wheel = 1
 		} else if m.Button == sdl.BUTTON_WHEELDOWN {
 			event.Wheel = -1
-		} else {
+		} else if m.Button == sdl.BUTTON_LEFT {
+			mb[0] = m.State == 1
+			event.Button = Button(m.Button)
+		} else if m.Button == sdl.BUTTON_MIDDLE {
+			mb[1] = m.State == 1
+			event.Button = Button(m.Button)
+		} else if m.Button == sdl.BUTTON_RIGHT {
+			mb[2] = m.State == 1
 			event.Button = Button(m.Button)
 		}
 	}
@@ -113,10 +119,6 @@ type Mouse struct {
 	Over  bool    // If the mouse is over the window
 }
 
-func New() *Mouse {
-	return &Mouse{}
-}
-
 // Returns the last known position of the mouse relative to the top-left corner
 func (m *Mouse) Pos() (x, y float64) {
 	return m.X, m.Y
@@ -143,6 +145,14 @@ func (m *Mouse) WheelMovement() int {
 // TODO Currently unimplemented
 func (m *Mouse) IsOver() bool {
 	return false
+}
+
+func (b Button) Down() bool {
+	return mb[b]
+}
+
+func (b Button) Up() bool {
+	return mb[b]
 }
 
 // Returns true if there's been a key pressed down since the last time the

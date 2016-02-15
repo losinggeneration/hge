@@ -1,11 +1,11 @@
 package main
 
 import (
-	Color "github.com/losinggeneration/hge-go/helpers/color"
-	Font "github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/gui"
-	. "github.com/losinggeneration/hge-go/hge/input"
-	. "github.com/losinggeneration/hge-go/hge/sound"
+	Color "github.com/losinggeneration/hge/helpers/color"
+	Font "github.com/losinggeneration/hge/helpers/font"
+	"github.com/losinggeneration/hge/helpers/gui"
+	. "github.com/losinggeneration/hge/input"
+	. "github.com/losinggeneration/hge/sound"
 )
 
 type GUIMenuItem struct {

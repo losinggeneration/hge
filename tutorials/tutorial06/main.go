@@ -2,21 +2,21 @@ package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/gui"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
-	. "github.com/losinggeneration/hge-go/hge/input"
-	. "github.com/losinggeneration/hge-go/hge/sound"
-	. "github.com/losinggeneration/hge-go/hge/timer"
 	"math"
+
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/font"
+	"github.com/losinggeneration/hge/helpers/gui"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	"github.com/losinggeneration/hge/input"
+	"github.com/losinggeneration/hge/timer"
 )
 
 var (
 	GUI  gui.GUI
 	fnt  *font.Font
-	quad Quad
+	quad gfx.Quad
 )
 
 var lastId int = 0
@@ -26,7 +26,7 @@ func frame() int {
 	dt := Delta()
 
 	// If ESCAPE was pressed, tell the GUI to finish
-	if NewKey(K_ESCAPE).State() {
+	if input.Key(input.K_ESCAPE).State() {
 		lastId = 5
 		GUI.Leave()
 	}
@@ -63,12 +63,12 @@ func frame() int {
 
 func render() int {
 	// Render graphics
-	BeginScene()
+	gfx.BeginScene()
 	quad.Render()
 	GUI.Render()
 	fnt.SetColor(0xFFFFFFFF)
-	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d", Delta(), GetFPS())
-	EndScene()
+	fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d", timer.Delta(), timer.FPS())
+	gfx.EndScene()
 
 	return 0
 }

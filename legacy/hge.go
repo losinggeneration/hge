@@ -2,14 +2,14 @@ package legacy
 
 import "fmt"
 import (
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/gfx"
-	"github.com/losinggeneration/hge-go/hge/ini"
-	"github.com/losinggeneration/hge-go/hge/input"
-	"github.com/losinggeneration/hge-go/hge/rand"
-	"github.com/losinggeneration/hge-go/hge/resource"
-	"github.com/losinggeneration/hge-go/hge/sound"
-	"github.com/losinggeneration/hge-go/hge/timer"
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/ini"
+	"github.com/losinggeneration/hge/input"
+	"github.com/losinggeneration/hge/rand"
+	"github.com/losinggeneration/hge/resource"
+	"github.com/losinggeneration/hge/sound"
+	"github.com/losinggeneration/hge/timer"
 )
 
 // HGE struct
@@ -418,7 +418,7 @@ func (h *HGE) Channel_IsSliding(chn sound.Channel) bool {
 }
 
 func (h *HGE) Input_GetMousePos() (x, y float64) {
-	return input.New().Pos()
+	return (&input.Mouse{}).Pos()
 }
 
 func (h *HGE) Input_SetMousePos(x, y float64) {
@@ -426,11 +426,11 @@ func (h *HGE) Input_SetMousePos(x, y float64) {
 }
 
 func (h *HGE) Input_GetMouseWheel() int {
-	return input.New().WheelMovement()
+	return (&input.Mouse{}).WheelMovement()
 }
 
 func (h *HGE) Input_IsMouseOver() bool {
-	return input.New().IsOver()
+	return (&input.Mouse{}).IsOver()
 }
 
 func newKey(key Key) input.Key {

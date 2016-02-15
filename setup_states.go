@@ -1,9 +1,10 @@
 package hge
 
 import (
-	"github.com/losinggeneration/hge-go/hge/gfx"
 	"log"
 	"os"
+
+	"github.com/losinggeneration/hge/gfx"
 )
 
 //////// Bool states

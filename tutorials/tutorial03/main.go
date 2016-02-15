@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/particle"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/gfx"
-	"github.com/losinggeneration/hge-go/hge/input"
-	"github.com/losinggeneration/hge-go/hge/sound"
-	"github.com/losinggeneration/hge-go/hge/timer"
+
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/font"
+	"github.com/losinggeneration/hge/helpers/particle"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	"github.com/losinggeneration/hge/input"
+	"github.com/losinggeneration/hge/sound"
+	"github.com/losinggeneration/hge/timer"
 )
 
 // An example of using closures
@@ -104,7 +105,7 @@ func main() {
 
 		h.SetState(hge.RENDERFUNC, func() int {
 			gfx.BeginScene()
-			gfx.Clear(0)
+			gfx.Clear(gfx.RGBAToColor(0))
 			par.Render()
 			spr.Render(x, y)
 			fnt.Printf(5, 5, font.TEXT_LEFT, "dt:%.3f\nFPS:%d (constant)", timer.Delta(), timer.FPS())
@@ -116,8 +117,13 @@ func main() {
 		if err := h.Initiate(); err == nil {
 			defer h.Shutdown()
 
+			tex, err := gfx.LoadTexture("particles.png")
+			if err != nil {
+				fmt.Printf("Error: can't load texture: %s\n", err)
+				return
+			}
+
 			snd = sound.NewEffect("menu.ogg")
-			tex := gfx.LoadTexture("particles.png")
 			if snd == nil || tex == nil {
 				fmt.Printf("Error: Can't load one of the following files:\nmenu.ogg, particles.png, font1.fnt, font1.png, trail.psi\n")
 				return

@@ -6,15 +6,16 @@ package hge
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/hge/gfx"
-	"github.com/losinggeneration/hge-go/hge/input"
-	"github.com/losinggeneration/hge-go/hge/rand"
-	"github.com/losinggeneration/hge-go/hge/sound"
-	"github.com/losinggeneration/hge-go/hge/timer"
 	"io"
 	"log"
 	"math"
 	"time"
+
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/input"
+	"github.com/losinggeneration/hge/rand"
+	"github.com/losinggeneration/hge/sound"
+	"github.com/losinggeneration/hge/timer"
 )
 
 // The current version of this package
@@ -91,7 +92,7 @@ func Shared(a ...interface{}) *HGE {
 func (h *HGE) Initialize() error {
 	h.Log("")
 	h.Log("-------------------------------------------------------------------")
-	h.Log(" hge-go can be found at http://github.com/losinggeneration/hge-go/")
+	h.Log(" hge can be found at http://github.com/losinggeneration/hge-go/")
 	h.Log(" This project is based on (mostly the design of) HGE.")
 	h.Log(" Please don't bother Relish Games or Icculus about this port.")
 	h.Log("-------------------------------------------------------------------")

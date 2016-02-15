@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/hge"
-	. "github.com/losinggeneration/hge-go/hge/gfx"
-	. "github.com/losinggeneration/hge-go/hge/input"
-	hge "github.com/losinggeneration/hge-go/legacy"
+
+	. "github.com/losinggeneration/hge"
+	. "github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/font"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	. "github.com/losinggeneration/hge/input"
+	hge "github.com/losinggeneration/hge/legacy"
 )
 
 const (

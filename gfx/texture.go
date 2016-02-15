@@ -2,7 +2,6 @@ package gfx
 
 import (
 	"errors"
-	gl "github.com/chsc/gogl/gl21"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
@@ -10,6 +9,8 @@ import (
 	"io"
 	"os"
 	"runtime"
+
+	gl "github.com/chsc/gogl/gl21"
 )
 
 var (

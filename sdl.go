@@ -4,6 +4,7 @@ package hge
 
 import (
 	"fmt"
+
 	"github.com/banthar/Go-SDL/sdl"
 )
 

@@ -2,10 +2,11 @@ package gui
 
 import (
 	"container/list"
-	"github.com/losinggeneration/hge-go/helpers/rect"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/hge"
-	"github.com/losinggeneration/hge-go/hge/input"
+
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/helpers/rect"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	"github.com/losinggeneration/hge/input"
 )
 
 const (
@@ -230,10 +231,10 @@ func (g *GUI) Move(dx, dy float64) {
 func (g *GUI) Update(dt float64) int {
 	// Update the mouse variables
 	g.mouse.Pos()
-	g.lPressed = input.K_LBUTTON.Down()
-	g.lReleased = input.K_LBUTTON.Up()
-	g.rPressed = input.K_RBUTTON.Down()
-	g.rReleased = input.K_RBUTTON.Up()
+	g.lPressed = input.M_LBUTTON.Down()
+	g.lReleased = input.M_LBUTTON.Up()
+	g.rPressed = input.M_RBUTTON.Down()
+	g.rReleased = input.M_RBUTTON.Up()
 	g.mouse.WheelMovement()
 
 	// Update all controls
@@ -343,15 +344,17 @@ func (g *GUI) Update(dt float64) int {
 			}
 			g.ctrlFocus = ctrl
 		}
-	} else if g.ctrlFocus != nil && key > 0 && key != input.K_LBUTTON && key != input.K_RBUTTON {
-		if g.ctrlFocus.KeyClick(key, input.GetChar()) {
-			return g.ctrlFocus.Id
-		}
+
+		// TODO Figure out if this is needed
+		//} else if g.ctrlFocus != nil && key > 0 && key != input.M_LBUTTON && key != input.M_RBUTTON {
+		//if g.ctrlFocus.KeyClick(key, input.GetChar()) {
+		//return g.ctrlFocus.Id
+		//}
 	}
 
 	// Handle mouse
-	lDown := input.K_LBUTTON.State()
-	rDown := input.K_RBUTTON.State()
+	lDown := input.M_LBUTTON.Down()
+	rDown := input.M_RBUTTON.Down()
 
 	if g.ctrlLock != nil {
 		ctrl := g.ctrlLock
