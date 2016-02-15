@@ -8,15 +8,15 @@ import (
 	"math"
 	"time"
 
-	hge "github.com/losinggeneration/hge-go"
-	. "github.com/losinggeneration/hge-go/gfx"
-	"github.com/losinggeneration/hge-go/helpers/color"
-	dist "github.com/losinggeneration/hge-go/helpers/distortionmesh"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/input"
-	. "github.com/losinggeneration/hge-go/rand"
-	. "github.com/losinggeneration/hge-go/timer"
+	"github.com/losinggeneration/hge"
+	. "github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/color"
+	dist "github.com/losinggeneration/hge/helpers/distortionmesh"
+	"github.com/losinggeneration/hge/helpers/font"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	. "github.com/losinggeneration/hge/input"
+	. "github.com/losinggeneration/hge/rand"
+	. "github.com/losinggeneration/hge/timer"
 )
 
 // Pointer to the HGE interface (helper classes require this to work)

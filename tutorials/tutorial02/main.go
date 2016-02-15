@@ -11,11 +11,11 @@ package main
 import (
 	"fmt"
 
-	HGE "github.com/losinggeneration/hge-go"
-	"github.com/losinggeneration/hge-go/gfx"
-	"github.com/losinggeneration/hge-go/input"
-	hge "github.com/losinggeneration/hge-go/legacy"
-	"github.com/losinggeneration/hge-go/sound"
+	HGE "github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/input"
+	hge "github.com/losinggeneration/hge/legacy"
+	"github.com/losinggeneration/hge/sound"
 )
 
 var (

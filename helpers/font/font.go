@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	hge "github.com/losinggeneration/hge-go"
-	"github.com/losinggeneration/hge-go/gfx"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/resource"
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	"github.com/losinggeneration/hge/resource"
 )
 
 const (

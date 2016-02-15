@@ -6,14 +6,14 @@ import (
 	"reflect"
 	"unsafe"
 
-	hge "github.com/losinggeneration/hge-go"
-	"github.com/losinggeneration/hge-go/helpers/color"
-	"github.com/losinggeneration/hge-go/helpers/rect"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	"github.com/losinggeneration/hge-go/helpers/vector"
-	"github.com/losinggeneration/hge-go/rand"
-	"github.com/losinggeneration/hge-go/resource"
-	"github.com/losinggeneration/hge-go/timer"
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/helpers/color"
+	"github.com/losinggeneration/hge/helpers/rect"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	"github.com/losinggeneration/hge/helpers/vector"
+	"github.com/losinggeneration/hge/rand"
+	"github.com/losinggeneration/hge/resource"
+	"github.com/losinggeneration/hge/timer"
 )
 
 const (

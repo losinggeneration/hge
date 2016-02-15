@@ -11,7 +11,7 @@ import (
 	"runtime"
 	"unsafe"
 
-	hge "github.com/losinggeneration/hge-go"
+	"github.com/losinggeneration/hge"
 )
 
 // HGE Blending constants

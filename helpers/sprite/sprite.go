@@ -3,9 +3,9 @@ package sprite
 import (
 	"math"
 
-	hge "github.com/losinggeneration/hge-go"
-	"github.com/losinggeneration/hge-go/gfx"
-	"github.com/losinggeneration/hge-go/helpers/rect"
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/rect"
 )
 
 type Sprite struct {

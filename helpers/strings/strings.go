@@ -3,8 +3,8 @@ package strings
 import (
 	"strings"
 
-	hge "github.com/losinggeneration/hge-go"
-	. "github.com/losinggeneration/hge-go/resource"
+	"github.com/losinggeneration/hge"
+	. "github.com/losinggeneration/hge/resource"
 )
 
 const (

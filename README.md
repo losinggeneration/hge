@@ -16,5 +16,5 @@ This is a binding and port of HGE (currently the hge-unix version) to Go. It cur
 
 ## Building:
 * All you need to do is run: go build
-* If you're wanting to use go get, you can do so with: go get github.com/losinggeneration/hge-go
-* Additionally, you can: import "github.com/losinggeneration/hge-go" and it should work as expected.
+* If you're wanting to use go get, you can do so with: go get github.com/losinggeneration/hge
+* Additionally, you can: import "github.com/losinggeneration/hge" and it should work as expected.

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"math"
 
-	. "github.com/losinggeneration/hge-go"
-	. "github.com/losinggeneration/hge-go/gfx"
-	dist "github.com/losinggeneration/hge-go/helpers/distortionmesh"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	. "github.com/losinggeneration/hge-go/input"
-	. "github.com/losinggeneration/hge-go/timer"
+	. "github.com/losinggeneration/hge"
+	. "github.com/losinggeneration/hge/gfx"
+	dist "github.com/losinggeneration/hge/helpers/distortionmesh"
+	"github.com/losinggeneration/hge/helpers/font"
+	. "github.com/losinggeneration/hge/input"
+	. "github.com/losinggeneration/hge/timer"
 )
 
 var (

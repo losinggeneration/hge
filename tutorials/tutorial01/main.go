@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	hge "github.com/losinggeneration/hge-go"
-	"github.com/losinggeneration/hge-go/input"
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/input"
 )
 
 func FrameFunc() int {

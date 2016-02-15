@@ -6,7 +6,7 @@ package timer
 */
 import "C"
 
-import hge "github.com/losinggeneration/hge-go"
+import "github.com/losinggeneration/hge"
 
 var timerHGE *hge.HGE
 

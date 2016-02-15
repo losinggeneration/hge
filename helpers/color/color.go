@@ -3,7 +3,7 @@ package color
 import (
 	"math"
 
-	. "github.com/losinggeneration/hge-go"
+	. "github.com/losinggeneration/hge"
 )
 
 func colorClamp(x *float64) {

@@ -9,7 +9,7 @@ import "C"
 import (
 	"unsafe"
 
-	hge "github.com/losinggeneration/hge-go"
+	"github.com/losinggeneration/hge"
 )
 
 type Key int

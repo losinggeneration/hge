@@ -1,8 +1,8 @@
 package distortionmesh
 
 import (
-	hge "github.com/losinggeneration/hge-go"
-	"github.com/losinggeneration/hge-go/gfx"
+	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
 )
 
 const (

@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 
-	hge "github.com/losinggeneration/hge-go"
-	. "github.com/losinggeneration/hge-go/gfx"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/particle"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/input"
-	. "github.com/losinggeneration/hge-go/sound"
-	. "github.com/losinggeneration/hge-go/timer"
+	"github.com/losinggeneration/hge"
+	. "github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/font"
+	"github.com/losinggeneration/hge/helpers/particle"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	. "github.com/losinggeneration/hge/input"
+	. "github.com/losinggeneration/hge/sound"
+	. "github.com/losinggeneration/hge/timer"
 )
 
 var (

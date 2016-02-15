@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	. "github.com/losinggeneration/hge-go"
-	. "github.com/losinggeneration/hge-go/gfx"
-	"github.com/losinggeneration/hge-go/helpers/font"
-	"github.com/losinggeneration/hge-go/helpers/sprite"
-	. "github.com/losinggeneration/hge-go/input"
-	hge "github.com/losinggeneration/hge-go/legacy"
+	. "github.com/losinggeneration/hge"
+	. "github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/helpers/font"
+	"github.com/losinggeneration/hge/helpers/sprite"
+	. "github.com/losinggeneration/hge/input"
+	hge "github.com/losinggeneration/hge/legacy"
 )
 
 const (
