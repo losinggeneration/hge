@@ -24,10 +24,9 @@ func initNative() error {
 	// 		return fmt.Errorf(sdl.GetError())
 	// 	}
 
-	// 	vidinfo := sdl.GetVideoInfo()
-	// 	nOrigScreenWidth := vidinfo.Current_w;
-	// 	nOrigScreenHeight := vidinfo.Current_h;
-	// 	Log("Screen: %dx%d\n", nOrigScreenWidth, nOrigScreenHeight);
+	vidinfo := sdl.GetVideoInfo()
+	origScreenWidth := vidinfo.Current_w
+	origScreenHeight := vidinfo.Current_h
 
 	// Create window
 	bpp := 4
@@ -56,7 +55,18 @@ func initNative() error {
 		flags |= sdl.FULLSCREEN
 	}
 
-	hwnd := sdl.SetVideoMode(stateInts[SCREENWIDTH], stateInts[SCREENHEIGHT], stateInts[SCREENBPP], flags)
+	width, height := stateInts[SCREENWIDTH], stateInts[SCREENHEIGHT]
+	if width > int(origScreenWidth) {
+		width = int(origScreenWidth)
+	}
+
+	if height > int(origScreenHeight) {
+		height = int(origScreenHeight)
+	}
+
+	fmt.Printf("Screen: %dx%d\n", width, height)
+
+	hwnd := sdl.SetVideoMode(width, height, stateInts[SCREENBPP], flags)
 	if hwnd == nil {
 		sdl.Quit()
 		return fmt.Errorf(sdl.GetError())
@@ -70,11 +80,14 @@ func initNative() error {
 		// 			pHGE->_FocusChange(true);
 		// 		}
 	}
+
 	cursor := sdl.ENABLE
 	if stateBools[HIDEMOUSE] {
 		cursor = sdl.DISABLE
 	}
+
 	sdl.ShowCursor(cursor)
+
 	return nil
 }
 
