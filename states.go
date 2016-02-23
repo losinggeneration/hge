@@ -130,44 +130,44 @@ func init() {
 // Second parameter must be of the matching type, bool, int, string, StateFunc/func (h *HGE)() int, *Hwnd
 func (h *HGE) SetState(a ...interface{}) error {
 	if len(a) == 2 {
-		switch a[0].(type) {
+		switch state := a[0].(type) {
 		case BoolState:
 			if bs, ok := a[1].(bool); ok {
-				return h.setStateBool(a[0].(BoolState), bs)
+				return h.setStateBool(state, bs)
 			}
 
 		case IntState:
 			if is, ok := a[1].(int); ok {
-				return h.setStateInt(a[0].(IntState), is)
+				return h.setStateInt(state, is)
 			}
 
 		case StringState:
 			if ss, ok := a[1].(string); ok {
-				return h.setStateString(a[0].(StringState), ss)
+				return h.setStateString(state, ss)
 			}
 			if ss, ok := a[1].(*string); ok && ss != nil {
-				return h.setStateString(a[0].(StringState), *ss)
+				return h.setStateString(state, *ss)
 			} else {
 				// A nil string state
-				return h.setStateString(a[0].(StringState), "")
+				return h.setStateString(state, "")
 			}
 
 		case FuncState:
 			switch a[1].(type) {
 			case StateFunc:
-				return h.setStateFunc(a[0].(FuncState), a[1].(StateFunc))
+				return h.setStateFunc(state, a[1].(StateFunc))
 			case func() bool:
-				return h.setStateFunc(a[0].(FuncState), a[1].(func() bool))
+				return h.setStateFunc(state, a[1].(func() bool))
 			default:
-				return h.setStateFunc(a[0].(FuncState), nil)
+				return h.setStateFunc(state, nil)
 			}
 
 		case HwndState:
 			switch a[1].(type) {
 			case *Hwnd:
-				return h.setStateHwnd(a[0].(HwndState), a[1].(*Hwnd))
+				return h.setStateHwnd(state, a[1].(*Hwnd))
 			default:
-				return h.setStateHwnd(a[0].(HwndState), nil)
+				return h.setStateHwnd(state, nil)
 			}
 		}
 	}
