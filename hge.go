@@ -92,7 +92,7 @@ func Shared(a ...interface{}) *HGE {
 func (h *HGE) Initialize() error {
 	h.Log("")
 	h.Log("-------------------------------------------------------------------")
-	h.Log(" hge can be found at http://github.com/losinggeneration/hge-go/")
+	h.Log(" hge can be found at http://github.com/losinggeneration/hge/")
 	h.Log(" This project is based on (mostly the design of) HGE.")
 	h.Log(" Please don't bother Relish Games or Icculus about this port.")
 	h.Log("-------------------------------------------------------------------")
@@ -100,7 +100,7 @@ func (h *HGE) Initialize() error {
 
 	h.Log("HGE Started...")
 
-	h.Log("hge-unix version: %X.%X.%X", VERSION>>8, (VERSION&0xF0)>>4, VERSION&0xF)
+	h.Log("hge version: %X.%X.%X", VERSION>>8, (VERSION&0xF0)>>4, VERSION&0xF)
 
 	h.Log("Date: %s", time.Now())
 
