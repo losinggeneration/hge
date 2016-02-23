@@ -124,8 +124,8 @@ func (h *HGE) Initialize() error {
 	// Later on this should be a fatal error
 	if err := gfx.Initialize(); err != nil {
 		h.postError(err)
-		// h.Shutdown()
-		// return err
+		h.Shutdown()
+		return err
 	}
 
 	// later on this should be a fatal error

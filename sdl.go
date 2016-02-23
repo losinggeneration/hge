@@ -92,6 +92,7 @@ func initNative() error {
 }
 
 func shutdownNative() {
+	sdl.Quit()
 }
 
 func initPowerStatus() error {
