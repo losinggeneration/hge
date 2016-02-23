@@ -13,10 +13,10 @@ func FrameFunc() bool {
 		return true
 	}
 
-	m := input.Mouse{}
-	// 	x, y := m.Pos()
-	// 	fmt.Println(x,y,m.WheelMovement())
-	fmt.Println(m.WheelMovement())
+	//m := input.Mouse{}
+	//x, y := m.Pos()
+	//fmt.Println(x, y, m.WheelMovement())
+	//fmt.Println(m.WheelMovement())
 
 	return false
 }
@@ -26,7 +26,6 @@ func main() {
 	h.SetState(hge.LOGFILE, "tutorial01.log")
 	h.SetState(hge.FRAMEFUNC, FrameFunc)
 	h.SetState(hge.TITLE, "HGE Tutorial 01 - Minimal HGE application")
-	h.SetState(hge.WINDOWED, true)
 	h.SetState(hge.USESOUND, false)
 
 	h.Log("Test")
