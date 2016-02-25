@@ -2,7 +2,7 @@
 // such as: +build sdl
 package input
 
-import "github.com/banthar/Go-SDL/sdl"
+import "github.com/veandco/go-sdl2/sdl"
 
 // HGE Input Event type constants
 const (
@@ -11,7 +11,7 @@ const (
 	INPUT_MBUTTONDOWN Type = sdl.MOUSEBUTTONDOWN
 	INPUT_MBUTTONUP   Type = sdl.MOUSEBUTTONUP
 	INPUT_MOUSEMOVE   Type = sdl.MOUSEMOTION
-	INPUT_MOUSEWHEEL  Type = sdl.NUMEVENTS + iota
+	INPUT_MOUSEWHEEL  Type = sdl.MOUSEWHEEL
 )
 
 // HGE Input Event flags
@@ -47,14 +47,14 @@ const (
 	K_CTRL  Key = sdl.K_RCTRL | sdl.K_LCTRL
 	K_ALT   Key = sdl.K_RALT | sdl.K_LALT
 
-	K_LWIN Key = sdl.K_LSUPER
-	K_RWIN Key = sdl.K_RSUPER
-	K_APPS Key = iota + key_offset
+	K_LWIN Key = sdl.K_LGUI
+	K_RWIN Key = sdl.K_RGUI
+	K_APPS Key = sdl.K_APPLICATION
 
 	K_PAUSE      Key = sdl.K_PAUSE
 	K_CAPSLOCK   Key = sdl.K_CAPSLOCK
-	K_NUMLOCK    Key = sdl.K_NUMLOCK
-	K_SCROLLLOCK Key = sdl.K_SCROLLOCK
+	K_NUMLOCK    Key = sdl.K_NUMLOCKCLEAR
+	K_SCROLLLOCK Key = sdl.K_SCROLLLOCK
 
 	K_PGUP   Key = sdl.K_PAGEUP
 	K_PGDN   Key = sdl.K_PAGEDOWN
@@ -118,16 +118,16 @@ const (
 	K_PERIOD     Key = sdl.K_PERIOD
 	K_SLASH      Key = sdl.K_SLASH
 
-	K_NUMPAD0 Key = sdl.K_KP0
-	K_NUMPAD1 Key = sdl.K_KP1
-	K_NUMPAD2 Key = sdl.K_KP2
-	K_NUMPAD3 Key = sdl.K_KP3
-	K_NUMPAD4 Key = sdl.K_KP4
-	K_NUMPAD5 Key = sdl.K_KP5
-	K_NUMPAD6 Key = sdl.K_KP6
-	K_NUMPAD7 Key = sdl.K_KP7
-	K_NUMPAD8 Key = sdl.K_KP8
-	K_NUMPAD9 Key = sdl.K_KP9
+	K_NUMPAD0 Key = sdl.K_KP_0
+	K_NUMPAD1 Key = sdl.K_KP_1
+	K_NUMPAD2 Key = sdl.K_KP_2
+	K_NUMPAD3 Key = sdl.K_KP_3
+	K_NUMPAD4 Key = sdl.K_KP_4
+	K_NUMPAD5 Key = sdl.K_KP_5
+	K_NUMPAD6 Key = sdl.K_KP_6
+	K_NUMPAD7 Key = sdl.K_KP_7
+	K_NUMPAD8 Key = sdl.K_KP_8
+	K_NUMPAD9 Key = sdl.K_KP_9
 
 	K_MULTIPLY Key = sdl.K_KP_MULTIPLY
 	K_DIVIDE   Key = sdl.K_KP_DIVIDE

@@ -11,14 +11,21 @@ import (
 	gl "github.com/chsc/gogl/gl21"
 )
 
+type Hwnd sdl.Surface
+
 var (
 	width, height      gl.Sizei
+	hwnd               *Hwnd
 	zBuffer            bool
 	curBlendMode       int = BLEND_DEFAULT
 	defaultTextureType gl.Enum
 )
 
 // States
+func SetHwnd(h *Hwnd) {
+	hwnd = h
+}
+
 func SetWidth(w int) {
 	width = gl.Sizei(w)
 }
@@ -122,7 +129,7 @@ func BeginScene(a ...interface{}) bool {
 
 func EndScene() {
 	gl.Finish()
-	sdl.GL_SwapBuffers()
+	//sdl.GL_SwapWindow()
 }
 
 func Clear(color Color) {

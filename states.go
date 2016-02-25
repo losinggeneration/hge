@@ -1,5 +1,11 @@
 package hge
 
+import (
+	"unsafe"
+
+	"github.com/losinggeneration/hge/gfx"
+)
+
 // HGE System state constants
 const (
 	WINDOWED      BoolState = iota // bool run in window? (default: true)
@@ -198,6 +204,8 @@ func (h *HGE) setStateFunc(state FuncState, value StateFunc) error {
 
 func (h *HGE) setStateHwndPrivate(state HwndState, value *Hwnd) error {
 	stateHwnds[state] = value
+	gfx.SetHwnd((*gfx.Hwnd)(unsafe.Pointer(value)))
+
 	return setupHwnds[state](h)
 }
 

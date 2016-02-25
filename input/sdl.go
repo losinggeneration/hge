@@ -2,19 +2,19 @@
 // such as: +build sdl
 package input
 
-import "github.com/banthar/Go-SDL/sdl"
+import "github.com/veandco/go-sdl2/sdl"
 
-type Type int     // A HGE Input Event type constants
-type Key int      // A HGE Virtual-key code
-type Flag sdl.Mod // HGE Input Event flags (multiple ones may be OR'd)
-type Button int   // A HGE Input Mouse button
+type Type int        // A HGE Input Event type constants
+type Key int         // A HGE Virtual-key code
+type Flag sdl.Keymod // HGE Input Event flags (multiple ones may be OR'd)
+type Button int      // A HGE Input Mouse button
 
 // HGE Input Event structure
 type InputEvent struct {
 	Type    Type    // event type
 	Key     Key     // key code
 	Flags   Flag    // event flags
-	Chr     uint8   // character code
+	Chr     uint32  // character code
 	Button  Button  // Mouse Button
 	Wheel   int     // wheel shift
 	X       float64 // mouse cursor x-coordinate
@@ -37,47 +37,42 @@ var (
 func Process() {
 	e := sdl.PollEvent()
 	// 	for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
-	switch e.(type) {
-	case *sdl.KeyboardEvent:
-		k, _ := e.(*sdl.KeyboardEvent)
+	switch e := e.(type) {
+	case *sdl.KeyDownEvent:
+		keys[e.Keysym.Sym] = 1 == e.State
+		keySym = Key(e.Keysym.Sym)
 
-		keys[k.Keysym.Sym] = 1 == k.State
-		keySym = Key(k.Keysym.Sym)
-
-		event.Type = Type(k.Type)
+		event.Type = Type(e.Type)
 		event.Key = Key(keySym)
-		event.Flags = Flag(k.Keysym.Mod)
-		event.Chr = k.Keysym.Scancode
+		event.Flags = Flag(e.Keysym.Mod)
+		event.Chr = uint32(e.Keysym.Scancode)
 
 		if event.Key == lastEvent.Key {
 			event.Flags |= INP_REPEAT
 		}
 
 	case *sdl.MouseMotionEvent:
-		m, _ := e.(*sdl.MouseMotionEvent)
-
-		event.Type = Type(m.Type)
-		event.X = float64(m.X)
-		event.Y = float64(m.Y)
+		event.Type = Type(e.Type)
+		event.X = float64(e.X)
+		event.Y = float64(e.Y)
 
 	case *sdl.MouseButtonEvent:
-		m, _ := e.(*sdl.MouseButtonEvent)
-
-		event.Type = Type(m.Type)
-		if m.Button == sdl.BUTTON_WHEELUP {
-			event.Wheel = 1
-		} else if m.Button == sdl.BUTTON_WHEELDOWN {
-			event.Wheel = -1
-		} else if m.Button == sdl.BUTTON_LEFT {
-			mb[0] = m.State == 1
-			event.Button = Button(m.Button)
-		} else if m.Button == sdl.BUTTON_MIDDLE {
-			mb[1] = m.State == 1
-			event.Button = Button(m.Button)
-		} else if m.Button == sdl.BUTTON_RIGHT {
-			mb[2] = m.State == 1
-			event.Button = Button(m.Button)
+		event.Type = Type(e.Type)
+		event.X = float64(e.X)
+		event.Y = float64(e.Y)
+		if e.Button == sdl.BUTTON_LEFT {
+			mb[0] = e.State == 1
+			event.Button = Button(e.Button)
+		} else if e.Button == sdl.BUTTON_MIDDLE {
+			mb[1] = e.State == 1
+			event.Button = Button(e.Button)
+		} else if e.Button == sdl.BUTTON_RIGHT {
+			mb[2] = e.State == 1
+			event.Button = Button(e.Button)
 		}
+	case *sdl.MouseWheelEvent:
+		event.Type = Type(e.Type)
+		event.Wheel = int(e.Y)
 	}
 	// 	}
 }
@@ -128,7 +123,8 @@ func (m *Mouse) Pos() (x, y float64) {
 func (m Mouse) SetPos(x, y float64) {
 	m.X, m.Y = x, y
 	mm.X, mm.Y = x, y
-	sdl.WarpMouse(int(x), int(y))
+	// There's WrapMouseInWindow, but it's a method off of Window
+	//sdl.WarpMouse(int(x), int(y))
 }
 
 // Returns the movement if there's been any mouse movement since the last time
@@ -170,13 +166,13 @@ func (k Key) Up() bool {
 // The current state of the button
 // Returns true if the key is currently pressed, false otherwise
 func (k Key) State() bool {
-	ks := sdl.GetKeyState()
+	ks := sdl.GetKeyboardState()
 	return ks[k] == 1
 }
 
 // Return the key name
 func (k Key) Name() string {
-	return sdl.GetKeyName(sdl.Key(k))
+	return sdl.GetKeyName(sdl.Keycode(k))
 }
 
 // Get the last polled key

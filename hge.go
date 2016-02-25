@@ -107,7 +107,7 @@ func (h *HGE) Initialize() error {
 	h.Log("Application: %s", stateStrings[TITLE])
 
 	// Init subsystems
-	if err := initNative(); err != nil {
+	if err := initNative(h); err != nil {
 		h.postError(err)
 		h.Shutdown()
 		return err
