@@ -8,10 +8,13 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-type Hwnd sdl.Surface
+type Hwnd sdl.Window
 
 func setTitle() {
-	//sdl.WM_SetCaption(stateStrings[TITLE], stateStrings[TITLE])
+	hwnd := (*sdl.Window)(stateHwnds[HWND])
+	if hwnd != nil {
+		hwnd.SetTitle(stateStrings[TITLE])
+	}
 }
 
 func initNative(h *HGE) error {
@@ -21,10 +24,6 @@ func initNative(h *HGE) error {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		return err
 	}
-
-	//vidinfo := sdl.GetVideoInfo()
-	//origScreenWidth := vidinfo.Current_w
-	//origScreenHeight := vidinfo.Current_h
 
 	// Create window
 	bpp := 4
@@ -37,8 +36,6 @@ func initNative(h *HGE) error {
 		zbuffer = 16
 	}
 
-	setTitle()
-
 	sdl.GL_SetAttribute(sdl.GL_RED_SIZE, bpp)
 	sdl.GL_SetAttribute(sdl.GL_GREEN_SIZE, bpp)
 	sdl.GL_SetAttribute(sdl.GL_BLUE_SIZE, bpp)
@@ -46,33 +43,36 @@ func initNative(h *HGE) error {
 	sdl.GL_SetAttribute(sdl.GL_DEPTH_SIZE, zbuffer)
 	sdl.GL_SetAttribute(sdl.GL_ACCELERATED_VISUAL, 1)
 	sdl.GL_SetAttribute(sdl.GL_DOUBLEBUFFER, 1)
-	// 	sdl.GL_SetAttribute(sdl.GL_SWAP_CONTROL, vsync ? 1 : 0);
 
-	//var flags uint32
-	//flags |= uint32(sdl.OPENGL)
-	//if !stateBools[WINDOWED] {
-	//flags |= sdl.FULLSCREEN
-	//}
+	var flags uint32
+	flags |= uint32(sdl.WINDOW_OPENGL)
+	if !stateBools[WINDOWED] {
+		flags |= sdl.WINDOW_FULLSCREEN
+	}
 
+	title := stateStrings[TITLE]
+	x, y := stateInts[SCREENX], stateInts[SCREENY]
 	width, height := stateInts[SCREENWIDTH], stateInts[SCREENHEIGHT]
-	//if width > int(origScreenWidth) {
-	//width = int(origScreenWidth)
-	//}
 
-	//if height > int(origScreenHeight) {
-	//height = int(origScreenHeight)
-	//}
+	window, err := sdl.CreateWindow(title, x, y, width, height, flags)
+	if err != nil {
+		sdl.Quit()
+		return err
+	}
 
-	fmt.Printf("Screen: %dx%d\n", width, height)
+	context, err := sdl.GL_CreateContext(window)
+	if err != nil {
+		sdl.Quit()
+		return err
+	}
 
-	//hwnd := sdl.SetVideoMode(width, height, stateInts[SCREENBPP], flags)
-	//if hwnd == nil {
-	//sdl.Quit()
-	//return fmt.Errorf(sdl.GetError())
-	//}
+	if err := sdl.GL_MakeCurrent(window, context); err != nil {
+		sdl.Quit()
+		return err
+	}
 
-	//h.SetState((*Hwnd)(hwnd))
-	//stateHwnds[HWND] = (*Hwnd)(hwnd)
+	h.SetState((*Hwnd)(window))
+	stateHwnds[HWND] = (*Hwnd)(window)
 
 	if !stateBools[WINDOWED] {
 		// 		bMouseOver = true;

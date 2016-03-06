@@ -7,14 +7,17 @@
 package gfx
 
 import (
-	"github.com/banthar/Go-SDL/sdl"
 	gl "github.com/chsc/gogl/gl21"
+	"github.com/veandco/go-sdl2/sdl"
 )
 
-type Hwnd sdl.Surface
+type Hwnd struct {
+	*sdl.Window
+}
 
 var (
 	width, height      gl.Sizei
+	x, y               int
 	hwnd               *Hwnd
 	zBuffer            bool
 	curBlendMode       int = BLEND_DEFAULT
@@ -28,14 +31,38 @@ func SetHwnd(h *Hwnd) {
 
 func SetWidth(w int) {
 	width = gl.Sizei(w)
+	updateSize(width, height)
 }
 
 func SetHeight(h int) {
 	height = gl.Sizei(h)
+	updateSize(width, height)
+}
+
+func SetX(i int) {
+	x = i
+	updatePosition(x, y)
+}
+
+func SetY(i int) {
+	y = i
+	updatePosition(x, y)
 }
 
 func SetZBuffer(b bool) {
 	zBuffer = b
+}
+
+func updateSize(width, height gl.Sizei) {
+	if hwnd != nil {
+		hwnd.SetSize(int(width), int(height))
+	}
+}
+
+func updatePosition(x, y int) {
+	if hwnd != nil {
+		hwnd.SetPosition(x, y)
+	}
 }
 
 func Initialize() error {
@@ -129,7 +156,7 @@ func BeginScene(a ...interface{}) bool {
 
 func EndScene() {
 	gl.Finish()
-	//sdl.GL_SwapWindow()
+	sdl.GL_SwapWindow(hwnd.Window)
 }
 
 func Clear(color Color) {

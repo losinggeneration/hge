@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/losinggeneration/hge/gfx"
+	"github.com/losinggeneration/hge/input"
+	"github.com/veandco/go-sdl2/sdl"
 )
 
 //////// Bool states
@@ -42,6 +44,10 @@ func setupShowSplash(h *HGE) error {
 
 //////// Hwnd states
 func setupHwnd(h *HGE) error {
+	hwnd := &gfx.Hwnd{(*sdl.Window)(stateHwnds[HWND])}
+
+	gfx.SetHwnd(hwnd)
+
 	return nil
 }
 
@@ -58,6 +64,16 @@ func setupScreenWidth(h *HGE) error {
 
 func setupScreenHeight(h *HGE) error {
 	gfx.SetHeight(stateInts[SCREENHEIGHT])
+	return nil
+}
+
+func setupScreenX(h *HGE) error {
+	gfx.SetX(stateInts[SCREENX])
+	return nil
+}
+
+func setupScreenY(h *HGE) error {
+	gfx.SetY(stateInts[SCREENY])
 	return nil
 }
 

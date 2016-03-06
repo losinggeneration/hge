@@ -1,10 +1,6 @@
 package hge
 
-import (
-	"unsafe"
-
-	"github.com/losinggeneration/hge/gfx"
-)
+import "github.com/veandco/go-sdl2/sdl"
 
 // HGE System state constants
 const (
@@ -45,6 +41,8 @@ const (
 const (
 	SCREENWIDTH      IntState = iota // int screen width (default: 800)
 	SCREENHEIGHT     IntState = iota // int screen height (default: 600)
+	SCREENX          IntState = iota // int screen x location (default: centered)
+	SCREENY          IntState = iota // int screen y location (default: centered)
 	SCREENBPP        IntState = iota // int screen bitdepth (default: 32) (desktop bpp in windowed mode)
 	ORIGSCREENWIDTH  IntState = iota // int original screen width (default: 800 ... not valid until hge.System_Initiate()!)
 	ORIGSCREENHEIGHT IntState = iota // int original screen height (default: 600 ... not valid until hge.System_Initiate()!))
@@ -113,6 +111,8 @@ func init() {
 	// Int states
 	setupInts[SCREENWIDTH] = setupScreenWidth
 	setupInts[SCREENHEIGHT] = setupScreenHeight
+	setupInts[SCREENX] = setupScreenX
+	setupInts[SCREENY] = setupScreenY
 	setupInts[SCREENBPP] = setupScreenBPP
 	setupInts[ORIGSCREENWIDTH] = setupOrigScreenWidth
 	setupInts[ORIGSCREENHEIGHT] = setupOrigScreenHeight
@@ -204,7 +204,6 @@ func (h *HGE) setStateFunc(state FuncState, value StateFunc) error {
 
 func (h *HGE) setStateHwndPrivate(state HwndState, value *Hwnd) error {
 	stateHwnds[state] = value
-	gfx.SetHwnd((*gfx.Hwnd)(unsafe.Pointer(value)))
 
 	return setupHwnds[state](h)
 }
@@ -321,14 +320,16 @@ func (h *HGE) setDefaultStates() {
 	h.SetState(HWNDPARENT, nil)      // int		parent win handle	(default: 0)
 
 	// Int states
-	h.SetState(SCREENWIDTH, 800)   // int screen width (default: 800)
-	h.SetState(SCREENHEIGHT, 600)  // int screen height (default: 600)
-	h.SetState(SCREENBPP, 32)      // int screen bitdepth (default: 32) (desktop bpp in windowed mode)
-	h.SetState(SAMPLERATE, 44100)  // int sample rate (default: 44100)
-	h.SetState(FXVOLUME, 100)      // int global fx volume (default: 100)
-	h.SetState(MUSVOLUME, 100)     // int global music volume (default: 100)
-	h.SetState(STREAMVOLUME, 100)  // int stream music volume (default: 100)
-	h.SetState(FPS, FPS_UNLIMITED) // int fixed fps (default: hge.FPS_UNLIMITED)
+	h.SetState(SCREENWIDTH, 800)                // int screen width (default: 800)
+	h.SetState(SCREENHEIGHT, 600)               // int screen height (default: 600)
+	h.SetState(SCREENX, sdl.WINDOWPOS_CENTERED) // int screen x (default: centered)
+	h.SetState(SCREENY, sdl.WINDOWPOS_CENTERED) // int screen y (default: centered)
+	h.SetState(SCREENBPP, 32)                   // int screen bitdepth (default: 32) (desktop bpp in windowed mode)
+	h.SetState(SAMPLERATE, 44100)               // int sample rate (default: 44100)
+	h.SetState(FXVOLUME, 100)                   // int global fx volume (default: 100)
+	h.SetState(MUSVOLUME, 100)                  // int global music volume (default: 100)
+	h.SetState(STREAMVOLUME, 100)               // int stream music volume (default: 100)
+	h.SetState(FPS, FPS_UNLIMITED)              // int fixed fps (default: hge.FPS_UNLIMITED)
 	h.SetState(MINDELTATIME, 1000)
 	h.SetState(POWERSTATUS, 0)      // int battery life percent + status
 	h.SetState(ORIGSCREENWIDTH, 0)  // int original screen width (default: 800 ... not valid until hge.System_Initiate()!)
