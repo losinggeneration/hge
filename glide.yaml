@@ -1,0 +1,8 @@
+package: github.com/losinggeneration/hge
+import:
+- package: github.com/chsc/gogl
+  subpackages:
+  - gl21
+- package: github.com/veandco/go-sdl2
+  subpackages:
+  - sdl

@@ -1,0 +1,12 @@
+hash: ee08a3c0549eb63603e5e5e108a7c24fcc2e0b957442c7875c229a434a1f024d
+updated: 2016-02-25T02:25:31.411635484-08:00
+imports:
+- name: github.com/chsc/gogl
+  version: c411acc846b6df1439cd317439b6392db6c3667d
+  subpackages:
+  - gl21
+- name: github.com/veandco/go-sdl2
+  version: 2a60e820199f7fa40b20b7547e918650367ea657
+  subpackages:
+  - sdl
+devImports: []
