@@ -3,7 +3,7 @@
 package hge
 
 import (
-	"fmt"
+	"runtime"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -15,6 +15,9 @@ func setTitle() {
 }
 
 func initNative(h *HGE) error {
+	// Prevent crashes due to poor SDL & Go thread interactions
+	runtime.LockOSThread()
+
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		return err
 	}
