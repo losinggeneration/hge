@@ -47,6 +47,7 @@ func setupHwnd(h *HGE) error {
 	hwnd := &gfx.Hwnd{(*sdl.Window)(stateHwnds[HWND])}
 
 	gfx.SetHwnd(hwnd)
+	input.SetHwnd(hwnd)
 
 	return nil
 }

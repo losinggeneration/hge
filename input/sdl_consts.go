@@ -32,9 +32,6 @@ const (
 	M_MBUTTON Button = sdl.BUTTON_MIDDLE
 )
 
-// This is the offset so it doesn't clash with any SDL key defines
-const key_offset = 0x160
-
 // HGE Virtual-key codes
 const (
 	K_ESCAPE    Key = sdl.K_ESCAPE
@@ -43,9 +40,12 @@ const (
 	K_ENTER     Key = sdl.K_RETURN
 	K_SPACE     Key = sdl.K_SPACE
 
-	K_SHIFT Key = sdl.K_RSHIFT | sdl.K_LSHIFT
-	K_CTRL  Key = sdl.K_RCTRL | sdl.K_LCTRL
-	K_ALT   Key = sdl.K_RALT | sdl.K_LALT
+	K_LSHIFT Key = sdl.K_LSHIFT
+	K_RSHIFT Key = sdl.K_RSHIFT
+	K_LCTRL  Key = sdl.K_LCTRL
+	K_RCTRL  Key = sdl.K_RCTRL
+	K_LALT   Key = sdl.K_LALT
+	K_RALT   Key = sdl.K_RALT
 
 	K_LWIN Key = sdl.K_LGUI
 	K_RWIN Key = sdl.K_RGUI
@@ -147,6 +147,4 @@ const (
 	K_F10 Key = sdl.K_F10
 	K_F11 Key = sdl.K_F11
 	K_F12 Key = sdl.K_F12
-
-	last_key = iota + key_offset
 )

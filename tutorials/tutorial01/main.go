@@ -5,18 +5,26 @@ import (
 	"os"
 
 	"github.com/losinggeneration/hge"
+	"github.com/losinggeneration/hge/gfx"
 	"github.com/losinggeneration/hge/input"
 )
 
-func FrameFunc() bool {
-	if input.K_ESCAPE.State() {
+func Frame() bool {
+	key := input.GetKey()
+	if key.Down() {
+		fmt.Println("Key:", key.Name())
+	}
+
+	if input.K_ESCAPE.Down() {
 		return true
 	}
 
-	//m := input.Mouse{}
-	//x, y := m.Pos()
-	//fmt.Println(x, y, m.WheelMovement())
-	//fmt.Println(m.WheelMovement())
+	return false
+}
+
+func Render() bool {
+	gfx.BeginScene()
+	gfx.EndScene()
 
 	return false
 }
@@ -24,7 +32,8 @@ func FrameFunc() bool {
 func main() {
 	h := hge.New()
 	h.SetState(hge.LOGFILE, "tutorial01.log")
-	h.SetState(hge.FRAMEFUNC, FrameFunc)
+	h.SetState(hge.FRAMEFUNC, Frame)
+	h.SetState(hge.RENDERFUNC, Render)
 	h.SetState(hge.TITLE, "HGE Tutorial 01 - Minimal HGE application")
 	h.SetState(hge.USESOUND, false)
 

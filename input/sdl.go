@@ -2,7 +2,10 @@
 // such as: +build sdl
 package input
 
-import "github.com/veandco/go-sdl2/sdl"
+import (
+	"github.com/losinggeneration/hge/gfx"
+	"github.com/veandco/go-sdl2/sdl"
+)
 
 type Type int        // A HGE Input Event type constants
 type Key int         // A HGE Virtual-key code
@@ -23,14 +26,19 @@ type InputEvent struct {
 }
 
 var (
-	keys       [last_key]bool
+	keys       map[Key]bool
 	keySym     Key
 	lastKeySym Key
 	mb         [3]bool
 	mm         Mouse
 	event      InputEvent
 	lastEvent  InputEvent
+	hwnd       *gfx.Hwnd
 )
+
+func SetHwnd(h *gfx.Hwnd) {
+	hwnd = h
+}
 
 // Process events
 // Called automatically by hge.Run()
@@ -39,8 +47,8 @@ func Process() {
 	// 	for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
 	switch e := e.(type) {
 	case *sdl.KeyDownEvent:
-		keys[e.Keysym.Sym] = 1 == e.State
 		keySym = Key(e.Keysym.Sym)
+		keys[keySym] = 1 == e.State
 
 		event.Type = Type(e.Type)
 		event.Key = Key(keySym)
@@ -80,10 +88,7 @@ func Process() {
 // Clear the event queue
 // Called automatically by hge.Run()
 func ClearQueue() {
-	for i := 0; i < last_key; i++ {
-		keys[i] = false
-	}
-
+	keys = make(map[Key]bool)
 	lastEvent = event
 	lastKeySym = keySym
 	event = InputEvent{cleared: true}
@@ -124,7 +129,7 @@ func (m Mouse) SetPos(x, y float64) {
 	m.X, m.Y = x, y
 	mm.X, mm.Y = x, y
 	// There's WrapMouseInWindow, but it's a method off of Window
-	//sdl.WarpMouse(int(x), int(y))
+	hwnd.WarpMouseInWindow(int(x), int(y))
 }
 
 // Returns the movement if there's been any mouse movement since the last time
