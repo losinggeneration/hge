@@ -9,11 +9,11 @@ type timer struct {
 	frames int       // current frame count
 }
 
-var t timer
+var t *timer
 
 func Reset() {
 	n := time.Now()
-	t = timer{s: n, l: n}
+	t = &timer{s: n, l: n}
 }
 
 // Updates the internal state. Should be called every frame by the main loop
@@ -21,11 +21,16 @@ func Update() {
 	n := time.Now()
 
 	if t.frames == 0 {
+		// Scope the global t for the goroutine so Reset can be called
+		// and this will update the old reference. This prevents the goroutine
+		// from potentially clobbering the value after a call to Reset has
+		// happened.
+		update := t
 		go func() {
 			select {
 			case <-time.After(1 * time.Second):
-				t.f = t.frames
-				t.frames = 0
+				update.f = update.frames
+				update.frames = 0
 			}
 		}()
 		t.frames++
