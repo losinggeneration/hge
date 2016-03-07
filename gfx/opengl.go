@@ -1,42 +1,23 @@
-// For now we only build SDL, if we need to in the future we can use build tags
-// such as: +build sdl
-// I doubt there will ever be the need for anything like: +build sdl,opengl
-// or: +build sdl,software
-// but it's an option
-
 package gfx
 
-import (
-	gl "github.com/chsc/gogl/gl21"
-	"github.com/veandco/go-sdl2/sdl"
-)
-
-type Hwnd struct {
-	*sdl.Window
-}
+import gl "github.com/chsc/gogl/gl21"
 
 var (
 	width, height      gl.Sizei
 	x, y               int
-	hwnd               *Hwnd
 	zBuffer            bool
 	curBlendMode       int = BLEND_DEFAULT
 	defaultTextureType gl.Enum
 )
 
-// States
-func SetHwnd(h *Hwnd) {
-	hwnd = h
-}
-
 func SetWidth(w int) {
 	width = gl.Sizei(w)
-	updateSize(width, height)
+	updateSize(int(width), int(height))
 }
 
 func SetHeight(h int) {
 	height = gl.Sizei(h)
-	updateSize(width, height)
+	updateSize(int(width), int(height))
 }
 
 func SetX(i int) {
@@ -51,18 +32,6 @@ func SetY(i int) {
 
 func SetZBuffer(b bool) {
 	zBuffer = b
-}
-
-func updateSize(width, height gl.Sizei) {
-	if hwnd != nil {
-		hwnd.SetSize(int(width), int(height))
-	}
-}
-
-func updatePosition(x, y int) {
-	if hwnd != nil {
-		hwnd.SetPosition(x, y)
-	}
 }
 
 func Initialize() error {
@@ -156,9 +125,7 @@ func BeginScene(a ...interface{}) bool {
 
 func EndScene() {
 	gl.Finish()
-	if hwnd != nil {
-		sdl.GL_SwapWindow(hwnd.Window)
-	}
+	swapBuffers()
 }
 
 func Clear(color Color) {
