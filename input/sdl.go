@@ -171,8 +171,7 @@ func (k Key) Up() bool {
 // The current state of the button
 // Returns true if the key is currently pressed, false otherwise
 func (k Key) State() bool {
-	ks := sdl.GetKeyboardState()
-	return ks[k] == 1
+	return k.Down()
 }
 
 // Return the key name
