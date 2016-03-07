@@ -115,9 +115,9 @@ func Initialize() error {
 	// !!! FIXME:  forces clamping outside of HGE, so I just wedged it in here.
 	// Apple says texture rectangle on ATI X1000 chips only supports CLAMP_TO_EDGE.
 	// Texture rectangle only supports CLAMP* wrap modes anyhow.
-	// 	gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-	// 	gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-	// 	gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+	// gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	// gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	// gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
 
 	gl.Scissor(0, 0, width, height)
 	gl.Viewport(0, 0, width, height)
@@ -156,7 +156,9 @@ func BeginScene(a ...interface{}) bool {
 
 func EndScene() {
 	gl.Finish()
-	sdl.GL_SwapWindow(hwnd.Window)
+	if hwnd != nil {
+		sdl.GL_SwapWindow(hwnd.Window)
+	}
 }
 
 func Clear(color Color) {
