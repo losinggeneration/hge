@@ -122,9 +122,12 @@ const (
 	K_ENTER     Key = Key(input.K_ENTER)
 	K_SPACE     Key = Key(input.K_SPACE)
 
-	K_SHIFT Key = Key(input.K_SHIFT)
-	K_CTRL  Key = Key(input.K_CTRL)
-	K_ALT   Key = Key(input.K_ALT)
+	K_LSHIFT Key = Key(input.K_LSHIFT)
+	K_RSHIFT Key = Key(input.K_RSHIFT)
+	K_LCTRL  Key = Key(input.K_LCTRL)
+	K_RCTRL  Key = Key(input.K_RCTRL)
+	K_LALT   Key = Key(input.K_LALT)
+	K_RALT   Key = Key(input.K_RALT)
 
 	K_LWIN Key = Key(input.K_LWIN)
 	K_RWIN Key = Key(input.K_RWIN)

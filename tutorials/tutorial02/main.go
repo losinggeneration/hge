@@ -112,7 +112,7 @@ var fps int
 func RenderFunc() bool {
 	if fps != h.Timer_GetFPS() {
 		fps = h.Timer_GetFPS()
-		fmt.Println(fps)
+		fmt.Println("FPS:", fps)
 	}
 	// Begin rendering quads.
 	// This function must be called

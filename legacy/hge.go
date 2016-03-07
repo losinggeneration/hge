@@ -27,7 +27,7 @@ type (
 
 type StateFunc hge.StateFunc
 
-type Hwnd hge.Hwnd
+type Hwnd gfx.Hwnd
 
 type Type input.Type     // A HGE Input Event type constants
 type Key input.Key       // A HGE Virtual-key code
@@ -128,7 +128,7 @@ func (h *HGE) System_SetState(a ...interface{}) {
 		case HwndState:
 			switch a[1].(type) {
 			case *Hwnd:
-				h.h.SetState(hge.HwndState(a[0].(HwndState)), (*hge.Hwnd)(a[1].(*Hwnd)))
+				h.h.SetState(hge.HwndState(a[0].(HwndState)), (*gfx.Hwnd)(a[1].(*Hwnd)))
 			default:
 				h.h.SetState(hge.HwndState(a[0].(HwndState)), nil)
 			}
