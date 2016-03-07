@@ -5,15 +5,19 @@ package hge
 import (
 	"runtime"
 
+	"github.com/losinggeneration/hge/gfx"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-type Hwnd sdl.Window
+const (
+	WINDOWPOS_CENTERED = sdl.WINDOWPOS_CENTERED
+)
 
 func setTitle() {
-	hwnd := (*sdl.Window)(stateHwnds[HWND])
+	hwnd := stateHwnds[HWND]
 	if hwnd != nil {
-		hwnd.SetTitle(stateStrings[TITLE])
+		window := hwnd.Window
+		window.SetTitle(stateStrings[TITLE])
 	}
 }
 
@@ -71,8 +75,9 @@ func initNative(h *HGE) error {
 		return err
 	}
 
-	h.SetState((*Hwnd)(window))
-	stateHwnds[HWND] = (*Hwnd)(window)
+	hwnd := &gfx.Hwnd{Window: window}
+	h.setStateHwndPrivate(HWND, hwnd)
+	stateHwnds[HWND] = hwnd
 
 	if !stateBools[WINDOWED] {
 		// 		bMouseOver = true;

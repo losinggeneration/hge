@@ -6,7 +6,6 @@ import (
 
 	"github.com/losinggeneration/hge/gfx"
 	"github.com/losinggeneration/hge/input"
-	"github.com/veandco/go-sdl2/sdl"
 )
 
 //////// Bool states
@@ -44,7 +43,7 @@ func setupShowSplash(h *HGE) error {
 
 //////// Hwnd states
 func setupHwnd(h *HGE) error {
-	hwnd := &gfx.Hwnd{(*sdl.Window)(stateHwnds[HWND])}
+	hwnd := stateHwnds[HWND]
 
 	gfx.SetHwnd(hwnd)
 	input.SetHwnd(hwnd)

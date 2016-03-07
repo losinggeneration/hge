@@ -1,6 +1,6 @@
 package hge
 
-import "github.com/veandco/go-sdl2/sdl"
+import "github.com/losinggeneration/hge/gfx"
 
 // HGE System state constants
 const (
@@ -32,8 +32,8 @@ const (
 )
 
 const (
-	HWND       HwndState = iota // int		window handle: read only
-	HWNDPARENT HwndState = iota // int		parent win handle	(default: 0)
+	HWND       HwndState = iota // int window handle: read only
+	HWNDPARENT HwndState = iota // int parent win handle (default: 0)
 
 	hwndstate HwndState = iota
 )
@@ -82,7 +82,7 @@ type StateFunc func() bool
 var (
 	stateBools   = new([boolstate]bool)
 	stateFuncs   = new([funcstate]StateFunc)
-	stateHwnds   = new([hwndstate]*Hwnd)
+	stateHwnds   = new([hwndstate]*gfx.Hwnd)
 	stateInts    = new([intstate]int)
 	stateStrings = new([stringstate]string)
 
@@ -170,8 +170,8 @@ func (h *HGE) SetState(a ...interface{}) error {
 
 		case HwndState:
 			switch a[1].(type) {
-			case *Hwnd:
-				return h.setStateHwnd(state, a[1].(*Hwnd))
+			case *gfx.Hwnd:
+				return h.setStateHwnd(state, a[1].(*gfx.Hwnd))
 			default:
 				return h.setStateHwnd(state, nil)
 			}
@@ -202,13 +202,13 @@ func (h *HGE) setStateFunc(state FuncState, value StateFunc) error {
 	return nil
 }
 
-func (h *HGE) setStateHwndPrivate(state HwndState, value *Hwnd) error {
+func (h *HGE) setStateHwndPrivate(state HwndState, value *gfx.Hwnd) error {
 	stateHwnds[state] = value
 
 	return setupHwnds[state](h)
 }
 
-func (h *HGE) setStateHwnd(state HwndState, value *Hwnd) error {
+func (h *HGE) setStateHwnd(state HwndState, value *gfx.Hwnd) error {
 	if state != HWNDPARENT {
 		h.Log("Invalid hwnd state")
 		return h.logError("Invald hwnd state: %d %s", state, value)
@@ -277,8 +277,8 @@ func (h *HGE) getStateFunc(state FuncState) StateFunc {
 	return stateFuncs[state]
 }
 
-func (h *HGE) getStateHwnd(state HwndState) Hwnd {
-	return Hwnd{}
+func (h *HGE) getStateHwnd(state HwndState) gfx.Hwnd {
+	return gfx.Hwnd{}
 }
 
 func (h *HGE) getStateInt(state IntState) int {
@@ -316,20 +316,20 @@ func (h *HGE) setDefaultStates() {
 	h.SetState(EXITFUNC, nil)       // func() bool exit function (default: nil)
 
 	// Hwnd States
-	h.setStateHwndPrivate(HWND, nil) // int		window handle: read only
-	h.SetState(HWNDPARENT, nil)      // int		parent win handle	(default: 0)
+	h.setStateHwndPrivate(HWND, nil) // int window handle: read only
+	h.SetState(HWNDPARENT, nil)      // int parent win handle (default: 0)
 
 	// Int states
-	h.SetState(SCREENWIDTH, 800)                // int screen width (default: 800)
-	h.SetState(SCREENHEIGHT, 600)               // int screen height (default: 600)
-	h.SetState(SCREENX, sdl.WINDOWPOS_CENTERED) // int screen x (default: centered)
-	h.SetState(SCREENY, sdl.WINDOWPOS_CENTERED) // int screen y (default: centered)
-	h.SetState(SCREENBPP, 32)                   // int screen bitdepth (default: 32) (desktop bpp in windowed mode)
-	h.SetState(SAMPLERATE, 44100)               // int sample rate (default: 44100)
-	h.SetState(FXVOLUME, 100)                   // int global fx volume (default: 100)
-	h.SetState(MUSVOLUME, 100)                  // int global music volume (default: 100)
-	h.SetState(STREAMVOLUME, 100)               // int stream music volume (default: 100)
-	h.SetState(FPS, FPS_UNLIMITED)              // int fixed fps (default: hge.FPS_UNLIMITED)
+	h.SetState(SCREENWIDTH, 800)            // int screen width (default: 800)
+	h.SetState(SCREENHEIGHT, 600)           // int screen height (default: 600)
+	h.SetState(SCREENX, WINDOWPOS_CENTERED) // int screen x (default: centered)
+	h.SetState(SCREENY, WINDOWPOS_CENTERED) // int screen y (default: centered)
+	h.SetState(SCREENBPP, 32)               // int screen bitdepth (default: 32) (desktop bpp in windowed mode)
+	h.SetState(SAMPLERATE, 44100)           // int sample rate (default: 44100)
+	h.SetState(FXVOLUME, 100)               // int global fx volume (default: 100)
+	h.SetState(MUSVOLUME, 100)              // int global music volume (default: 100)
+	h.SetState(STREAMVOLUME, 100)           // int stream music volume (default: 100)
+	h.SetState(FPS, FPS_UNLIMITED)          // int fixed fps (default: hge.FPS_UNLIMITED)
 	h.SetState(MINDELTATIME, 1000)
 	h.SetState(POWERSTATUS, 0)      // int battery life percent + status
 	h.SetState(ORIGSCREENWIDTH, 0)  // int original screen width (default: 800 ... not valid until hge.System_Initiate()!)
