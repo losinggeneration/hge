@@ -9,8 +9,9 @@ import (
 	"io"
 	"os"
 	"runtime"
+	"unsafe"
 
-	gl "github.com/chsc/gogl/gl21"
+	gl "github.com/go-gl/gl/v2.1/gl"
 )
 
 var (
@@ -23,7 +24,7 @@ func SetTextureFilter(filter bool) {
 
 type img struct {
 	bytes []byte
-	w, h  gl.Sizei
+	w, h  uint32
 }
 
 func decodeImage(r io.Reader) (*img, error) {
@@ -38,11 +39,11 @@ func decodeImage(r io.Reader) (*img, error) {
 	}
 
 	is := new(img)
-	is.w, is.h = gl.Sizei(i.Bounds().Dx()), gl.Sizei(i.Bounds().Dy())
+	is.w, is.h = uint32(i.Bounds().Dx()), uint32(i.Bounds().Dy())
 	// 4 is one byte for each R-G-B-A
 	is.bytes = make([]byte, is.w*is.h*4)
-	lw := is.w * 4                    // line width
-	d := gl.Sizei(len(is.bytes)) - lw // The bottom line
+	lw := is.w * 4                  // line width
+	d := uint32(len(is.bytes)) - lw // The bottom line
 
 	// Reverse the image lines
 	for s := 0; s < len(rgba.Pix); s += rgba.Stride {
@@ -53,13 +54,13 @@ func decodeImage(r io.Reader) (*img, error) {
 	return is, nil
 }
 
-func isPowerOfTwo(x gl.Sizei) bool {
+func isPowerOfTwo(x uint32) bool {
 	return ((x & (x - 1)) == 0)
 }
 
-func nextPowerOfTwo(x gl.Sizei) gl.Sizei {
+func nextPowerOfTwo(x uint32) uint32 {
 	x--
-	for i := uint(1); i < 32; i *= 2 {
+	for i := uint32(1); i < 32; i *= 2 {
 		x |= x >> i
 	}
 	return x + 1
@@ -67,13 +68,13 @@ func nextPowerOfTwo(x gl.Sizei) gl.Sizei {
 
 // HGE Handle type
 type Texture struct {
-	tex     gl.Uint
-	texType gl.Enum
-	w, h    gl.Sizei
+	tex     uint32
+	texType uint32
+	w, h    uint32
 }
 
 func NewTexture(width, height int) *Texture {
-	var t gl.Uint
+	var t uint32
 	gl.GenTextures(1, &t)
 	tex := Texture{tex: t, texType: gl.TEXTURE_2D}
 
@@ -111,11 +112,11 @@ func LoadTexture(filename string, a ...interface{}) (*Texture, error) {
 	// Textures are required to be a power of two unless there's
 	// GL_ARB_texture_non_power_of_two (an extention for 1.4 and in 2.0 core)
 	if isPowerOfTwo(b.w) && isPowerOfTwo(b.h) {
-		gl.TexImage2D(t.texType, 0, gl.RGBA, b.w, b.h, 0, gl.RGBA, gl.UNSIGNED_BYTE, gl.Pointer(&b.bytes[0]))
+		gl.TexImage2D(t.texType, 0, gl.RGBA, int32(b.w), int32(b.h), 0, gl.RGBA, gl.UNSIGNED_BYTE, unsafe.Pointer(&b.bytes[0]))
 	} else {
 		potw, poth := nextPowerOfTwo(b.w), nextPowerOfTwo(b.h)
-		gl.TexImage2D(t.texType, 0, gl.RGBA, potw, poth, 0, gl.RGBA, gl.UNSIGNED_BYTE, nil)
-		gl.TexSubImage2D(t.texType, 0, 0, 0, b.w, b.h, gl.RGBA, gl.UNSIGNED_BYTE, gl.Pointer(&b.bytes[0]))
+		gl.TexImage2D(t.texType, 0, gl.RGBA, int32(potw), int32(poth), 0, gl.RGBA, gl.UNSIGNED_BYTE, nil)
+		gl.TexSubImage2D(t.texType, 0, 0, 0, int32(b.w), int32(b.h), gl.RGBA, gl.UNSIGNED_BYTE, unsafe.Pointer(&b.bytes[0]))
 	}
 
 	// Unbind this texture now
@@ -132,7 +133,7 @@ func (t *Texture) bind() {
 }
 
 func default_texture_filter() {
-	var filter gl.Int
+	var filter int32
 	if texFilter {
 		filter = gl.LINEAR
 	} else {
@@ -144,7 +145,7 @@ func default_texture_filter() {
 }
 
 func tex_coord(v Vertex) {
-	gl.TexCoord2d(gl.Double(v.X), gl.Double(v.Y))
+	gl.TexCoord2d(float64(v.X), float64(v.Y))
 }
 
 func (t *Texture) Width(a ...interface{}) int {

@@ -1,22 +1,22 @@
 package gfx
 
-import gl "github.com/chsc/gogl/gl21"
+import gl "github.com/go-gl/gl/v2.1/gl"
 
 var (
-	width, height      gl.Sizei
+	width, height      int32
 	x, y               int
 	zBuffer            bool
 	curBlendMode       int = BLEND_DEFAULT
-	defaultTextureType gl.Enum
+	defaultTextureType uint32
 )
 
 func SetWidth(w int) {
-	width = gl.Sizei(w)
+	width = int32(w)
 	updateSize(int(width), int(height))
 }
 
 func SetHeight(h int) {
-	height = gl.Sizei(h)
+	height = int32(h)
 	updateSize(int(width), int(height))
 }
 
@@ -35,21 +35,7 @@ func SetZBuffer(b bool) {
 }
 
 func Initialize() error {
-	if err := gl.InitVersion10(); err != nil {
-		return err
-	}
-	if err := gl.InitVersion11(); err != nil {
-		return err
-	}
-	if err := gl.InitVersion12(); err != nil {
-		return err
-	}
-	if err := gl.InitVersion13(); err != nil {
-		return err
-	}
-	if err := gl.InitVersion14(); err != nil {
-		return err
-	}
+	gl.Init()
 
 	// For now, just TEXTURE_2D
 	defaultTextureType = gl.TEXTURE_2D
@@ -104,7 +90,7 @@ func Initialize() error {
 func setProjectionMatrix() {
 	gl.MatrixMode(gl.PROJECTION)
 	gl.LoadIdentity()
-	gl.Ortho(0, gl.Double(width), 0, gl.Double(height), 0.0, 1.0)
+	gl.Ortho(0, float64(width), 0, float64(height), 0.0, 1.0)
 }
 
 func BeginScene(a ...interface{}) bool {
@@ -129,7 +115,7 @@ func EndScene() {
 }
 
 func Clear(color Color) {
-	gl.ClearColor(gl.Float(color.R), gl.Float(color.G), gl.Float(color.B), gl.Float(color.A))
+	gl.ClearColor(float32(color.R), float32(color.G), float32(color.B), float32(color.A))
 }
 
 func setBlendMode(blend int) {
@@ -143,9 +129,9 @@ func setBlendMode(blend int) {
 
 	if (blend & BLEND_ZWRITE) != (curBlendMode & BLEND_ZWRITE) {
 		if blend&BLEND_ZWRITE == BLEND_ZWRITE {
-			gl.DepthMask(gl.TRUE)
+			gl.DepthMask(true)
 		} else {
-			gl.DepthMask(gl.FALSE)
+			gl.DepthMask(false)
 		}
 	}
 
@@ -191,9 +177,9 @@ func NewLine(x1, y1, x2, y2 float64, a ...interface{}) Line {
 
 func (l Line) Render() {
 	gl.Begin(gl.LINES)
-	gl.Color3ub(gl.Ubyte(l.Color.R), gl.Ubyte(l.Color.G), gl.Ubyte(l.Color.B))
-	gl.Vertex2d(gl.Double(l.X1), gl.Double(l.Y1))
-	gl.Vertex2d(gl.Double(l.X2), gl.Double(l.Y2))
+	gl.Color3ub(uint8(l.Color.R), uint8(l.Color.G), uint8(l.Color.B))
+	gl.Vertex2d(float64(l.X1), float64(l.Y1))
+	gl.Vertex2d(float64(l.X2), float64(l.Y2))
 	gl.End()
 }
 
@@ -201,8 +187,8 @@ func (t *Triple) Render() {
 }
 
 func (v *Vertex) Render() {
-	gl.Color4ub(gl.Ubyte(v.Color.R), gl.Ubyte(v.Color.G), gl.Ubyte(v.Color.B), gl.Ubyte(v.Color.A))
-	gl.Vertex2d(gl.Double(v.X), gl.Double(v.Y))
+	gl.Color4ub(uint8(v.Color.R), uint8(v.Color.G), uint8(v.Color.B), uint8(v.Color.A))
+	gl.Vertex2d(float64(v.X), float64(v.Y))
 }
 
 func (q *Quad) Render() {
