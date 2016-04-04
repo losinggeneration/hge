@@ -66,14 +66,6 @@ func Initialize() error {
 
 	default_texture_filter()
 
-	// !!! FIXME: this isn't what HGE's Direct3D code does, but the game I'm working with
-	// !!! FIXME:  forces clamping outside of HGE, so I just wedged it in here.
-	// Apple says texture rectangle on ATI X1000 chips only supports CLAMP_TO_EDGE.
-	// Texture rectangle only supports CLAMP* wrap modes anyhow.
-	// gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-	// gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-	// gl.TexParameteri(pOpenGLDevice->TextureTarget, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
-
 	gl.Scissor(0, 0, width, height)
 	gl.Viewport(0, 0, width, height)
 
@@ -184,6 +176,23 @@ func (l Line) Render() {
 }
 
 func (t *Triple) Render() {
+	if t.Texture != nil {
+		t.Texture.bind()
+		default_texture_filter()
+	}
+	setBlendMode(t.Blend)
+
+	gl.Begin(gl.TRIANGLES)
+	for _, v := range t.V {
+		if t.Texture != nil {
+			// The Y axis has to be inverted for OpenGL, we have the top left
+			// corner (0,0) and it's the bottom left in OpenGL
+			tex_coord(Vertex{X: v.TX, Y: 1 - v.TY})
+		}
+
+		v.Render()
+	}
+	gl.End()
 }
 
 func (v *Vertex) Render() {
