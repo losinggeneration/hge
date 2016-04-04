@@ -6,64 +6,84 @@ import (
 )
 
 func TestReset(te *testing.T) {
-	Reset()
+	t := NewTimer()
+	t.Reset()
 
-	if !t.s.Equal(t.l) {
+	if !t.start.Equal(t.last) {
 		te.Error("Expected start time and last update time to be equal after reset")
 	}
 
-	last := t
+	last := *t
 
 	time.Sleep(5 * time.Microsecond)
 
-	Reset()
-	if last.s.Equal(t.s) {
+	t.Reset()
+	if last.start.Equal(t.start) {
 		te.Error("Did not expect start times to be equal after Reset")
 	}
 
-	if last.l.Equal(t.l) {
+	if last.last.Equal(t.last) {
 		te.Error("Did not expect last update times to be equal after Reset")
 	}
 }
 
 func TestUpdate(te *testing.T) {
-	Reset()
-	start := t.s
-	last := t.l
+	t := NewTimer()
+	t.Reset()
+	start := t.start
+	last := t.last
+	now := t.now
 
 	time.Sleep(5 * time.Millisecond)
-	Update()
+	t.Update()
 
-	if !start.Equal(t.s) {
+	if !start.Equal(t.start) {
 		te.Error("Did not expect start time to change after call to Update")
 	}
 
-	if last.Equal(t.l) {
-		te.Error("Expected last update time to change after call to Update")
+	if now.Equal(t.now) {
+		te.Error("Did not expected now update time to change after call to Update")
 	}
 
-	if start.Equal(t.l) {
-		te.Error("Did not expect start & last update time to be equal after call to Update")
+	if !last.Equal(t.last) {
+		te.Error("Did not expected last update time to change after call to Update")
+	}
+
+	if start.Equal(t.now) {
+		te.Error("Did not expect start & now update time to be equal after call to Update")
+	}
+
+	if !start.Equal(t.last) {
+		te.Error("Expect start & last update time to be equal after first call to Update")
 	}
 
 	if t.frames != 1 {
 		te.Error("Did not expect frames to be 0 after call to Update")
 	}
 
-	last = t.l
+	now = t.now
+	last = t.last
 
 	time.Sleep(5 * time.Millisecond)
-	Update()
+	t.Update()
 
-	if !start.Equal(t.s) {
+	if !start.Equal(t.start) {
 		te.Error("Did not expect start time to change after call to Update")
 	}
 
-	if last.Equal(t.l) {
+	if now.Equal(t.now) {
+		te.Error("Expected now update time to change after call to Update")
+	}
+
+	if last.Equal(t.last) {
 		te.Error("Expected last update time to change after call to Update")
 	}
 
-	if start.Equal(t.l) {
+	if start.Equal(t.now) {
+		te.Error("Did not expect start & now update time to be equal after call to Update")
+	}
+
+	if start.Equal(t.last) {
 		te.Error("Did not expect start & last update time to be equal after call to Update")
 	}
 
@@ -73,48 +93,55 @@ func TestUpdate(te *testing.T) {
 }
 
 func TestTime(t *testing.T) {
-	Reset()
+	timer := NewTimer()
+	timer.Reset()
 
 	time.Sleep(5 * time.Millisecond)
-	if now := Time(); now <= .001 {
+	if now := timer.Time(); now <= .001 {
 		t.Error("Not eneough time has passed when Time was called")
 	}
 
 	time.Sleep(5 * time.Millisecond)
-	if now := Time(); now <= .001 {
+	if now := timer.Time(); now <= .001 {
 		t.Error("Not eneough time has passed when Time was called")
 	}
 }
 
 func TestDelta(t *testing.T) {
-	Reset()
+	timer := NewTimer()
+	timer.Reset()
 
 	time.Sleep(5 * time.Millisecond)
-	if now := Delta(); now <= .001 {
+	timer.Update()
+
+	if now := timer.Delta(); now <= .001 {
 		t.Error("Not eneough time has passed when Delta was called")
 	}
 
 	time.Sleep(5 * time.Millisecond)
-	if now := Delta(); now <= .001 {
+	timer.Update()
+
+	if now := timer.Delta(); now <= .001 {
 		t.Error("Not eneough time has passed when Delta was called")
 	}
 }
 
 func TestFPS(te *testing.T) {
-	Reset()
+	timer := NewTimer()
+	timer.Reset()
 	expected := 10
 
-	if f := FPS(); f != 0 {
+	if f := timer.FPS(); f != 0 {
 		te.Errorf("Expected FPS to return 0 but got %v", f)
 	}
 
 	for i := 0; i < expected; i++ {
-		Update()
+		timer.Update()
 	}
 
 	time.Sleep(1015 * time.Millisecond)
 
-	if f := FPS(); f != expected {
+	if f := timer.FPS(); f != expected {
 		te.Errorf("Expected FPS to return %v but got %v", expected, f)
 	}
 }
