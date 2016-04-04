@@ -40,7 +40,7 @@ func boom() {
 }
 
 func FrameFunc() bool {
-	dt := h.Timer_GetDelta() * 1000
+	dt := h.Timer_GetDelta() * 20
 
 	// Process keys
 	if h.Input_GetKeyState(hge.K_ESCAPE) {
@@ -53,10 +53,10 @@ func FrameFunc() bool {
 		dx += speed * dt
 	}
 	if h.Input_GetKeyState(hge.K_UP) {
-		dy -= speed * dt
+		dy += speed * dt
 	}
 	if h.Input_GetKeyState(hge.K_DOWN) {
-		dy += speed * dt
+		dy -= speed * dt
 		//fmt.Println(dy, speed, dt)
 	}
 
