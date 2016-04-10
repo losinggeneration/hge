@@ -30,7 +30,7 @@ var (
 
 const (
 	speed    = 90.0
-	friction = 0.98
+	friction = 0.88
 )
 
 func boom() {
@@ -40,7 +40,7 @@ func boom() {
 }
 
 func FrameFunc() bool {
-	dt := h.Timer_GetDelta() * 20
+	dt := h.Timer_GetDelta() * 5
 
 	// Process keys
 	if h.Input_GetKeyState(hge.K_ESCAPE) {
@@ -87,18 +87,12 @@ func FrameFunc() bool {
 	}
 
 	// Set up quad's screen coordinates
-	quad.V[0].X = float32(x - 16)
-	quad.V[0].Y = float32(y - 16)
-	quad.V[1].X = float32(x + 16)
-	quad.V[1].Y = float32(y - 16)
-	quad.V[2].X = float32(x + 16)
-	quad.V[2].Y = float32(y + 16)
-	quad.V[3].X = float32(x - 16)
-	quad.V[3].Y = float32(y + 16)
-	line.X1 = x + 16
-	line.X2 = x - 16
-	line.Y1 = y + 16
-	line.Y2 = y - 16
+	quad.V[0].X, quad.V[0].Y = float32(x-16), float32(y-16)
+	quad.V[1].X, quad.V[1].Y = float32(x+16), float32(y-16)
+	quad.V[2].X, quad.V[2].Y = float32(x+16), float32(y+16)
+	quad.V[3].X, quad.V[3].Y = float32(x-16), float32(y+16)
+	line.X1, line.X2 = x+16, x-16
+	line.Y1, line.Y2 = y+16, y-16
 
 	// Continue execution
 	return false
