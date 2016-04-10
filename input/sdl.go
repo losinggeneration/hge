@@ -44,51 +44,57 @@ func SetHwnd(h *gfx.Hwnd) {
 // Called automatically by hge.Run()
 func Process() {
 	e := sdl.PollEvent()
-	// 	for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
-	switch e := e.(type) {
-	case *sdl.KeyDownEvent:
-		keySym = Key(e.Keysym.Sym)
-		keys[keySym] = 1 == e.State
+	for e != nil {
+		switch e := e.(type) {
+		case *sdl.KeyDownEvent:
+			keySym = Key(e.Keysym.Sym)
+			keys[keySym] = 1 == e.State
 
-		event.Type = Type(e.Type)
-		event.Key = Key(keySym)
-		event.Flags = Flag(e.Keysym.Mod)
-		event.Chr = uint32(e.Keysym.Scancode)
+			event.Type = Type(e.Type)
+			event.Key = Key(keySym)
+			event.Flags = Flag(e.Keysym.Mod)
+			event.Chr = uint32(e.Keysym.Scancode)
 
-		if event.Key == lastEvent.Key {
-			event.Flags |= INP_REPEAT
+			if event.Key == lastEvent.Key {
+				event.Flags |= INP_REPEAT
+			}
+
+		case *sdl.KeyUpEvent:
+			keySym = Key(e.Keysym.Sym)
+			keys[keySym] = 1 == e.State
+
+		case *sdl.MouseMotionEvent:
+			event.Type = Type(e.Type)
+			event.X = float64(e.X)
+			event.Y = float64(e.Y)
+
+		case *sdl.MouseButtonEvent:
+			event.Type = Type(e.Type)
+			event.X = float64(e.X)
+			event.Y = float64(e.Y)
+			if e.Button == sdl.BUTTON_LEFT {
+				mb[0] = e.State == 1
+				event.Button = Button(e.Button)
+			} else if e.Button == sdl.BUTTON_MIDDLE {
+				mb[1] = e.State == 1
+				event.Button = Button(e.Button)
+			} else if e.Button == sdl.BUTTON_RIGHT {
+				mb[2] = e.State == 1
+				event.Button = Button(e.Button)
+			}
+		case *sdl.MouseWheelEvent:
+			event.Type = Type(e.Type)
+			event.Wheel = int(e.Y)
 		}
 
-	case *sdl.MouseMotionEvent:
-		event.Type = Type(e.Type)
-		event.X = float64(e.X)
-		event.Y = float64(e.Y)
-
-	case *sdl.MouseButtonEvent:
-		event.Type = Type(e.Type)
-		event.X = float64(e.X)
-		event.Y = float64(e.Y)
-		if e.Button == sdl.BUTTON_LEFT {
-			mb[0] = e.State == 1
-			event.Button = Button(e.Button)
-		} else if e.Button == sdl.BUTTON_MIDDLE {
-			mb[1] = e.State == 1
-			event.Button = Button(e.Button)
-		} else if e.Button == sdl.BUTTON_RIGHT {
-			mb[2] = e.State == 1
-			event.Button = Button(e.Button)
-		}
-	case *sdl.MouseWheelEvent:
-		event.Type = Type(e.Type)
-		event.Wheel = int(e.Y)
+		e = sdl.PollEvent()
 	}
-	// 	}
 }
 
 // Clear the event queue
 // Called automatically by hge.Run()
 func ClearQueue() {
-	keys = make(map[Key]bool)
+	//keys = make(map[Key]bool)
 	lastEvent = event
 	lastKeySym = keySym
 	event = InputEvent{cleared: true}
@@ -109,6 +115,7 @@ func UpdateMouse() {
 // Initialize the event structure
 // Called automatically in hge.Initialize()
 func Initialize() error {
+	keys = make(map[Key]bool)
 	ClearQueue()
 	return nil
 }
