@@ -4,65 +4,157 @@
 // but it's an option
 package sound
 
-import "fmt"
+import (
+	"log"
+	"runtime"
 
-func Initialize() error {
-	return fmt.Errorf("Sound Initialize not implemented")
+	mix "github.com/veandco/go-sdl2/sdl_mixer"
+)
+
+var (
+	channels    = mix.DEFAULT_CHANNELS
+	logger      *log.Logger
+	nextChannel = 0
+)
+
+func Initialize(log *log.Logger) error {
+	logger = log
+	err := mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, channels, mix.DEFAULT_CHUNKSIZE)
+	if err != nil {
+		return err
+	}
+
+	return mix.Init(mix.INIT_FLAC | mix.INIT_OGG | mix.INIT_MP3)
 }
 
 // HGE Handle type
 type Effect struct {
-	effect interface{}
+	chunk   *mix.Chunk
+	channel Channel
 }
 
-func NewEffect(filename string, a ...interface{}) *Effect {
-	return &Effect{}
+func NewEffect(filename string, a ...interface{}) (*Effect, error) {
+	e := Effect{}
+	if chunk, err := mix.LoadWAV(filename); err != nil {
+		return nil, err
+	} else {
+		e.chunk = chunk
+	}
+
+	runtime.SetFinalizer(&e, func(e *Effect) {
+		e.chunk.Free()
+	})
+
+	e.channel.channel = nextChannel % mix.AllocateChannels(-1)
+
+	return &e, nil
 }
 
 func (e *Effect) Free() {
+	if e.chunk != nil {
+		e.chunk.Free()
+	}
 }
 
 func (e *Effect) Play() Channel {
 	return e.PlayEx(100, 0, 1.0, false)
 }
 
+// volume = 100, pan = 0, pitch = 1.0, loop = false
 func (e *Effect) PlayEx(a ...interface{}) Channel {
-	return Channel{}
+	volume := 100
+	pan := 0
+	pitch := 1.0
+	loop := false
+
+	if len(a) > 0 {
+		volume = a[0].(int)
+	}
+	if len(a) > 1 {
+		pan = a[1].(int)
+	}
+	if len(a) > 2 {
+		pitch = a[2].(float64)
+	}
+	if len(a) > 3 {
+		loop = a[3].(bool)
+	}
+
+	looping := 0
+	if loop {
+		looping = -1
+	}
+
+	e.channel.SetVolume(volume)
+	e.channel.SetPanning(pan)
+	e.channel.SetPitch(pitch)
+
+	_, err := e.chunk.Play(e.channel.channel, looping)
+	if err != nil {
+		logger.Println(err)
+	}
+
+	return e.channel
 }
 
 // HGE Handle type
 type Channel struct {
-	channel interface{}
+	channel int
 }
 
 func (c Channel) SetPanning(pan int) {
+	left := uint8(127)
+	right := uint8(127)
+	if pan < 0 {
+		right = uint8(127 - 127*float64(pan*-1)/100)
+	}
+	if pan > 0 {
+		left = uint8(127 - 127*float64(pan)/100)
+	}
+
+	mix.SetPanning(c.channel, left, right)
 }
 
 func (c Channel) SetVolume(volume int) {
+	p := volume / 100
+	mix.Volume(c.channel, int(mix.MAX_VOLUME*p))
 }
 
 func (c Channel) SetPitch(pitch float64) {
+	mix.RegisterEffect(c.channel, func(channel int, stream []byte) {
+		for i, v := range stream {
+			if i%2 == 0 {
+				stream[i] = byte(float64(v) * pitch)
+			}
+		}
+	}, func(int) {})
 }
 
 func (c Channel) Pause() {
+	mix.Pause(c.channel)
 }
 
 func (c Channel) Resume() {
+	mix.Resume(c.channel)
 }
 
 func (c Channel) Stop() {
+	mix.HaltChannel(c.channel)
 }
 
 // Pause all sounds on all channels
 func PauseAll() {
+	mix.Pause(-1)
 }
 
 // Resume all sounds on all channels
 func ResumeAll() {
+	mix.Resume(-1)
 }
 
 // Stop all sounds on all channels
 func StopAll() {
+	mix.HaltChannel(-1)
 }
 
 func (c Channel) IsPlaying() bool {

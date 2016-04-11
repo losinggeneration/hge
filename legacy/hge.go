@@ -282,7 +282,11 @@ func (h *HGE) Timer_GetFPS() int {
 }
 
 func (h *HGE) Effect_Load(filename string, a ...interface{}) *sound.Effect {
-	return sound.NewEffect(filename, a...)
+	e, err := sound.NewEffect(filename, a...)
+	if err != nil {
+		h.System_Log("Effect_load - Error: %v", err)
+	}
+	return e
 }
 
 func (h *HGE) Effect_Free(eff *sound.Effect) {

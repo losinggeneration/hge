@@ -129,10 +129,10 @@ func (h *HGE) Initialize() error {
 	}
 
 	// later on this should be a fatal error
-	if err := sound.Initialize(); err != nil {
+	if err := sound.Initialize(h.log.Logger); err != nil {
 		h.postError(err)
-		// h.Shutdown()
-		// return err
+		h.Shutdown()
+		return err
 	}
 
 	h.Log("Init done.\n")

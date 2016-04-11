@@ -153,7 +153,7 @@ func main() {
 		// Load sound and texture
 		snd = h.Effect_Load("menu.ogg")
 		quad.Texture = h.Texture_Load("particles.png")
-		if /*snd == nil ||*/ quad.Texture == nil {
+		if snd == nil || quad.Texture == nil {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
 			fmt.Println("Error: Can't load menu.ogg or particles.png")
