@@ -96,9 +96,8 @@ func main() {
 			return
 		}
 
-		snd := sound.NewEffect("menu.ogg")
-
-		if snd == nil {
+		snd, err := sound.NewEffect("menu.ogg")
+		if err != nil {
 			fmt.Println("Error loading menu.ogg")
 			return
 		}

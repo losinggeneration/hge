@@ -144,9 +144,10 @@ func main() {
 
 	if err := h.Initiate(); err == nil {
 		defer h.Shutdown()
-		snd = sound.NewEffect("menu.ogg")
+		var serr error
+		snd, serr = sound.NewEffect("menu.ogg")
 		tex, err = gfx.LoadTexture("particles.png")
-		if snd == nil || tex == nil || err != nil {
+		if serr == nil || tex == nil || err != nil {
 			// If one of the data files is not found, display
 			// an error message and shutdown.
 			fmt.Printf("Error: Can't load one of the following files:\nmenu.ogg, particles.png, font1.fnt, font1.png, trail.psi\n")
