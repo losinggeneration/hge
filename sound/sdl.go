@@ -6,6 +6,7 @@ package sound
 
 import (
 	"log"
+	"math"
 	"runtime"
 
 	mix "github.com/veandco/go-sdl2/sdl_mixer"
@@ -102,7 +103,13 @@ type Channel struct {
 	channel int
 }
 
+func clip(i, min, max int) int {
+	return int(math.Max(float64(min), math.Min(float64(i), float64(max))))
+}
+
 func (c Channel) SetPanning(pan int) {
+	pan = clip(pan, -100, 100)
+
 	left := uint8(127)
 	right := uint8(127)
 	if pan < 0 {
@@ -116,7 +123,7 @@ func (c Channel) SetPanning(pan int) {
 }
 
 func (c Channel) SetVolume(volume int) {
-	p := volume / 100
+	p := clip(volume, 0, 100) / 100
 	mix.Volume(c.channel, int(mix.MAX_VOLUME*p))
 }
 
