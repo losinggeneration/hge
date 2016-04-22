@@ -1,3 +1,5 @@
+// +build sdl
+
 // For now we only build SDL, if we need to in the future we can use build tags
 // such as: +build sdl
 // I doubt there will ever bee the need for anything like: +build sdl,openal
@@ -34,7 +36,7 @@ type Effect struct {
 	channel Channel
 }
 
-func NewEffect(filename string, a ...interface{}) (*Effect, error) {
+func NewEffect(filename string) (*Effect, error) {
 	e := Effect{}
 	if chunk, err := mix.LoadWAV(filename); err != nil {
 		return nil, err
