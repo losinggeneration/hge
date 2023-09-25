@@ -12,9 +12,7 @@ type Hwnd struct {
 	*sdl.Window
 }
 
-var (
-	hwnd *Hwnd
-)
+var hwnd *Hwnd
 
 // States
 func SetHwnd(h *Hwnd) {
@@ -23,18 +21,18 @@ func SetHwnd(h *Hwnd) {
 
 func updateSize(width, height int) {
 	if hwnd != nil {
-		hwnd.SetSize(width, height)
+		hwnd.SetSize(int32(width), int32(height))
 	}
 }
 
 func updatePosition(x, y int) {
 	if hwnd != nil {
-		hwnd.SetPosition(x, y)
+		hwnd.SetPosition(int32(x), int32(y))
 	}
 }
 
 func swapBuffers() {
 	if hwnd != nil {
-		sdl.GL_SwapWindow(hwnd.Window)
+		hwnd.GLSwap()
 	}
 }
