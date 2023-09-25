@@ -11,7 +11,7 @@ import (
 	"math"
 	"runtime"
 
-	mix "github.com/veandco/go-sdl2/sdl_mixer"
+	"github.com/veandco/go-sdl2/mix"
 )
 
 var (
