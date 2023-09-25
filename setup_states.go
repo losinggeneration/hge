@@ -8,7 +8,8 @@ import (
 	"github.com/losinggeneration/hge/input"
 )
 
-//////// Bool states
+// Bool states
+
 func setupWindowed(h *HGE) error {
 	return nil
 }
@@ -39,9 +40,10 @@ func setupShowSplash(h *HGE) error {
 	return nil
 }
 
-//////// Func states: no setup needed
+// Func states: no setup needed
 
-//////// Hwnd states
+// Hwnd states
+
 func setupHwnd(h *HGE) error {
 	hwnd := stateHwnds[HWND]
 
@@ -55,7 +57,7 @@ func setupHwndParent(h *HGE) error {
 	return nil
 }
 
-//////// Int states
+// Int states
 
 func setupScreenWidth(h *HGE) error {
 	gfx.SetWidth(stateInts[SCREENWIDTH])
@@ -78,6 +80,7 @@ func setupScreenY(h *HGE) error {
 }
 
 func setupScreenBPP(h *HGE) error {
+	gfx.SetBPP(stateInts[SCREENBPP])
 	return nil
 }
 
@@ -121,7 +124,7 @@ func setupPowerStatus(h *HGE) error {
 	return nil
 }
 
-//////// String State setups
+// String State setups
 
 func setupIcon(h *HGE) error {
 	return nil
