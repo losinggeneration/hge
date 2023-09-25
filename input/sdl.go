@@ -3,14 +3,17 @@
 package input
 
 import (
-	"github.com/losinggeneration/hge/gfx"
 	"github.com/veandco/go-sdl2/sdl"
+
+	"github.com/losinggeneration/hge/gfx"
 )
 
-type Type int        // A HGE Input Event type constants
-type Key int         // A HGE Virtual-key code
-type Flag sdl.Keymod // HGE Input Event flags (multiple ones may be OR'd)
-type Button int      // A HGE Input Mouse button
+type (
+	Type   int        // A HGE Input Event type constants
+	Key    int        // A HGE Virtual-key code
+	Flag   sdl.Keymod // HGE Input Event flags (multiple ones may be OR'd)
+	Button int        // A HGE Input Mouse button
+)
 
 // HGE Input Event structure
 type InputEvent struct {
@@ -40,52 +43,56 @@ func SetHwnd(h *gfx.Hwnd) {
 	hwnd = h
 }
 
+func processEvent(e sdl.Event) {
+	switch e := e.(type) {
+	case *sdl.KeyboardEvent:
+		keySym = Key(e.Keysym.Sym)
+		keys[keySym] = 1 == e.State
+		if e.State == sdl.RELEASED {
+			return
+		}
+
+		event.Type = Type(e.Type)
+		event.Key = Key(keySym)
+		event.Flags = Flag(e.Keysym.Mod)
+		event.Chr = uint32(e.Keysym.Scancode)
+
+		if event.Key == lastEvent.Key {
+			event.Flags |= INP_REPEAT
+		}
+
+	case *sdl.MouseMotionEvent:
+		event.Type = Type(e.Type)
+		event.X = float64(e.X)
+		event.Y = float64(e.Y)
+
+	case *sdl.MouseButtonEvent:
+		event.Type = Type(e.Type)
+		event.X = float64(e.X)
+		event.Y = float64(e.Y)
+		if e.Button == sdl.BUTTON_LEFT {
+			mb[0] = e.State == 1
+			event.Button = Button(e.Button)
+		} else if e.Button == sdl.BUTTON_MIDDLE {
+			mb[1] = e.State == 1
+			event.Button = Button(e.Button)
+		} else if e.Button == sdl.BUTTON_RIGHT {
+			mb[2] = e.State == 1
+			event.Button = Button(e.Button)
+		}
+
+	case *sdl.MouseWheelEvent:
+		event.Type = Type(e.Type)
+		event.Wheel = int(e.Y)
+	}
+}
+
 // Process events
 // Called automatically by hge.Run()
 func Process() {
 	e := sdl.PollEvent()
 	for e != nil {
-		switch e := e.(type) {
-		case *sdl.KeyDownEvent:
-			keySym = Key(e.Keysym.Sym)
-			keys[keySym] = 1 == e.State
-
-			event.Type = Type(e.Type)
-			event.Key = Key(keySym)
-			event.Flags = Flag(e.Keysym.Mod)
-			event.Chr = uint32(e.Keysym.Scancode)
-
-			if event.Key == lastEvent.Key {
-				event.Flags |= INP_REPEAT
-			}
-
-		case *sdl.KeyUpEvent:
-			keySym = Key(e.Keysym.Sym)
-			keys[keySym] = 1 == e.State
-
-		case *sdl.MouseMotionEvent:
-			event.Type = Type(e.Type)
-			event.X = float64(e.X)
-			event.Y = float64(e.Y)
-
-		case *sdl.MouseButtonEvent:
-			event.Type = Type(e.Type)
-			event.X = float64(e.X)
-			event.Y = float64(e.Y)
-			if e.Button == sdl.BUTTON_LEFT {
-				mb[0] = e.State == 1
-				event.Button = Button(e.Button)
-			} else if e.Button == sdl.BUTTON_MIDDLE {
-				mb[1] = e.State == 1
-				event.Button = Button(e.Button)
-			} else if e.Button == sdl.BUTTON_RIGHT {
-				mb[2] = e.State == 1
-				event.Button = Button(e.Button)
-			}
-		case *sdl.MouseWheelEvent:
-			event.Type = Type(e.Type)
-			event.Wheel = int(e.Y)
-		}
+		processEvent(e)
 
 		e = sdl.PollEvent()
 	}
@@ -94,7 +101,7 @@ func Process() {
 // Clear the event queue
 // Called automatically by hge.Run()
 func ClearQueue() {
-	//keys = make(map[Key]bool)
+	// keys = make(map[Key]bool)
 	lastEvent = event
 	lastKeySym = keySym
 	event = InputEvent{cleared: true}
@@ -132,11 +139,11 @@ func (m *Mouse) Pos() (x, y float64) {
 }
 
 // Set the mouse position to (x,y)
-func (m Mouse) SetPos(x, y float64) {
+func (m *Mouse) SetPos(x, y float64) {
 	m.X, m.Y = x, y
 	mm.X, mm.Y = x, y
 	// There's WrapMouseInWindow, but it's a method off of Window
-	hwnd.WarpMouseInWindow(int(x), int(y))
+	hwnd.WarpMouseInWindow(int32(x), int32(y))
 }
 
 // Returns the movement if there's been any mouse movement since the last time
@@ -166,13 +173,13 @@ func (b Button) Up() bool {
 // Returns true if there's been a key pressed down since the last time the
 // events were updated
 func (k Key) Down() bool {
-	return keys[k] == true
+	return keys[k]
 }
 
 // Returns true if there's been a key pressed down since the last time the
 // events were updated
 func (k Key) Up() bool {
-	return keys[k] == false
+	return keys[k]
 }
 
 // The current state of the button
