@@ -20,7 +20,6 @@ var (
 	h *hge.HGE
 
 	quad gfx.Quad
-	line gfx.Line
 
 	snd *sound.Effect
 
@@ -30,7 +29,7 @@ var (
 
 const (
 	speed    = 90.0
-	friction = 0.88
+	friction = 0.98
 )
 
 func boom() {
@@ -47,17 +46,17 @@ func FrameFunc() bool {
 		return true
 	}
 	if h.Input_GetKeyState(hge.K_LEFT) {
-		dx -= speed * dt
+		dx -= float64(speed * dt)
 	}
 	if h.Input_GetKeyState(hge.K_RIGHT) {
 		dx += speed * dt
 	}
 	if h.Input_GetKeyState(hge.K_UP) {
-		dy += speed * dt
+		dy -= speed * dt
 	}
 	if h.Input_GetKeyState(hge.K_DOWN) {
-		dy -= speed * dt
-		//fmt.Println(dy, speed, dt)
+		dy += speed * dt
+		// fmt.Println(dy, speed, dt)
 	}
 
 	// Do some movement calculations and collision detection
@@ -91,8 +90,6 @@ func FrameFunc() bool {
 	quad.V[1].X, quad.V[1].Y = float32(x+16), float32(y-16)
 	quad.V[2].X, quad.V[2].Y = float32(x+16), float32(y+16)
 	quad.V[3].X, quad.V[3].Y = float32(x-16), float32(y+16)
-	line.X1, line.X2 = x+16, x-16
-	line.Y1, line.Y2 = y+16, y-16
 
 	// Continue execution
 	return false
@@ -119,9 +116,6 @@ func RenderFunc() bool {
 	// Render quads here. This time just
 	// one of them will serve our needs.
 	h.Gfx_RenderQuad(&quad)
-
-	line.Render()
-	h.Gfx_RenderLine(100, 100, 150, 150, uint32(0xFFFFFFFF))
 
 	// End rendering and update the screen
 	h.Gfx_EndScene()
@@ -184,15 +178,9 @@ func main() {
 		quad.V[3].TX = 96.0 / 128.0
 		quad.V[3].TY = 96.0 / 128.0
 
-		line.X1 = 300
-		line.Y1 = 300
-		line.X2 = 400
-		line.Y2 = 300
-		line.Color = gfx.ARGBToColor(0xFFFFA000)
-
 		// Let's rock now!
 		h.System_Start()
 	} else {
-		fmt.Println("Error: %s\n", h.System_GetErrorMessage())
+		fmt.Printf("Error: %s\n", h.System_GetErrorMessage())
 	}
 }
