@@ -15,9 +15,9 @@ const (
 
 // HGE Primitive type constants
 const (
-	PRIM_LINES   = iota
-	PRIM_TRIPLES = iota
-	PRIM_QUADS   = iota
+	PrimLines   = iota
+	PrimTriples = iota
+	PrimQuads   = iota
 )
 
 type Color struct {
