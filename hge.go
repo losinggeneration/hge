@@ -204,7 +204,7 @@ func (h *HGE) Run() error {
 		}
 
 		if vsync || (!active && !stateBools[DONTSUSPEND]) {
-			time.Sleep(1 * time.Millisecond)
+			timer.Sleep(1 * time.Millisecond)
 		}
 	}
 
