@@ -1,7 +1,8 @@
 package legacy
 
-import "fmt"
 import (
+	"fmt"
+
 	"github.com/losinggeneration/hge"
 	"github.com/losinggeneration/hge/gfx"
 	"github.com/losinggeneration/hge/ini"
@@ -29,10 +30,12 @@ type StateFunc hge.StateFunc
 
 type Hwnd gfx.Hwnd
 
-type Type input.Type     // A HGE Input Event type constants
-type Key input.Key       // A HGE Virtual-key code
-type Flag input.Flag     // HGE Input Event flags (multiple ones may be OR'd)
-type Button input.Button // A HGE Input Mouse button
+type (
+	Type   input.Type   // A HGE Input Event type constants
+	Key    input.Key    // A HGE Virtual-key code
+	Flag   input.Flag   // HGE Input Event flags (multiple ones may be OR'd)
+	Button input.Button // A HGE Input Mouse button
+)
 
 // HGE Input Event structure
 type InputEvent struct {
@@ -60,7 +63,7 @@ func (h *HGE) System_Initiate() bool {
 	return h.h.Initiate() == nil
 }
 
-//  Restores video mode and frees allocated resources.
+// Restores video mode and frees allocated resources.
 func (h *HGE) System_Shutdown() {
 	h.h.Shutdown()
 }
@@ -70,7 +73,7 @@ func (h *HGE) System_Start() bool {
 	return h.h.Start() == nil
 }
 
-//  Returns last occurred HGE error description.
+// Returns last occurred HGE error description.
 func (h *HGE) System_GetErrorMessage() string {
 	return h.h.GetErrorMessage()
 }
@@ -89,7 +92,7 @@ func (h *HGE) System_Launch(url string) bool {
 	return h.h.Launch(url)
 }
 
-//  Saves current screen snapshot into a file.
+// Saves current screen snapshot into a file.
 func (h *HGE) System_Snapshot(a ...interface{}) {
 	h.h.Snapshot(a...)
 }
@@ -426,7 +429,7 @@ func (h *HGE) Input_GetMousePos() (x, y float64) {
 }
 
 func (h *HGE) Input_SetMousePos(x, y float64) {
-	input.Mouse{}.SetPos(x, y)
+	(&input.Mouse{}).SetPos(x, y)
 }
 
 func (h *HGE) Input_GetMouseWheel() int {
