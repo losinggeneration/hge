@@ -3,10 +3,12 @@
 package hge
 
 import (
+	"errors"
 	"runtime"
 
-	"github.com/losinggeneration/hge/gfx"
 	"github.com/veandco/go-sdl2/sdl"
+
+	"github.com/losinggeneration/hge/gfx"
 )
 
 const (
@@ -40,16 +42,20 @@ func initNative(h *HGE) error {
 		zbuffer = 16
 	}
 
-	sdl.GL_SetAttribute(sdl.GL_RED_SIZE, bpp)
-	sdl.GL_SetAttribute(sdl.GL_GREEN_SIZE, bpp)
-	sdl.GL_SetAttribute(sdl.GL_BLUE_SIZE, bpp)
-	sdl.GL_SetAttribute(sdl.GL_ALPHA_SIZE, bpp)
-	sdl.GL_SetAttribute(sdl.GL_DEPTH_SIZE, zbuffer)
-	sdl.GL_SetAttribute(sdl.GL_ACCELERATED_VISUAL, 1)
-	sdl.GL_SetAttribute(sdl.GL_DOUBLEBUFFER, 1)
+	err := errors.Join(sdl.GLSetAttribute(sdl.GL_RED_SIZE, bpp),
+		sdl.GLSetAttribute(sdl.GL_GREEN_SIZE, bpp),
+		sdl.GLSetAttribute(sdl.GL_BLUE_SIZE, bpp),
+		sdl.GLSetAttribute(sdl.GL_ALPHA_SIZE, bpp),
+		sdl.GLSetAttribute(sdl.GL_DEPTH_SIZE, zbuffer),
+		sdl.GLSetAttribute(sdl.GL_ACCELERATED_VISUAL, 1),
+		sdl.GLSetAttribute(sdl.GL_DOUBLEBUFFER, 1),
+	)
+	if err != nil {
+		sdl.Quit()
+		return err
+	}
 
-	var flags uint32
-	flags |= uint32(sdl.WINDOW_OPENGL)
+	flags := uint32(sdl.WINDOW_OPENGL)
 	if !stateBools[WINDOWED] {
 		flags |= sdl.WINDOW_FULLSCREEN
 	}
@@ -58,25 +64,28 @@ func initNative(h *HGE) error {
 	x, y := stateInts[SCREENX], stateInts[SCREENY]
 	width, height := stateInts[SCREENWIDTH], stateInts[SCREENHEIGHT]
 
-	window, err := sdl.CreateWindow(title, x, y, width, height, flags)
+	window, err := sdl.CreateWindow(title, int32(x), int32(y), int32(width), int32(height), flags)
 	if err != nil {
 		sdl.Quit()
 		return err
 	}
 
-	context, err := sdl.GL_CreateContext(window)
+	context, err := window.GLCreateContext()
 	if err != nil {
 		sdl.Quit()
 		return err
 	}
 
-	if err := sdl.GL_MakeCurrent(window, context); err != nil {
+	if err = window.GLMakeCurrent(context); err != nil {
 		sdl.Quit()
 		return err
 	}
 
 	hwnd := &gfx.Hwnd{Window: window}
-	h.setStateHwndPrivate(HWND, hwnd)
+	if err = h.setStateHwndPrivate(HWND, hwnd); err != nil {
+		sdl.Quit()
+		return err
+	}
 	stateHwnds[HWND] = hwnd
 
 	if !stateBools[WINDOWED] {
@@ -91,7 +100,10 @@ func initNative(h *HGE) error {
 		cursor = sdl.DISABLE
 	}
 
-	sdl.ShowCursor(cursor)
+	if _, err = sdl.ShowCursor(cursor); err != nil {
+		sdl.Quit()
+		return err
+	}
 
 	return nil
 }
