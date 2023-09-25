@@ -1,13 +1,31 @@
 package gfx
 
-import gl "github.com/go-gl/gl/v2.1/gl"
+import (
+	"fmt"
+	"strings"
+
+	gl "github.com/go-gl/gl/v2.1/gl"
+)
+
+const vertexBufferSize = 4000
 
 var (
 	width, height      int32
 	x, y               int
 	zBuffer            bool
-	curBlendMode       int = BLEND_DEFAULT
-	defaultTextureType uint32
+	bpp                int8
+	curBlendMode       int    = BLEND_DEFAULT
+	defaultTextureType uint32 = gl.TEXTURE_2D
+	indexBufferObject  uint32
+	indexBuffer        [vertexBufferSize * 6 / 4]int32
+	vertexBuffer       [vertexBufferSize]Vertex
+
+	hasGLARBTextureRectangle       bool
+	hasGLARBTextureNonPowerOfTwo   bool
+	hasGLEXTFramebufferObject      bool
+	hasGLEXTTextureCompressionS3TC bool
+	hasGLAppleYCBCR422             bool
+	hasGLARBVertexBufferObject     bool
 )
 
 func SetWidth(w int) {
@@ -30,31 +48,118 @@ func SetY(i int) {
 	updatePosition(x, y)
 }
 
+func SetBPP(i int) {
+	bpp = int8(i)
+}
+
 func SetZBuffer(b bool) {
 	zBuffer = b
 }
 
-func Initialize() error {
-	gl.Init()
+func loadGLProperties() error {
+	exts := strings.Split(gl.GoStr(gl.GetString(gl.EXTENSIONS)), " ")
+	has := make(map[string]bool, len(exts))
+	for _, ext := range exts {
+		has[ext] = true
+	}
 
-	// For now, just TEXTURE_2D
+	version := gl.GoStr(gl.GetString(gl.VERSION))
+
+	var major, minor int
+	if _, err := fmt.Fscanf(strings.NewReader(version), "%d.%d", &major, &minor); err != nil {
+		return fmt.Errorf("unable to parse OpenGL major.minor version from %q: %w", version, err)
+	}
+
+	if major < 1 || (major == 1 && minor < 2) {
+		return fmt.Errorf("OpenGL < 1.2 is not supported: %v.%v", major, minor)
+	}
+
+	// We can fake this with POT textures, but the GL version seems broken or super old.
 	defaultTextureType = gl.TEXTURE_2D
+	if has["GL_ARB_texture_rectangle"] || has["GL_EXT_texture_rectangle"] || has["GL_NV_texture_rectangle"] {
+		hasGLARBTextureRectangle = true
+		defaultTextureType = gl.TEXTURE_RECTANGLE_ARB
+	} else if major >= 2 || has["GL_ARB_texture_non_power_of_two"] {
+		hasGLARBTextureNonPowerOfTwo = true
+		defaultTextureType = gl.TEXTURE_2D
+	}
+
+	if has["GL_EXT_framebuffer_object"] {
+		hasGLEXTFramebufferObject = true
+	}
+
+	if has["GL_ARB_texture_compression"] && has["GL_EXT_texture_compression_s3tc"] {
+		hasGLEXTTextureCompressionS3TC = true
+	}
+
+	if has["GL_APPLE_ycbcr_422"] {
+		hasGLAppleYCBCR422 = true
+	}
+
+	if has["GL_ARB_vertex_buffer_object"] {
+		hasGLARBVertexBufferObject = true
+	}
+
+	return nil
+}
+
+func Initialize() error {
+	if err := gl.Init(); err != nil {
+		return err
+	}
+
+	surface, err := hwnd.GetSurface()
+	if err != nil {
+		return err
+	}
+
+	bpp = int8(surface.Format.BitsPerPixel)
+
+	// if err := loadGLProperties(); err != nil {
+	// 	return err
+	// }
+
+	// var n int32
+	// for i := 0; i < vertexBufferSize/4; i++ {
+	// 	indexBuffer[n] = n
+	// 	indexBuffer[n+1] = n + 1
+	// 	indexBuffer[n+2] = n + 2
+	// 	indexBuffer[n+3] = n + 2
+	// 	indexBuffer[n+4] = n + 3
+	// 	n += 4
+	// }
+
+	if hasGLARBVertexBufferObject {
+		// gl.GenBuffersARB(1, &indexBufferObject)
+		// gl.BindBufferARB(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject)
+		// gl.BufferDataARB(gl.ELEMENT_ARRAY_BUFFER, len(indexBuffer), unsafe.Pointer(&indexBuffer[0]), gl.STATIC_DRAW)
+	}
+
+	// gl.VertexPointer(3, gl.FLOAT, int32(len(vertexBuffer)), unsafe.Pointer(&vertexBuffer[0]))
+	// gl.ColorPointer(4, gl.UNSIGNED_BYTE, int32(len(vertexBuffer)), unsafe.Pointer(&vertexBuffer[0]))
+	// gl.TexCoordPointer(2, gl.FLOAT, int32(len(vertexBuffer)), unsafe.Pointer(&vertexBuffer[0]))
+	// gl.EnableClientState(gl.VERTEX_ARRAY)
+	// gl.EnableClientState(gl.COLOR_ARRAY)
+	// gl.EnableClientState(gl.TEXTURE_COORD_ARRAY)
 
 	gl.PixelStorei(gl.UNPACK_ALIGNMENT, 1)
 	gl.PixelStorei(gl.PACK_ALIGNMENT, 1)
 
 	gl.Disable(gl.TEXTURE_2D)
+	if hasGLARBTextureRectangle {
+		gl.Disable(gl.TEXTURE_RECTANGLE_ARB)
+	}
 	gl.Enable(defaultTextureType)
 	gl.Enable(gl.SCISSOR_TEST)
 	gl.Disable(gl.CULL_FACE)
 	gl.Disable(gl.LIGHTING)
 	gl.DepthFunc(gl.GEQUAL)
 
-	if zBuffer {
-		gl.Enable(gl.DEPTH_TEST)
-	} else {
-		gl.Disable(gl.DEPTH_TEST)
-	}
+	// if zBuffer {
+	gl.Enable(gl.DEPTH_TEST)
+	// } else {
+	// 	gl.Disable(gl.DEPTH_TEST)
+	// }
 
 	gl.Enable(gl.BLEND)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
@@ -66,6 +171,10 @@ func Initialize() error {
 
 	default_texture_filter()
 
+	gl.TexParameteri(defaultTextureType, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+	gl.TexParameteri(defaultTextureType, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+	gl.TexParameteri(defaultTextureType, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE)
+
 	gl.Scissor(0, 0, width, height)
 	gl.Viewport(0, 0, width, height)
 
@@ -75,6 +184,12 @@ func Initialize() error {
 	setProjectionMatrix()
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
+
+	// make sure the framebuffers are cleared and force to screen
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	swapBuffers()
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	swapBuffers()
 
 	return nil
 }
@@ -86,7 +201,13 @@ func setProjectionMatrix() {
 }
 
 func BeginScene(a ...interface{}) bool {
-	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	if false && hasGLEXTFramebufferObject {
+		// bool HGE_Impl::Gfx_BeginScene(HTARGET targ)
+		// CRenderTargetList *target=(CRenderTargetList *)targ;
+		// TODO if target != currentTarget
+		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, (target) ? target->frame : 0);
+		gl.BindFramebufferEXT(gl.FRAMEBUFFER_EXT, 0)
+	}
 
 	if zBuffer {
 		gl.Enable(gl.DEPTH_TEST)
@@ -94,9 +215,13 @@ func BeginScene(a ...interface{}) bool {
 		gl.Disable(gl.DEPTH_TEST)
 	}
 
+	// TODO if target != nil use target width/height
 	gl.Scissor(0, 0, width, height)
 	gl.Viewport(0, 0, width, height)
 	setProjectionMatrix()
+
+	gl.MatrixMode(gl.MODELVIEW)
+	gl.LoadIdentity()
 
 	return true
 }
@@ -108,6 +233,13 @@ func EndScene() {
 
 func Clear(color Color) {
 	gl.ClearColor(float32(color.R), float32(color.G), float32(color.B), float32(color.A))
+
+	flags := gl.COLOR_BUFFER_BIT
+	if zBuffer {
+		flags |= gl.DEPTH_BUFFER_BIT
+	}
+
+	gl.Clear(uint32(flags))
 }
 
 func setBlendMode(blend int) {

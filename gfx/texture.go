@@ -14,9 +14,7 @@ import (
 	gl "github.com/go-gl/gl/v2.1/gl"
 )
 
-var (
-	texFilter bool
-)
+var texFilter bool
 
 func SetTextureFilter(filter bool) {
 	texFilter = filter
@@ -35,7 +33,7 @@ func decodeImage(r io.Reader) (*img, error) {
 
 	rgba, ok := i.(*image.NRGBA)
 	if !ok {
-		return nil, errors.New("Texture must be an NRGBA image.")
+		return nil, errors.New("Texture must be an NRGBA image")
 	}
 
 	is := new(img)
@@ -76,18 +74,23 @@ type Texture struct {
 func NewTexture(width, height int) *Texture {
 	var t uint32
 	gl.GenTextures(1, &t)
-	tex := Texture{tex: t, texType: gl.TEXTURE_2D}
+	tex := Texture{
+		tex:     t,
+		texType: gl.TEXTURE_2D,
+		w:       uint32(width),
+		h:       uint32(height),
+	}
 
 	runtime.SetFinalizer(&tex, func(texture *Texture) {
 		texture.free()
 	})
 
+	tex.bind()
+
 	return &tex
 }
 
 func LoadTexture(filename string, a ...interface{}) (*Texture, error) {
-	t := NewTexture(0, 0)
-
 	f, e := os.Open(filename)
 	if e != nil {
 		return nil, e
@@ -99,23 +102,27 @@ func LoadTexture(filename string, a ...interface{}) (*Texture, error) {
 		return nil, e
 	}
 
-	t.w, t.h = b.w, b.h
+	t := NewTexture(int(b.w), int(b.h))
 
-	gl.GenTextures(1, &t.tex)
-	t.bind()
-
-	gl.TexParameterf(t.texType, gl.TEXTURE_MIN_LOD, 0.0)
-	gl.TexParameterf(t.texType, gl.TEXTURE_MAX_LOD, 0.0)
-	gl.TexParameteri(t.texType, gl.TEXTURE_BASE_LEVEL, 0)
-	gl.TexParameteri(t.texType, gl.TEXTURE_MAX_LEVEL, 0)
+	if gl.IsTextureEXT(gl.TEXTURE_RECTANGLE_ARB) {
+		gl.TexParameterf(t.texType, gl.TEXTURE_MIN_LOD, 0.0)
+		gl.TexParameterf(t.texType, gl.TEXTURE_MAX_LOD, 0.0)
+		gl.TexParameteri(t.texType, gl.TEXTURE_BASE_LEVEL, 0)
+		gl.TexParameteri(t.texType, gl.TEXTURE_MAX_LEVEL, 0)
+	}
 
 	// Textures are required to be a power of two unless there's
 	// GL_ARB_texture_non_power_of_two (an extention for 1.4 and in 2.0 core)
+	format := gl.RGBA
+	if gl.IsTextureEXT(gl.COMPRESSED_RGBA_S3TC_DXT1_EXT) {
+		format = gl.COMPRESSED_RGBA_S3TC_DXT1_EXT
+	}
+
 	if isPowerOfTwo(b.w) && isPowerOfTwo(b.h) {
-		gl.TexImage2D(t.texType, 0, gl.RGBA, int32(b.w), int32(b.h), 0, gl.RGBA, gl.UNSIGNED_BYTE, unsafe.Pointer(&b.bytes[0]))
+		gl.TexImage2D(t.texType, 0, int32(format), int32(b.w), int32(b.h), 0, gl.RGBA, gl.UNSIGNED_BYTE, unsafe.Pointer(&b.bytes[0]))
 	} else {
 		potw, poth := nextPowerOfTwo(b.w), nextPowerOfTwo(b.h)
-		gl.TexImage2D(t.texType, 0, gl.RGBA, int32(potw), int32(poth), 0, gl.RGBA, gl.UNSIGNED_BYTE, nil)
+		gl.TexImage2D(t.texType, 0, int32(format), int32(potw), int32(poth), 0, gl.RGBA, gl.UNSIGNED_BYTE, nil)
 		gl.TexSubImage2D(t.texType, 0, 0, 0, int32(b.w), int32(b.h), gl.RGBA, gl.UNSIGNED_BYTE, unsafe.Pointer(&b.bytes[0]))
 	}
 
