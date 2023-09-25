@@ -38,16 +38,13 @@ func (t *Timer) Update() {
 		// happened.
 		update := t
 		go func() {
-			select {
-			case <-time.After(1 * time.Second):
-				update.fps = update.frames
-				update.frames = 0
-			}
+			time.Sleep(1 * time.Second)
+			update.fps = update.frames
+			update.frames = 0
 		}()
-		t.frames++
-	} else {
-		t.frames++
 	}
+
+	t.frames++
 }
 
 // The time since we've created the timer
@@ -63,6 +60,10 @@ func (t Timer) Delta() float64 {
 // The approximate frames per second
 func (t Timer) FPS() int {
 	return t.fps
+}
+
+func (t Timer) Sleep(d time.Duration) {
+	time.Sleep(d)
 }
 
 func Reset() {
@@ -83,4 +84,8 @@ func Delta() float64 {
 
 func FPS() int {
 	return t.FPS()
+}
+
+func Sleep(d time.Duration) {
+	t.Sleep(d)
 }
