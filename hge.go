@@ -164,14 +164,14 @@ func (h *HGE) Run() error {
 	}
 
 	active := true
-	dt := 0.0
+	var dt float64
 
 	vsync := stateInts[FPS] == -1
 
-	delta := 1.0 / float64(stateInts[MINDELTATIME])
-	timer.Update()
+	delta := 1 / float64(stateInts[MINDELTATIME])
 
 	for {
+		timer.Update()
 		dt += timer.Delta()
 
 		input.Process()
